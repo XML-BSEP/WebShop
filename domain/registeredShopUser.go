@@ -7,25 +7,26 @@ import (
 
 type RegisteredShopUser struct {
 	gorm.Model
-	Person     Person    `json:"Person"`
-	ShopAccount   ShopAccount    `json:"shopAccount"`
+	Person     Person
+	PersonID uint
+	ShopAccount   ShopAccount
+	ShopAccountID uint
+
 
 }
 
 type RegisteredShopUserUsecase interface {
-	Fetch(ctx context.Context, cursor string, num int64) ([]RegisteredShopUser, string, error)
-	GetByID(ctx context.Context, id int64) (RegisteredShopUser, error)
-	Update(ctx context.Context, adr *RegisteredShopUser) error
-	GetByTitle(ctx context.Context, title string) (RegisteredShopUser, error)
-	Store(ctx context.Context, adr *RegisteredShopUser) error
-	Delete(ctx context.Context, id int64) error
+	Fetch(ctx context.Context) ([]*RegisteredShopUser, error)
+	GetByID(ctx context.Context, id uint) (*RegisteredShopUser, error)
+	Update(ctx context.Context, reg *RegisteredShopUser) (*RegisteredShopUser, error)
+	Create(ctx context.Context, reg *RegisteredShopUser) (*RegisteredShopUser, error)
+	Delete(ctx context.Context, id uint) error
 }
 
 type RegisteredShopUserRepository interface {
-	Fetch(ctx context.Context, cursor string, num int64) (res []RegisteredShopUser, nextCursor string, err error)
-	GetByID(ctx context.Context, id int64) (RegisteredShopUser, error)
-	GetByTitle(ctx context.Context, title string) (RegisteredShopUser, error)
-	Update(ctx context.Context, adr *RegisteredShopUser) error
-	Store(ctx context.Context, adr *RegisteredShopUser) error
-	Delete(ctx context.Context, id int64) error
+	Fetch(ctx context.Context) ([]*RegisteredShopUser, error)
+	GetByID(ctx context.Context, id uint) (*RegisteredShopUser, error)
+	Update(ctx context.Context, reg *RegisteredShopUser) (*RegisteredShopUser, error)
+	Create(ctx context.Context, reg *RegisteredShopUser) (*RegisteredShopUser, error)
+	Delete(ctx context.Context, id uint) error
 }

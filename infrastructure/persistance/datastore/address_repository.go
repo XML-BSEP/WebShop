@@ -10,9 +10,6 @@ type addressRepository struct {
 	Conn *gorm.DB
 }
 
-func newAddressRepository(Conn *gorm.DB) domain.AddressRepository {
-	return &addressRepository{Conn}
-}
 func (a *addressRepository) GetByID(ctx context.Context, id uint) (*domain.Address, error) {
 	adr := &domain.Address{ID: id}
 	err := a.Conn.First(adr).Error
