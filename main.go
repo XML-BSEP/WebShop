@@ -7,6 +7,7 @@ import (
 	"web-shop/infrastructure/database"
 	"web-shop/infrastructure/persistance/datastore"
 	"web-shop/infrastructure/seeder"
+	"web-shop/usecase"
 )
 
 const (
@@ -43,23 +44,24 @@ func main() {
 	//_, _ = addrRepo.Create(context.TODO(), &a3)
 	//_,_ = perRepo.Create(context.TODO(), &p1)
 
-	addrRepo := datastore.NewAddressRepository(conn)
+	//addrRepo := datastore.NewAddressRepository(conn)
 	perRepo := datastore.NewPersonRepository(conn)
 	regRepo := datastore.NewRegisteredUserRepository(conn)
 
-	addr, _ := addrRepo.Fetch(context.TODO())
 
-	e.GET("/addresses", func(c echo.Context) error {
-		return c.JSON(200, addr)
-	})
 
-	pers, _ := perRepo.Fetch(context.TODO())
+	personUsecase := usecase.NewPersonUsecase(perRepo)
+	pers, _ := personUsecase.Fetch(context.TODO())
+
+
+
 
 	e.GET("/persons", func(c echo.Context) error {
 		return c.JSON(200, pers)
 	})
 
-	regusers, _ := regRepo.Fetch(context.TODO())
+	regUsersUsecase := usecase.NewRegisteredUserUsecase(regRepo)
+	regusers, _ := regUsersUsecase.Fetch(context.TODO())
 
 	e.GET("/regusers", func(c echo.Context) error {
 		return c.JSON(200, regusers)
