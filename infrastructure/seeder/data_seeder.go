@@ -2,7 +2,6 @@ package seeder
 
 import (
 	"context"
-	"fmt"
 	"gorm.io/gorm"
 	"time"
 	"web-shop/domain"
@@ -78,11 +77,9 @@ func seedRegisteredUsers(conn *gorm.DB){
 	acc2, _ := datastore.NewShopAccountRepository(conn).GetByID(context.TODO(), 2)
 
 	regUser1 := domain.RegisteredShopUser{Person: *p1, ShopAccount: *acc1}
-	fmt.Println(regUser1)
 	regRepo.Create(context.TODO(), &regUser1)
-	regUser2 := domain.RegisteredShopUser{Person: *p2, ShopAccount: *acc2}
-	fmt.Println(regUser2)
 
+	regUser2 := domain.RegisteredShopUser{Person: *p2, ShopAccount: *acc2}
 	regRepo.Create(context.TODO(), &regUser2)
 
 

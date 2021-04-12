@@ -12,7 +12,6 @@ type RegisteredShopUser struct {
 	ShopAccount   ShopAccount
 	ShopAccountID uint
 
-
 }
 
 type RegisteredShopUserUsecase interface {

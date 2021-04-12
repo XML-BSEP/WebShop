@@ -9,7 +9,7 @@ import (
 )
 
 func NewDBConnection() *gorm.DB {
-	return getMysqlConn()
+	return getConnection()
 }
 
 func init_viper() {
@@ -24,7 +24,7 @@ func init_viper() {
 	}
 }
 
-func getMysqlConn() *gorm.DB {
+func getConnection() *gorm.DB {
 	init_viper()
 	host := viper.GetString(`database.host`)
 	port := viper.GetString(`database.port`)
