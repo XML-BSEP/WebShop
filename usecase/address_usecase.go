@@ -9,7 +9,7 @@ type addressUseCase struct {
 	AddressRepository domain.AddressRepository
 }
 
-func NewAddresUseCase(r domain.AddressRepository) domain.AddressUsecase {
+func NewAddresUsecase(r domain.AddressRepository) domain.AddressUsecase {
 	return &addressUseCase{r}
 }
 
