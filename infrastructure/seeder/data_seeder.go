@@ -2,11 +2,12 @@ package seeder
 
 import (
 	"context"
-	"gorm.io/gorm"
 	"time"
 	"web-shop/domain"
 	"web-shop/infrastructure/database"
 	"web-shop/infrastructure/persistance/datastore"
+
+	"gorm.io/gorm"
 )
 
 type Seed struct {
@@ -28,7 +29,7 @@ func MigrateData() {
 	seedRegisteredUsers(conn)
 }
 
-func seedAddresses(conn *gorm.DB){
+func seedAddresses(conn *gorm.DB) {
 
 	addrRepo := datastore.NewAddressRepository(conn)
 
@@ -44,10 +45,10 @@ func seedAddresses(conn *gorm.DB){
 
 }
 
-func seedPersons(conn *gorm.DB){
+func seedPersons(conn *gorm.DB) {
 	perRepo := datastore.NewPersonRepository(conn)
-	a1,_ := datastore.NewAddressRepository(conn).GetByID(context.TODO(), 1)
-	a2,_ := datastore.NewAddressRepository(conn).GetByID(context.TODO(), 2)
+	a1, _ := datastore.NewAddressRepository(conn).GetByID(context.TODO(), 1)
+	a2, _ := datastore.NewAddressRepository(conn).GetByID(context.TODO(), 2)
 
 	p1 := domain.Person{Address: *a1, Name: "Pera", Surname: "Peric", Phone: "1223124", DateOfBirth: time.Now(), Gender: 1}
 	p2 := domain.Person{Address: *a2, Name: "Jovica", Surname: "Jovic", Phone: "918246", DateOfBirth: time.Now(), Gender: 1}
@@ -55,10 +56,9 @@ func seedPersons(conn *gorm.DB){
 	perRepo.Create(context.TODO(), &p1)
 	perRepo.Create(context.TODO(), &p2)
 
-
 }
 
-func seedShopAccounts(conn *gorm.DB){
+func seedShopAccounts(conn *gorm.DB) {
 	accRepo := datastore.NewShopAccountRepository(conn)
 	acc := domain.ShopAccount{Username: "password", Password: "$2y$12$1duXzw4C3iYpZpU14rh0A.cjbF2kWdqKlUfsMWJOpRGmcFFHfok36 "}
 	accRepo.Create(context.TODO(), &acc)
@@ -67,7 +67,7 @@ func seedShopAccounts(conn *gorm.DB){
 
 }
 
-func seedRegisteredUsers(conn *gorm.DB){
+func seedRegisteredUsers(conn *gorm.DB) {
 	regRepo := datastore.NewRegisteredUserRepository(conn)
 
 	p1, _ := datastore.NewPersonRepository(conn).GetByID(context.TODO(), 1)
@@ -82,5 +82,8 @@ func seedRegisteredUsers(conn *gorm.DB){
 	regUser2 := domain.RegisteredShopUser{Person: *p2, ShopAccount: *acc2}
 	regRepo.Create(context.TODO(), &regUser2)
 
+}
 
+func seedProducts(conn *gorm.DB) {
+	// product1 := domain.Product{Name: "Product1"}
 }
