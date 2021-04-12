@@ -1,0 +1,8 @@
+{
+  "production" : false,
+  "server" : {
+    "address" : "localhost",
+    "port" : 8085
+  },
+  "production_server": {}
+}
