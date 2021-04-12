@@ -2,12 +2,12 @@ package seeder
 
 import (
 	"context"
-	"fmt"
-	"gorm.io/gorm"
 	"time"
 	"web-shop/domain"
 	"web-shop/infrastructure/database"
 	"web-shop/infrastructure/persistance/datastore"
+
+	"gorm.io/gorm"
 )
 
 type Seed struct {
@@ -27,9 +27,11 @@ func MigrateData() {
 	seedPersons(conn)
 	seedShopAccounts(conn)
 	seedRegisteredUsers(conn)
+	seedProducts(conn)
+	seedStorages(conn)
 }
 
-func seedAddresses(conn *gorm.DB){
+func seedAddresses(conn *gorm.DB) {
 
 	addrRepo := datastore.NewAddressRepository(conn)
 
@@ -45,10 +47,10 @@ func seedAddresses(conn *gorm.DB){
 
 }
 
-func seedPersons(conn *gorm.DB){
+func seedPersons(conn *gorm.DB) {
 	perRepo := datastore.NewPersonRepository(conn)
-	a1,_ := datastore.NewAddressRepository(conn).GetByID(context.TODO(), 1)
-	a2,_ := datastore.NewAddressRepository(conn).GetByID(context.TODO(), 2)
+	a1, _ := datastore.NewAddressRepository(conn).GetByID(context.TODO(), 1)
+	a2, _ := datastore.NewAddressRepository(conn).GetByID(context.TODO(), 2)
 
 	p1 := domain.Person{Address: *a1, Name: "Pera", Surname: "Peric", Phone: "1223124", DateOfBirth: time.Now(), Gender: 1}
 	p2 := domain.Person{Address: *a2, Name: "Jovica", Surname: "Jovic", Phone: "918246", DateOfBirth: time.Now(), Gender: 1}
@@ -56,10 +58,9 @@ func seedPersons(conn *gorm.DB){
 	perRepo.Create(context.TODO(), &p1)
 	perRepo.Create(context.TODO(), &p2)
 
-
 }
 
-func seedShopAccounts(conn *gorm.DB){
+func seedShopAccounts(conn *gorm.DB) {
 	accRepo := datastore.NewShopAccountRepository(conn)
 	acc := domain.ShopAccount{Username: "password", Password: "$2y$12$1duXzw4C3iYpZpU14rh0A.cjbF2kWdqKlUfsMWJOpRGmcFFHfok36 "}
 	accRepo.Create(context.TODO(), &acc)
@@ -68,7 +69,7 @@ func seedShopAccounts(conn *gorm.DB){
 
 }
 
-func seedRegisteredUsers(conn *gorm.DB){
+func seedRegisteredUsers(conn *gorm.DB) {
 	regRepo := datastore.NewRegisteredUserRepository(conn)
 
 	p1, _ := datastore.NewPersonRepository(conn).GetByID(context.TODO(), 1)
@@ -78,12 +79,38 @@ func seedRegisteredUsers(conn *gorm.DB){
 	acc2, _ := datastore.NewShopAccountRepository(conn).GetByID(context.TODO(), 2)
 
 	regUser1 := domain.RegisteredShopUser{Person: *p1, ShopAccount: *acc1}
-	fmt.Println(regUser1)
 	regRepo.Create(context.TODO(), &regUser1)
-	regUser2 := domain.RegisteredShopUser{Person: *p2, ShopAccount: *acc2}
-	fmt.Println(regUser2)
 
+	regUser2 := domain.RegisteredShopUser{Person: *p2, ShopAccount: *acc2}
 	regRepo.Create(context.TODO(), &regUser2)
 
+}
+
+func seedProducts(conn *gorm.DB) {
+	//prodRepo := datastore.NewProductRepository(conn)
+	// product1 := domain.Product{Name: "Product1", Price: 6969, Image: "assets/randompic1.jpg"}
+	// product2 := domain.Product{Name: "Product2", Price: 69420, Image: "assets/randompic2.jpg"}
+	// product3 := domain.Product{Name: "Product3", Price: 1512, Image: "assets/randompic4.png"}
+	// prodRepo.Create(context.TODO(), &product1)
+	// prodRepo.Create(context.TODO(), &product2)
+	// prodRepo.Create(context.TODO(), &product3)
+
+}
+
+func seedStorages(conn *gorm.DB) {
+	// prodRepo := datastore.NewProductRepository(conn)
+	// p1, _ := datastore.NewProductRepository(conn).GetByID(context.TODO(), 1)
+	// p2, _ := datastore.NewProductRepository(conn).GetByID(context.TODO(), 2)
+	// p3, _ := datastore.NewProductRepository(conn).GetByID(context.TODO(), 2)
+
+	//storageRepo := datastore.NewStorageRepository(conn)
+
+	// s1 := domain.Storage{Product: *p1, Available: 666}
+	// s2 := domain.Storage{Product: *p2, Available: 12}
+	// s3 := domain.Storage{Product: *p3, Available: 420}
+
+	// storageRepo.Create(context.TODO(), &s1)
+	// storageRepo.Create(context.TODO(), &s2)
+	// storageRepo.Create(context.TODO(), &s3)
 
 }
