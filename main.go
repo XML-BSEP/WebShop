@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"web-shop/infrastructure/seeder"
-
 	"github.com/labstack/echo"
 )
 
