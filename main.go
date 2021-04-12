@@ -3,9 +3,6 @@ package main
 import (
 	"fmt"
 	"web-shop/infrastructure/seeder"
-	"web-shop/usecase"
-)
-
 	"github.com/labstack/echo"
 )
 
