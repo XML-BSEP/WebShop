@@ -2,20 +2,12 @@ package main
 
 import (
 	"fmt"
-	"github.com/labstack/echo"
 	"web-shop/infrastructure/seeder"
-)
 
-const (
-	host     = "localhost"
-	port     = 5432
-	user     = "postgres"
-	password = "root"
-	dbname   = "webshop"
+	"github.com/labstack/echo"
 )
 
 func main() {
-
 
 	seeder.MigrateData()
 
@@ -24,6 +16,5 @@ func main() {
 	e.Logger.Fatal(e.Start("localhost:8080"))
 
 	fmt.Println("Successfully connected!")
-
 
 }
