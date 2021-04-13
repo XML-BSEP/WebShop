@@ -5,7 +5,7 @@ import (
 	"web-shop/domain"
 	"web-shop/http/handler"
 	"web-shop/infrastructure/persistance/datastore"
-	"web-shop/infrastructure/security/auth"
+	auth2 "web-shop/security/auth"
 	"web-shop/usecase"
 )
 
@@ -14,23 +14,17 @@ type Interactor interface {
 	NewAddressUsecase() domain.AddressUsecase
 	NewAddressHandler() handler.AddressHandler
 	NewPersonRepository() domain.PersonRepository
+	NewShopAccountRepository() domain.ShopAccountRepository
+	NewRegisteredUserRepository(repository domain.ShopAccountRepository) domain.RegisteredShopUserRepository
 	NewPersonUsecase() domain.PersonUsecase
+	NewTokenService() *auth2.Token
 	NewPersonHandler() handler.PersonHandler
 	NewAuthenticateHandler() handler.AuthenticateHandler
-
 	NewAppHandler() handler.AppHandler
 }
 
 type interactor struct {
 	Conn *gorm.DB
-}
-
-func (i *interactor) NewAuthenticateHandler() handler.AuthenticateHandler {
-	shopAccountRepo := datastore.NewShopAccountRepository(i.Conn)
-	userRepo := datastore.NewRegisteredUserRepository(i.Conn, shopAccountRepo)
-
-	tk := auth.NewToken()
-	return handler.NewAuthenticate(userRepo, tk)
 }
 
 type appHandler struct {
@@ -49,6 +43,30 @@ func (i *interactor) NewAppHandler() handler.AppHandler {
 	appHandler.PersonHandler = i.NewPersonHandler()
 	appHandler.AuthenticateHandler = i.NewAuthenticateHandler()
 	return appHandler
+}
+
+
+func (i *interactor) NewAuthenticateHandler() handler.AuthenticateHandler {
+	shopAccountRepo := i.NewShopAccountRepository()
+	userRepo := i.NewRegisteredUserRepository(shopAccountRepo)
+	tk := i.NewTokenService()
+
+	return handler.NewAuthenticate(userRepo, tk)
+}
+
+func (i *interactor) NewTokenService() *auth2.Token {
+	tk := auth2.NewToken()
+	return tk
+}
+
+func (i *interactor) NewRegisteredUserRepository(shopAccountRepo domain.ShopAccountRepository) domain.RegisteredShopUserRepository {
+	userRepo := datastore.NewRegisteredUserRepository(i.Conn, shopAccountRepo)
+	return userRepo
+}
+
+func (i *interactor) NewShopAccountRepository() domain.ShopAccountRepository {
+	shopAccountRepo := datastore.NewShopAccountRepository(i.Conn)
+	return shopAccountRepo
 }
 
 func (i *interactor) NewPersonRepository() domain.PersonRepository {

@@ -9,22 +9,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"web-shop/domain/auth"
 )
-
-
-type AccessDetails struct {
-	TokenUuid string
-	UserId    uint64
-}
-
-type TokenDetails struct {
-	AccessToken  string
-	RefreshToken string
-	TokenUuid    string
-	RefreshUuid  string
-	AtExpires    int64
-	RtExpires    int64
-}
 
 
 type Token struct{}
@@ -34,14 +20,14 @@ func NewToken() *Token {
 }
 
 type TokenInterface interface {
-	CreateToken(userid uint64) (*TokenDetails, error)
-	ExtractTokenMetadata(*http.Request) (*AccessDetails, error)
+	CreateToken(userid uint64) (*auth.TokenDetails, error)
+	ExtractTokenMetadata(*http.Request) (*auth.AccessDetails, error)
 }
 
 var _ TokenInterface = &Token{}
 
-func (t *Token) CreateToken(userid uint64) (*TokenDetails, error) {
-	td := &TokenDetails{}
+func (t *Token) CreateToken(userid uint64) (*auth.TokenDetails, error) {
+	td := &auth.TokenDetails{}
 
 	td.AtExpires = time.Now().Add(time.Minute * 15).Unix()
 
@@ -114,7 +100,7 @@ func ExtractToken(r *http.Request) string {
 	return ""
 }
 
-func (t *Token) ExtractTokenMetadata(r *http.Request) (*AccessDetails, error) {
+func (t *Token) ExtractTokenMetadata(r *http.Request) (*auth.AccessDetails, error) {
 	token, err := VerifyToken(r)
 	if err != nil {
 		return nil, err
@@ -129,7 +115,7 @@ func (t *Token) ExtractTokenMetadata(r *http.Request) (*AccessDetails, error) {
 		if err != nil {
 			return nil, err
 		}
-		return &AccessDetails{
+		return &auth.AccessDetails{
 			TokenUuid: accessUuid,
 			UserId:    userId,
 		}, nil
