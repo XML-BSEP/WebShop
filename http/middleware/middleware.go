@@ -12,4 +12,6 @@ func NewMiddleware(e *echo.Echo) {
 		AllowOrigins: []string{"*"},
 		AllowMethods: []string{echo.GET, echo.POST, echo.PUT, echo.DELETE, echo.PATCH, echo.HEAD},
 	}))
+
+
 }

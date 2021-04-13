@@ -5,6 +5,7 @@ import (
 	"web-shop/domain"
 	"web-shop/http/handler"
 	"web-shop/infrastructure/persistance/datastore"
+	"web-shop/infrastructure/security/auth"
 	"web-shop/usecase"
 )
 
@@ -15,6 +16,7 @@ type Interactor interface {
 	NewPersonRepository() domain.PersonRepository
 	NewPersonUsecase() domain.PersonUsecase
 	NewPersonHandler() handler.PersonHandler
+	NewAuthenticateHandler() handler.AuthenticateHandler
 
 	NewAppHandler() handler.AppHandler
 }
@@ -23,9 +25,18 @@ type interactor struct {
 	Conn *gorm.DB
 }
 
+func (i *interactor) NewAuthenticateHandler() handler.AuthenticateHandler {
+	shopAccountRepo := datastore.NewShopAccountRepository(i.Conn)
+	userRepo := datastore.NewRegisteredUserRepository(i.Conn, shopAccountRepo)
+
+	tk := auth.NewToken()
+	return handler.NewAuthenticate(userRepo, tk)
+}
+
 type appHandler struct {
 	handler.AddressHandler
 	handler.PersonHandler
+	handler.AuthenticateHandler
 }
 
 func NewInteractor(conn *gorm.DB) Interactor {
@@ -36,6 +47,7 @@ func (i *interactor) NewAppHandler() handler.AppHandler {
 	appHandler := &appHandler{}
 	appHandler.AddressHandler = i.NewAddressHandler()
 	appHandler.PersonHandler = i.NewPersonHandler()
+	appHandler.AuthenticateHandler = i.NewAuthenticateHandler()
 	return appHandler
 }
 
