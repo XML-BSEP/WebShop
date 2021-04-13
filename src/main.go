@@ -24,7 +24,8 @@ func main() {
 	middleware.NewMiddleware(e)
 	router.NewRouter(e, handler)
 
-	e.Logger.Fatal(e.Start("localhost:8080"))
+	e.Logger.Fatal(e.StartTLS("localhost:443", "certificate/DukeStrategicTechnologies-SN-9946396461889217640.pem", "certificate/DukeStrategicTechnologies9946396461889217640-key.pem"))
+
 
 
 	fmt.Println("Successfully connected!")
