@@ -11,7 +11,7 @@ type Order struct {
 	gorm.Model
 	DateOfPlacement time.Time
 	ShoppingCart    ShoppingCart
-	TotalPrice      uint64
+	TotalPrice      uint
 }
 
 type OrderUsecase interface {

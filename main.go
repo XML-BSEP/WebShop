@@ -2,31 +2,31 @@ package main
 
 import (
 	"fmt"
-
-	//"web-shop/infrastructure/security/auth"
-	"web-shop/infrastructure/seeder"
-	//"web-shop/infrastructure"
 	"github.com/labstack/echo"
-	//"web-shop/infrastructure/persistance/datastore"
+	"web-shop/http/middleware"
+	"web-shop/http/router"
+	"web-shop/infrastructure/database"
+	"web-shop/interactor"
 )
 
 func main() {
 
 	//conn := database.NewDBConnection()
 
-	seeder.MigrateData()
+	//seeder.MigrateData()
+
+	conn := database.NewDBConnection()
+	i := interactor.NewInteractor(conn)
+	handler := i.NewAppHandler()
 
 	e := echo.New()
 
+	middleware.NewMiddleware(e)
+	router.NewRouter(e, handler)
 
 	e.Logger.Fatal(e.Start("localhost:8080"))
 
-	//userRepo := datastore.NewRegisteredUserRepository(conn)
-	//redisService := auth.RedisService{}
-	//tk := auth.NewToken()
-	//authenticate := infrastructure.NewAuthenticate(userRepo, redisService.Auth, tk)
 
-	//e.POST("/login", authenticate.Login)
 	fmt.Println("Successfully connected!")
 
 }

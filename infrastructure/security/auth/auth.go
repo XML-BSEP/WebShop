@@ -19,7 +19,7 @@ type ClientData struct {
 	client *redis.Client
 }
 
-var _ AuthInterface = &ClientData{}
+
 
 func NewAuth(client *redis.Client) *ClientData {
 	return &ClientData{client: client}

@@ -25,4 +25,5 @@ type ShopAccountRepository interface {
 	Update(ctx context.Context, account *ShopAccount) (*ShopAccount, error)
 	Create(ctx context.Context, account *ShopAccount) (*ShopAccount, error)
 	Delete(ctx context.Context, id uint) error
+	GetUserDetailsByUsername(account *ShopAccount) (*ShopAccount, error)
 }

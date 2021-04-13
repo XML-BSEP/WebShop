@@ -4,15 +4,23 @@ import (
 	"context"
 	"gorm.io/gorm"
 	"web-shop/domain"
+
 )
 
 type registeredUserRepository struct {
 	Conn *gorm.DB
+	ShopAccountRepository domain.ShopAccountRepository
 }
 
-func (r registeredUserRepository) GetUserDetailsByUsername(account *domain.ShopAccount) (*domain.RegisteredShopUser, error) {
+func (r registeredUserRepository) GetUserDetailsByAccount(account *domain.ShopAccount) (*domain.RegisteredShopUser, error) {
+	realAccount, accErr := r.ShopAccountRepository.GetUserDetailsByUsername(account)
+
+	if accErr != nil {
+		return nil, accErr
+	}
+
 	user := &domain.RegisteredShopUser{}
-	err := r.Conn.Where("username = ?", account.Username).Take(&user).Error
+	err := r.Conn.Where("shop_account_id = ?", realAccount.ID).Take(&user).Error
 	return user, err
 }
 
@@ -49,6 +57,6 @@ func (r registeredUserRepository) Delete(ctx context.Context, id uint) error {
 	return err
 }
 
-func NewRegisteredUserRepository(Conn *gorm.DB) domain.RegisteredShopUserRepository{
-	return &registeredUserRepository{Conn}
+func NewRegisteredUserRepository(Conn *gorm.DB, shopAccountRepository domain.ShopAccountRepository) domain.RegisteredShopUserRepository{
+	return &registeredUserRepository{Conn, shopAccountRepository}
 }

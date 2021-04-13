@@ -8,8 +8,8 @@ import (
 
 type ShoppingCart struct {
 	gorm.Model
-	Products []Product
-	Buyer    RegisteredShopUser
+	ShoppingCartItems []ShoppingCartItem
+	Buyer             RegisteredShopUser
 }
 
 type ShoppingCartUsecase interface {

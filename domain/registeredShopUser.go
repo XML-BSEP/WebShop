@@ -28,5 +28,5 @@ type RegisteredShopUserRepository interface {
 	Update(ctx context.Context, reg *RegisteredShopUser) (*RegisteredShopUser, error)
 	Create(ctx context.Context, reg *RegisteredShopUser) (*RegisteredShopUser, error)
 	Delete(ctx context.Context, id uint) error
-	GetUserDetailsByUsername(account *ShopAccount) (*RegisteredShopUser, error)
+	GetUserDetailsByAccount(account *ShopAccount) (*RegisteredShopUser, error)
 }

@@ -27,6 +27,8 @@ func MigrateData() {
 	seedPersons(conn)
 	seedShopAccounts(conn)
 	seedRegisteredUsers(conn)
+	seedProducts(conn)
+	seedStorages(conn)
 }
 
 func seedAddresses(conn *gorm.DB) {
@@ -85,5 +87,38 @@ func seedRegisteredUsers(conn *gorm.DB) {
 }
 
 func seedProducts(conn *gorm.DB) {
-	// product1 := domain.Product{Name: "Product1"}
+	//prodRepo := datastore.NewProductRepository(conn)
+	// product1 := domain.Product{Name: "Product1", Price: 6969, Image: "assets/randompic1.jpg"}
+	// product2 := domain.Product{Name: "Product2", Price: 69420, Image: "assets/randompic2.jpg"}
+	// product3 := domain.Product{Name: "Product3", Price: 1512, Image: "assets/randompic4.png"}
+	// prodRepo.Create(context.TODO(), &product1)
+	// prodRepo.Create(context.TODO(), &product2)
+	// prodRepo.Create(context.TODO(), &product3)
+
+}
+
+func seedStorages(conn *gorm.DB) {
+	// prodRepo := datastore.NewProductRepository(conn)
+	// p1, _ := datastore.NewProductRepository(conn).GetByID(context.TODO(), 1)
+	// p2, _ := datastore.NewProductRepository(conn).GetByID(context.TODO(), 2)
+	// p3, _ := datastore.NewProductRepository(conn).GetByID(context.TODO(), 3)
+
+	//storageRepo := datastore.NewStorageRepository(conn)
+
+	// s1 := domain.Storage{Product: *p1, Available: 666}
+	// s2 := domain.Storage{Product: *p2, Available: 12}
+	// s3 := domain.Storage{Product: *p3, Available: 420}
+
+	// storageRepo.Create(context.TODO(), &s1)
+	// storageRepo.Create(context.TODO(), &s2)
+	// storageRepo.Create(context.TODO(), &s3)
+
+}
+
+func seedShoppingCarts(conn *gorm.DB) {
+	// prodRepo := datastore.NewProductRepository(conn)
+	// p1, _ := datastore.NewProductRepository(conn).GetByID(context.TODO(), 1)
+	// p2, _ := datastore.NewProductRepository(conn).GetByID(context.TODO(), 2)
+	// p3, _ := datastore.NewProductRepository(conn).GetByID(context.TODO(), 3)
+
 }

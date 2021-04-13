@@ -1,4 +1,4 @@
-package infrastructure
+package handler
 
 import (
 	"fmt"
@@ -13,13 +13,20 @@ import (
 	"web-shop/infrastructure/security/password-verification"
 )
 
+type AuthenticateHandler interface {
+	Login(c echo.Context) error
+	Logout(c echo.Context) error
+	Refresh(c echo.Context) error
+}
+
+
 type Authenticate struct {
 	us domain.RegisteredShopUserRepository
 	rd auth.AuthInterface
 	tk auth.TokenInterface
 }
 
-func NewAuthenticate(uApp domain.RegisteredShopUserRepository, rd auth.AuthInterface, tk auth.TokenInterface) *Authenticate {
+func NewAuthenticate(uApp domain.RegisteredShopUserRepository, rd auth.AuthInterface, tk auth.TokenInterface) AuthenticateHandler {
 	return &Authenticate{
 		us: uApp,
 		rd: rd,
@@ -27,47 +34,47 @@ func NewAuthenticate(uApp domain.RegisteredShopUserRepository, rd auth.AuthInter
 	}
 }
 
-func (au *Authenticate) Login(c *echo.Context) {
+func (au *Authenticate) Login(c echo.Context) error {
 	var account *domain.ShopAccount
 	var tokenErr = map[string]string{}
 
-	if err := (*c).Bind(&account); err != nil {
-		(*c).JSON(http.StatusUnprocessableEntity, "Invalid json provided")
-		return
+	if err := c.Bind(&account); err != nil {
+		return c.JSON(http.StatusUnprocessableEntity, "Invalid json provided")
+
 	}
 
 	validateUser := ValidateLoginInput(account)
 
 	if len(validateUser) > 0 {
-		(*c).JSON(http.StatusUnprocessableEntity, validateUser)
-		return
+		return c.JSON(http.StatusUnprocessableEntity, validateUser)
+
 	}
 
-	u, userErr := au.us.GetUserDetailsByUsername(account)
+	u, userErr := au.us.GetUserDetailsByAccount(account)
 
 	err := password_verification.VerifyPassword(account.Password, u.ShopAccount.Password)
 	if err != nil && err == bcrypt.ErrMismatchedHashAndPassword {
-		(*c).JSON(http.StatusForbidden, "Invalid password")
-		return
+		return c.JSON(http.StatusForbidden, "Invalid password")
+
 	}
 
 	if userErr != nil {
-		(*c).JSON(http.StatusInternalServerError, userErr)
-		return
+		return c.JSON(http.StatusInternalServerError, userErr)
+
 	}
 
 	ts, tErr := au.tk.CreateToken(u.PersonID)
 	if tErr != nil {
 		tokenErr["token_error"] = tErr.Error()
-		(*c).JSON(http.StatusUnprocessableEntity, tErr.Error())
-		return
+		return c.JSON(http.StatusUnprocessableEntity, tErr.Error())
+
 	}
 
-	saveErr := au.rd.CreateAuth(u.PersonID, ts)
-	if saveErr != nil {
-		(*c).JSON(http.StatusInternalServerError, saveErr.Error())
-		return
-	}
+	//saveErr := au.rd.CreateAuth(u.PersonID, ts)
+	//if saveErr != nil {
+	//	return c.JSON(http.StatusInternalServerError, saveErr.Error())
+
+	//}
 
 	userData := make(map[string]interface{})
 	userData["access_token"] = ts.AccessToken
@@ -76,31 +83,31 @@ func (au *Authenticate) Login(c *echo.Context) {
 	userData["first_name"] = u.Person.Name
 	userData["last_name"] = u.Person.Surname
 
-	(*c).JSON(http.StatusOK, userData)
+	return c.JSON(http.StatusOK, userData)
 }
 
-func (au *Authenticate) Logout(c echo.Context) {
+func (au *Authenticate) Logout(c echo.Context) error {
 
 
 	metadata, err := au.tk.ExtractTokenMetadata(c.Request())
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, "Unauthorized")
-		return
+		return c.JSON(http.StatusUnauthorized, "Unauthorized")
+
 	}
 
 	deleteErr := au.rd.DeleteTokens(metadata)
 	if deleteErr != nil {
-		c.JSON(http.StatusUnauthorized, deleteErr.Error())
-		return
+		return c.JSON(http.StatusUnauthorized, deleteErr.Error())
+
 	}
-	c.JSON(http.StatusOK, "Successfully logged out")
+	return c.JSON(http.StatusOK, "Successfully logged out")
 }
 
-func (au *Authenticate) Refresh(c echo.Context) {
+func (au *Authenticate) Refresh(c echo.Context) error {
 	mapToken := map[string]string{}
 	if err := c.Bind(&mapToken); err != nil {
-		c.JSON(http.StatusUnprocessableEntity, err.Error())
-		return
+		return c.JSON(http.StatusUnprocessableEntity, err.Error())
+
 	}
 	refreshToken := mapToken["refresh_token"]
 
@@ -112,52 +119,52 @@ func (au *Authenticate) Refresh(c echo.Context) {
 	})
 	//any error may be due to token expiration
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, err.Error())
-		return
+		return c.JSON(http.StatusUnauthorized, err.Error())
+
 	}
 
 	if _, ok := token.Claims.(jwt.Claims); !ok && !token.Valid {
-		c.JSON(http.StatusUnauthorized, err)
-		return
+		return c.JSON(http.StatusUnauthorized, err)
+
 	}
 
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if ok && token.Valid {
 		refreshUuid, ok := claims["refresh_uuid"].(string) //convert the interface to string
 		if !ok {
-			c.JSON(http.StatusUnprocessableEntity, "Cannot get uuid")
-			return
+			return c.JSON(http.StatusUnprocessableEntity, "Cannot get uuid")
+
 		}
 		userId, err := strconv.ParseUint(fmt.Sprintf("%.f", claims["user_id"]), 10, 64)
 		if err != nil {
-			c.JSON(http.StatusUnprocessableEntity, "Error occurred")
-			return
+			return c.JSON(http.StatusUnprocessableEntity, "Error occurred")
+
 		}
 
 		delErr := au.rd.DeleteRefresh(refreshUuid)
 		if delErr != nil { //if any goes wrong
-			c.JSON(http.StatusUnauthorized, "unauthorized")
-			return
+			return c.JSON(http.StatusUnauthorized, "unauthorized")
+
 		}
 
 		ts, createErr := au.tk.CreateToken(userId)
 		if createErr != nil {
-			c.JSON(http.StatusForbidden, createErr.Error())
-			return
+			return c.JSON(http.StatusForbidden, createErr.Error())
+
 		}
 
 		saveErr := au.rd.CreateAuth(userId, ts)
 		if saveErr != nil {
-			c.JSON(http.StatusForbidden, saveErr.Error())
-			return
+			return c.JSON(http.StatusForbidden, saveErr.Error())
+
 		}
 		tokens := map[string]string{
 			"access_token":  ts.AccessToken,
 			"refresh_token": ts.RefreshToken,
 		}
-		c.JSON(http.StatusCreated, tokens)
+		return c.JSON(http.StatusCreated, tokens)
 	} else {
-		c.JSON(http.StatusUnauthorized, "refresh token expired")
+		return c.JSON(http.StatusUnauthorized, "refresh token expired")
 	}
 }
 

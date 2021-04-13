@@ -10,6 +10,12 @@ type shopAccountRepository struct {
 	Conn *gorm.DB
 }
 
+func (s shopAccountRepository) GetUserDetailsByUsername(account *domain.ShopAccount) (*domain.ShopAccount, error) {
+	user := &domain.ShopAccount{}
+	err := s.Conn.Where("username = ?", account.Username).Take(&user).Error
+	return user, err
+}
+
 func (s shopAccountRepository) Fetch(ctx context.Context) ([]*domain.ShopAccount, error) {
 	var(
 		 accounts []*domain.ShopAccount
@@ -43,6 +49,7 @@ func (s shopAccountRepository) Delete(ctx context.Context, id uint) error {
 	err := s.Conn.Delete(acc).Error
 	return err
 }
+
 
 func NewShopAccountRepository(Conn *gorm.DB) domain.ShopAccountRepository{
 	return &shopAccountRepository{Conn}
