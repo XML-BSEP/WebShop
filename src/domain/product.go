@@ -2,15 +2,23 @@ package domain
 
 import (
 	"context"
-
 	"gorm.io/gorm"
+)
+
+type Currency int
+
+const (
+	USD Currency = iota
+	EUR
+	RSD
 )
 
 type Product struct {
 	gorm.Model
 	Name  string
-	Price string
-	Image []string
+	Price uint64
+	Image string
+	Currency Currency
 }
 
 type ProductUsecase interface {
