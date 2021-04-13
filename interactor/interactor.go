@@ -28,14 +28,9 @@ type interactor struct {
 func (i *interactor) NewAuthenticateHandler() handler.AuthenticateHandler {
 	shopAccountRepo := datastore.NewShopAccountRepository(i.Conn)
 	userRepo := datastore.NewRegisteredUserRepository(i.Conn, shopAccountRepo)
-	redisService, err := auth.NewRedisDB("localhost", "6379", "")
-
-	if err != nil {
-		return nil
-	}
 
 	tk := auth.NewToken()
-	return handler.NewAuthenticate(userRepo, redisService.Auth, tk)
+	return handler.NewAuthenticate(userRepo, tk)
 }
 
 type appHandler struct {

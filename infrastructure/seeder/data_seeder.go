@@ -70,7 +70,8 @@ func seedShopAccounts(conn *gorm.DB) {
 }
 
 func seedRegisteredUsers(conn *gorm.DB) {
-	regRepo := datastore.NewRegisteredUserRepository(conn)
+	shopAccountRepo := datastore.NewShopAccountRepository(conn)
+	regRepo := datastore.NewRegisteredUserRepository(conn, shopAccountRepo)
 
 	p1, _ := datastore.NewPersonRepository(conn).GetByID(context.TODO(), 1)
 	p2, _ := datastore.NewPersonRepository(conn).GetByID(context.TODO(), 2)

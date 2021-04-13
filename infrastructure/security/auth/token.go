@@ -1,7 +1,5 @@
 package auth
 
-
-
 import (
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
@@ -12,6 +10,21 @@ import (
 	"strings"
 	"time"
 )
+
+
+type AccessDetails struct {
+	TokenUuid string
+	UserId    uint64
+}
+
+type TokenDetails struct {
+	AccessToken  string
+	RefreshToken string
+	TokenUuid    string
+	RefreshUuid  string
+	AtExpires    int64
+	RtExpires    int64
+}
 
 
 type Token struct{}
@@ -102,7 +115,6 @@ func ExtractToken(r *http.Request) string {
 }
 
 func (t *Token) ExtractTokenMetadata(r *http.Request) (*AccessDetails, error) {
-	// fmt.Println("WE ENTERED METADATA")
 	token, err := VerifyToken(r)
 	if err != nil {
 		return nil, err

@@ -10,5 +10,4 @@ func NewRouter(e *echo.Echo, h handler.AppHandler) {
 	e.GET("/persons", h.GetPersons)
 	e.POST("/login", h.Login)
 	e.POST("/logout", h.Logout)
-	e.POST("/refresh", h.Refresh)
 }
