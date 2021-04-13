@@ -10,6 +10,12 @@ type registeredUserRepository struct {
 	Conn *gorm.DB
 }
 
+func (r registeredUserRepository) GetUserDetailsByUsername(account *domain.ShopAccount) (*domain.RegisteredShopUser, error) {
+	user := &domain.RegisteredShopUser{}
+	err := r.Conn.Where("username = ?", account.Username).Take(&user).Error
+	return user, err
+}
+
 func (r registeredUserRepository) Fetch(ctx context.Context) ([]*domain.RegisteredShopUser, error) {
 	var(
 		users []*domain.RegisteredShopUser
