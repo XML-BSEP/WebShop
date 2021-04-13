@@ -117,3 +117,11 @@ func seedStorages(conn *gorm.DB) {
 	storageRepo.Create(context.TODO(), &s2)
 	storageRepo.Create(context.TODO(), &s3)
 }
+
+func seedShoppingCarts(conn *gorm.DB) {
+	// prodRepo := datastore.NewProductRepository(conn)
+	// p1, _ := datastore.NewProductRepository(conn).GetByID(context.TODO(), 1)
+	// p2, _ := datastore.NewProductRepository(conn).GetByID(context.TODO(), 2)
+	// p3, _ := datastore.NewProductRepository(conn).GetByID(context.TODO(), 3)
+
+}
