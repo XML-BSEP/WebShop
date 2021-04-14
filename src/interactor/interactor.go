@@ -31,6 +31,7 @@ type appHandler struct {
 	handler.AddressHandler
 	handler.PersonHandler
 	handler.AuthenticateHandler
+	handler.SignUpHandler
 }
 
 func NewInteractor(conn *gorm.DB) Interactor {
@@ -42,6 +43,7 @@ func (i *interactor) NewAppHandler() handler.AppHandler {
 	appHandler.AddressHandler = i.NewAddressHandler()
 	appHandler.PersonHandler = i.NewPersonHandler()
 	appHandler.AuthenticateHandler = i.NewAuthenticateHandler()
+	appHandler.SignUpHandler = i.NewSignUpHandler()
 	return appHandler
 }
 
@@ -92,6 +94,10 @@ func (i *interactor) NewAddressHandler() handler.AddressHandler {
 
 func (i *interactor) NewAddressRepository() domain.AddressRepository {
 	return datastore.NewAddressRepository(i.Conn)
+}
+
+func (i *interactor) NewSignUpHandler() handler.SignUpHandler {
+	return handler.NewSignUpHandler()
 }
 
 

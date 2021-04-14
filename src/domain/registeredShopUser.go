@@ -7,10 +7,17 @@ import (
 
 type RegisteredShopUser struct {
 	gorm.Model
-	Person     Person
-	PersonID uint64
+	Email	string	`json: "email"`
+	SecurityQuestion	string	`json: "question"`
+	SecurityAnswer	string	`json: "answer"`
+	Name	string	`json: "name"`
+	Surname	string	`json: "surname"`
 	ShopAccount   ShopAccount
 	ShopAccountID uint
+
+
+	Person Person
+	PersonID uint64
 
 }
 
