@@ -37,7 +37,6 @@ export class LoginComponent implements OnInit {
     this.authService.login(this.credentials).subscribe(
       result => {
         localStorage.setItem('userId',String(result.id))
-
         this.router.navigate(['/'])
 
 
@@ -48,4 +47,6 @@ export class LoginComponent implements OnInit {
 
       });
   }
+
+
 }

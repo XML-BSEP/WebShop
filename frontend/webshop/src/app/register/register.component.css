@@ -67,50 +67,72 @@
   /* justify-content:center; */
   flex-direction:row;
 }
-.login-text{
+
+.register-text{
     color:black;
     font-size: 2.4rem;
     background-color:white;
-    margin-left: 40%;
-  }
-#login{
+    margin-left: 36%;
+
+}
+
+#register{
     background-color: #2980B9;
     color:white;
     font-size: 1.2rem;
     margin-top: 1rem;
     margin-left: 20%;
     width:60%;
-    height:20%;
+    height:7%;
     border-radius: 20px;
 
 }
-#login:hover{
+#register:hover{
     background-color:white;
     color: #2980B9;
     border: 1px solid #2980B9;
 
 }
 .main-card{
-    margin-top:30%;
+    margin-top:3%;
     margin-left: 0%;
     width:60%;
-    height:26rem;
+    height:53rem;
     display:flex;
     justify-content:center;
     flex-direction: column;
 }
-#not-signed{
+#list-element{
+  color:black;
+  font-size: 14px;
+  margin: -15px 0;
+
+}
+#login{
   margin-top:5%;
   margin-left:25%;
   font-size:1.3rem;
 }
-#email-ff{
-    width:60%;
-    margin-left:20%;
+#text-ff{
+    width:80%;
+    margin-left:10%;
     background-color: white;
+    margin-top:0.8rem;
 }
-#password-ff{
-    width:60%;
-    margin-left:20%;
-    background-color: white;
+#list{
+  width: 80%;
+  margin-left:15%;
 }
+#toggler{
+  margin-left:10%;
+  display:flex;
+  justify-content:center;
+  flex-direction: row;
+}
+#tips{
+  margin-top: 10px;
+  margin-bottom: 10px;
+  width:100%;
+  height:10rem;
+}
+
