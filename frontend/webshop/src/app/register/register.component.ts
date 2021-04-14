@@ -20,8 +20,8 @@ export class RegisterComponent implements OnInit {
     'lastname' : new FormControl(null, Validators.required),
     'username' : new FormControl(null, Validators.required),
     'email' : new FormControl(null, [Validators.required, Validators.email]),
-    'password' : new FormControl(null, [Validators.required, Validators.pattern("^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$")]),
-    'confirmPassword' : new FormControl(null, [Validators.required, Validators.pattern("^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$")]),
+    'password' : new FormControl(null, [Validators.required, Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{7,}')]),
+    'confirmPassword' : new FormControl(null, [Validators.required,    Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{7,}')]),
     'secquestion' : new FormControl(null, [Validators.required]),
     'secanswer' : new FormControl(null, [Validators.required])
   });
@@ -36,20 +36,20 @@ export class RegisterComponent implements OnInit {
     var confirmPassword = this.registrationForm.controls.confirmPassword.value;
     var secquestion = this.registrationForm.controls.secquestion.value;
     var secanswer = this.registrationForm.controls.secanswer.value;
+    console.log(password);
+    // if(password===confirmPassword){
+    //   this.newUser = new RegisteredUser(name, lastname, email, secquestion, secanswer, password, confirmPassword, username);
 
-    if(password===confirmPassword){
-      this.newUser = new RegisteredUser(name, lastname, email, secquestion, secanswer, password, confirmPassword, username);
-
-      this.registrationService.registerPatient(this.newUser).subscribe(
-        res=>{
-          alert('Success');
-          this.router.navigate(['/home']);
-        },
-        error=>{
-          alert("Fail - email is already in use!")
-        }
-      )
-    }
+    //   // this.registrationService.registerPatient(this.newUser).subscribe(
+    //   //   res=>{
+    //   //     alert('Success');
+    //   //     this.router.navigate(['/home']);
+    //   //   },
+    //   //   error=>{
+    //   //     alert("Fail - email is already in use!")
+    //   //   }
+    //   // )
+    // }
 
   }
 }
