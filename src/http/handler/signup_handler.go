@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"web-shop/domain"
 	"web-shop/infrastructure/dto"
+	"web-shop/usecase"
 )
 
 type SignUpHandler interface {
@@ -50,6 +51,10 @@ func (SignUp *SignUp) UserRegister(ctx echo.Context) (err error){
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
+
+	usecase.SendMail(t.Email, t.Name)
+
+
 
 	return ctx.JSON(http.StatusOK, t)
 
