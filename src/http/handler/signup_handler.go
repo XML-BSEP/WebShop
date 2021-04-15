@@ -54,6 +54,7 @@ func (SignUp *SignUp) UserRegister(ctx echo.Context) (err error){
 	return ctx.JSON(http.StatusOK, t)
 
 
-
+	//AJAO IDE GAS AAAAAAAAAAAAAAA
+	// SJUJUJUUUUU
 	//return  ctx.JSON(http.StatusCreated, "")
 }

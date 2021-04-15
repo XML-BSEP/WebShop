@@ -37,19 +37,19 @@ export class RegisterComponent implements OnInit {
     var secquestion = this.registrationForm.controls.secquestion.value;
     var secanswer = this.registrationForm.controls.secanswer.value;
     console.log(password);
-    // if(password===confirmPassword){
-    //   this.newUser = new RegisteredUser(name, lastname, email, secquestion, secanswer, password, confirmPassword, username);
+    if(password===confirmPassword){
+      this.newUser = new RegisteredUser(name, lastname, email, secquestion, secanswer, password, confirmPassword, username);
 
-    //   // this.registrationService.registerPatient(this.newUser).subscribe(
-    //   //   res=>{
-    //   //     alert('Success');
-    //   //     this.router.navigate(['/home']);
-    //   //   },
-    //   //   error=>{
-    //   //     alert("Fail - email is already in use!")
-    //   //   }
-    //   // )
-    // }
+    this.registrationService.registerPatient(this.newUser).subscribe(
+      res=>{
+        alert('Success');
+        this.router.navigate(['/home']);
+      },
+      error=>{
+        alert("Fail - email is already in use!")
+      }
+        )
+    }
 
   }
 }
