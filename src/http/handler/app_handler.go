@@ -6,4 +6,5 @@ type AppHandler interface {
 	AddressHandler
 	PersonHandler
 	SignUpHandler
+	RedisHandlerSample
 }

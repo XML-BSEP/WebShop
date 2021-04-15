@@ -5,6 +5,7 @@ import (
 	"web-shop/domain"
 	"web-shop/http/handler"
 	"web-shop/infrastructure/persistance/datastore"
+	"web-shop/infrastructure/redisdb"
 	auth2 "web-shop/security/auth"
 	"web-shop/usecase"
 )
@@ -20,18 +21,23 @@ type Interactor interface {
 	NewTokenService() *auth2.Token
 	NewPersonHandler() handler.PersonHandler
 	NewAuthenticateHandler() handler.AuthenticateHandler
+	NewRedisUsecase() usecase.RedisUsecase
+	NewRedisHandler() handler.RedisHandlerSample
 	NewAppHandler() handler.AppHandler
 }
 
 type interactor struct {
 	Conn *gorm.DB
+
 }
+
 
 type appHandler struct {
 	handler.AddressHandler
 	handler.PersonHandler
 	handler.AuthenticateHandler
 	handler.SignUpHandler
+	handler.RedisHandlerSample
 }
 
 func NewInteractor(conn *gorm.DB) Interactor {
@@ -44,6 +50,7 @@ func (i *interactor) NewAppHandler() handler.AppHandler {
 	appHandler.PersonHandler = i.NewPersonHandler()
 	appHandler.AuthenticateHandler = i.NewAuthenticateHandler()
 	appHandler.SignUpHandler = i.NewSignUpHandler()
+	appHandler.RedisHandlerSample = i.NewRedisHandler()
 	return appHandler
 }
 
@@ -83,7 +90,6 @@ func (i *interactor) NewPersonHandler() handler.PersonHandler {
 	return handler.NewPersonHandler(i.NewPersonUsecase())
 }
 
-
 func (i *interactor) NewAddressUsecase() domain.AddressUsecase {
 	return usecase.NewAddresUsecase(i.NewAddressRepository())
 }
@@ -100,4 +106,12 @@ func (i *interactor) NewSignUpHandler() handler.SignUpHandler {
 	return handler.NewSignUpHandler()
 }
 
+func (i *interactor) NewRedisUsecase() usecase.RedisUsecase {
+	redis := redisdb.NewReddisConn()
+	return usecase.NewRedisUsecase(redis)
+}
+
+func (i *interactor) NewRedisHandler() handler.RedisHandlerSample {
+	return handler.NewRedisHandlerSample(i.NewRedisUsecase())
+}
 

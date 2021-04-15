@@ -10,5 +10,3 @@ type NewUser struct {
 	Password   string	`json: "password"`
 	ConfirmedPassword	string `json: "confirmedpassword"`
 }
-
-
