@@ -7,8 +7,8 @@ import (
 
 type ShopAccount struct {
 	gorm.Model
-	Username     string
-	Password   string
+	Username     string	`json:"username" gorm:"unique"`
+	Password   string	`json:"password"`
 }
 
 type ShopAccountUsecase interface {

@@ -17,6 +17,7 @@ type redisHandlerSample struct {
 	RedisUsecase usecase.RedisUsecase
 }
 
+
 func NewRedisHandlerSample(r usecase.RedisUsecase) RedisHandlerSample{
 	return &redisHandlerSample{r}
 }

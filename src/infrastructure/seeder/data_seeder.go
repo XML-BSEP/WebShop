@@ -81,10 +81,10 @@ func seedRegisteredUsers(conn *gorm.DB) {
 	acc1, _ := datastore.NewShopAccountRepository(conn).GetByID(context.TODO(), 1)
 	acc2, _ := datastore.NewShopAccountRepository(conn).GetByID(context.TODO(), 2)
 
-	regUser1 := domain.RegisteredShopUser{Person: *p1, ShopAccount: *acc1}
+	regUser1 := domain.RegisteredShopUser{Email: "a@a.com", Person: *p1, ShopAccount: *acc1}
 	regRepo.Create(context.TODO(), &regUser1)
 
-	regUser2 := domain.RegisteredShopUser{Person: *p2, ShopAccount: *acc2}
+	regUser2 := domain.RegisteredShopUser{Email: "a2@a.com", Person: *p2, ShopAccount: *acc2}
 	regRepo.Create(context.TODO(), &regUser2)
 
 }

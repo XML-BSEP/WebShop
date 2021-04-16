@@ -7,7 +7,7 @@ export const environment = {
   baseUrl: 'https://localhost:443',
   login:"login",
   auth:"auth",
-  registration : "registration"
+  registration : "register"
 };
 
 /*

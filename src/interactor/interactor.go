@@ -24,6 +24,9 @@ type Interactor interface {
 	NewRedisUsecase() usecase.RedisUsecase
 	NewRedisHandler() handler.RedisHandlerSample
 	NewAppHandler() handler.AppHandler
+	NewSigUpUsecase() usecase.SignUpUseCase
+	NewRegisterUserUsecase() usecase.RegisterUserUsecase
+	NewRandomStringGeneratorUsecase() usecase.RandomStringGeneratorUsecase
 }
 
 type interactor struct {
@@ -32,10 +35,12 @@ type interactor struct {
 }
 
 
+
 type appHandler struct {
 	handler.AddressHandler
 	handler.PersonHandler
 	handler.AuthenticateHandler
+	handler.SignUpHandler
 	handler.RedisHandlerSample
 }
 
@@ -48,6 +53,7 @@ func (i *interactor) NewAppHandler() handler.AppHandler {
 	appHandler.AddressHandler = i.NewAddressHandler()
 	appHandler.PersonHandler = i.NewPersonHandler()
 	appHandler.AuthenticateHandler = i.NewAuthenticateHandler()
+	appHandler.SignUpHandler = i.NewSignUpHandler()
 	appHandler.RedisHandlerSample = i.NewRedisHandler()
 	return appHandler
 }
@@ -100,6 +106,10 @@ func (i *interactor) NewAddressRepository() domain.AddressRepository {
 	return datastore.NewAddressRepository(i.Conn)
 }
 
+func (i *interactor) NewSignUpHandler() handler.SignUpHandler {
+	return handler.NewSignUpHandler(i.NewRegisteredUserRepository(i.NewShopAccountRepository()), i.NewSigUpUsecase())
+}
+
 func (i *interactor) NewRedisUsecase() usecase.RedisUsecase {
 	redis := redisdb.NewReddisConn()
 	return usecase.NewRedisUsecase(redis)
@@ -108,4 +118,20 @@ func (i *interactor) NewRedisUsecase() usecase.RedisUsecase {
 func (i *interactor) NewRedisHandler() handler.RedisHandlerSample {
 	return handler.NewRedisHandlerSample(i.NewRedisUsecase())
 }
+
+func (i *interactor) NewRegisterUserUsecase() usecase.RegisterUserUsecase {
+	return usecase.NewRegisteredUserUsecase(i.NewRegisteredUserRepository(i.NewShopAccountRepository()))
+}
+
+
+func (i *interactor) NewRandomStringGeneratorUsecase() usecase.RandomStringGeneratorUsecase {
+	return usecase.NewRandomStringGenrator()
+}
+
+
+func (i *interactor) NewSigUpUsecase() usecase.SignUpUseCase {
+	return usecase.NewSignUpUsecase(i.NewRedisUsecase(), i.NewRegisterUserUsecase(), i.NewRandomStringGeneratorUsecase())
+}
+
+
 

@@ -63,7 +63,10 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "webshop:build"
+            "browserTarget": "webshop:build",
+            "ssl" : true,
+            "sslCert": "ssl/DukeStrategicTechnologies-SN-9946396461889217640.crt",
+            "sslKey": "ssl/DukeStrategicTechnologies9946396461889217640-key.key"
           },
           "configurations": {
             "production": {
