@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"web-shop/domain"
 	"web-shop/infrastructure/dto"
+	"web-shop/infrastructure/mapper"
 	"web-shop/usecase"
 )
 
@@ -14,34 +15,17 @@ type SignUpHandler interface {
 }
 
 
-type SignUp struct {
+type signUp struct {
 	us domain.RegisteredShopUserRepository
+	SignUpUsecase usecase.SignUpUseCase
 }
 
-func NewSignUpHandler() SignUpHandler {
-	return &SignUp{nil}
+func NewSignUpHandler(us domain.RegisteredShopUserRepository,signUpUsecase usecase.SignUpUseCase) SignUpHandler {
+	return &signUp{us, signUpUsecase}
 }
 
 
-func (SignUp *SignUp) UserRegister(ctx echo.Context) (err error){
-
-	/*
-	//var newUser *dto.NewUser
-	var json map[string]interface{} = map[string]interface{}{}
-
-	if err := ctx.Bind(&json); err != nil {
-		return err
-	}*/
-
-	/*
-	u := new(dto.NewUser)
-
-	if err = ctx.Bind(u); err != nil {
-			return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-		}
-
-	return ctx.String(http.StatusOK, u.Name)
-*/
+func (signUp *signUp) UserRegister(ctx echo.Context) (err error){
 
 	decoder := json.NewDecoder(ctx.Request().Body)
 
@@ -52,14 +36,21 @@ func (SignUp *SignUp) UserRegister(ctx echo.Context) (err error){
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	usecase.SendMail(t.Email, t.Name)
+	_, errE :=  signUp.SignUpUsecase.CheckIfExistUser(ctx, t)
+	if errE != nil {
+		ctx.JSON(http.StatusBadRequest, "User does not exists!")
+	}
+
+
+	code, errR := signUp.SignUpUsecase.RegisterNewUser(ctx, mapper.NewUserDtoToRequestUser(t))
+	if errR != nil {
+		ctx.JSON(http.StatusBadRequest, "Redis failed!")
+	}
+
+	go usecase.SendMail(t.Email, t.Username, code)
+
+	return ctx.JSON(http.StatusOK, "Successfull registration!")
 
 
 
-	return ctx.JSON(http.StatusOK, t)
-
-
-	//AJAO IDE GAS AAAAAAAAAAAAAAA
-	// SJUJUJUUUUU
-	//return  ctx.JSON(http.StatusCreated, "")
 }

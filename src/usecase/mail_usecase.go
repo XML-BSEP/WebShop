@@ -6,6 +6,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/pkg/errors"
 	"net/smtp"
+	"os"
 	"time"
 )
 
@@ -24,7 +25,7 @@ const (
 )
 
 const (
-	tokenExpiresIn = 30000
+	tokenExpiresIn = 100000000000000 * 3600 * 5
 )
 
 type TokenHandler struct {
@@ -48,7 +49,7 @@ func NewToken(subject string, email string) (string, error) {
 		},
 		Email: email,
 	})
-	return t.SignedString(rsa.PrivateKey{})
+	return t.SignedString([]byte(os.Getenv("ACCESS_SECRET")))
 }
 
 // Verifikuje token i vraca subjekt i mail
@@ -68,7 +69,10 @@ func (e TokenHandler) Verify(token string) (string, string, error) {
 }
 
 
-func SendMail(subjectMail string, subjectName string) error {
+
+
+
+func SendMail(subjectMail string, subjectName string, verCode string) error {
 
 	emailAuth := smtp.PlainAuth("", emailFrom, emailPassword, emailHost)
 
@@ -76,7 +80,7 @@ func SendMail(subjectMail string, subjectName string) error {
 		"To: " + subjectMail + "\r\n" +
 			"Subject: " + "Email verification by Duke Strategic Techologies" + "\r\n" +
 			"Dear " + subjectName + ",\nWe just need to verify your email address before you can access DukeStrategic\n " +
-			"\nVerify your email address " + tokenLink(subjectName, subjectMail) +
+			"\nVerify your email address " + verCode +
 			"\n\nThanks! ,\nDuke Strategic Technologies")
 
 

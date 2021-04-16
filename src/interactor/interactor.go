@@ -24,12 +24,16 @@ type Interactor interface {
 	NewRedisUsecase() usecase.RedisUsecase
 	NewRedisHandler() handler.RedisHandlerSample
 	NewAppHandler() handler.AppHandler
+	NewSigUpUsecase() usecase.SignUpUseCase
+	NewRegisterUserUsecase() usecase.RegisterUserUsecase
+	NewRandomStringGeneratorUsecase() usecase.RandomStringGeneratorUsecase
 }
 
 type interactor struct {
 	Conn *gorm.DB
 
 }
+
 
 
 type appHandler struct {
@@ -103,7 +107,7 @@ func (i *interactor) NewAddressRepository() domain.AddressRepository {
 }
 
 func (i *interactor) NewSignUpHandler() handler.SignUpHandler {
-	return handler.NewSignUpHandler()
+	return handler.NewSignUpHandler(i.NewRegisteredUserRepository(i.NewShopAccountRepository()), i.NewSigUpUsecase())
 }
 
 func (i *interactor) NewRedisUsecase() usecase.RedisUsecase {
@@ -114,4 +118,20 @@ func (i *interactor) NewRedisUsecase() usecase.RedisUsecase {
 func (i *interactor) NewRedisHandler() handler.RedisHandlerSample {
 	return handler.NewRedisHandlerSample(i.NewRedisUsecase())
 }
+
+func (i *interactor) NewRegisterUserUsecase() usecase.RegisterUserUsecase {
+	return usecase.NewRegisteredUserUsecase(i.NewRegisteredUserRepository(i.NewShopAccountRepository()))
+}
+
+
+func (i *interactor) NewRandomStringGeneratorUsecase() usecase.RandomStringGeneratorUsecase {
+	return usecase.NewRandomStringGenrator()
+}
+
+
+func (i *interactor) NewSigUpUsecase() usecase.SignUpUseCase {
+	return usecase.NewSignUpUsecase(i.NewRedisUsecase(), i.NewRegisterUserUsecase(), i.NewRandomStringGeneratorUsecase())
+}
+
+
 

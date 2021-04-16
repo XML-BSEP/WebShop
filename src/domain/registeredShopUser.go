@@ -2,16 +2,17 @@ package domain
 
 import (
 	"context"
+	"github.com/labstack/echo"
 	"gorm.io/gorm"
 )
 
 type RegisteredShopUser struct {
 	gorm.Model
-	Email	string	`json: "email"`
-	SecurityQuestion	string	`json: "question"`
-	SecurityAnswer	string	`json: "answer"`
-	Name	string	`json: "name"`
-	Surname	string	`json: "surname"`
+	Email	string	`json:"email" gorm:"unique"`
+	SecurityQuestion	string	`json:"question"`
+	SecurityAnswer	string	`json:"answer"`
+	Name	string	`json:"name"`
+	Surname	string	`json:"surname"`
 	ShopAccount   ShopAccount
 	ShopAccountID uint
 
@@ -27,6 +28,7 @@ type RegisteredShopUserUsecase interface {
 	Update(ctx context.Context, reg *RegisteredShopUser) (*RegisteredShopUser, error)
 	Create(ctx context.Context, reg *RegisteredShopUser) (*RegisteredShopUser, error)
 	Delete(ctx context.Context, id uint) error
+	GetByUsernameOrEmail(ctx context.Context, username string, email string) (*RegisteredShopUser, error)
 }
 
 type RegisteredShopUserRepository interface {
@@ -36,4 +38,6 @@ type RegisteredShopUserRepository interface {
 	Create(ctx context.Context, reg *RegisteredShopUser) (*RegisteredShopUser, error)
 	Delete(ctx context.Context, id uint) error
 	GetUserDetailsByAccount(account *ShopAccount) (*RegisteredShopUser, error)
+	GetByUsernameOrEmail(ctx echo.Context, username string, email string) (*RegisteredShopUser, error)
+
 }
