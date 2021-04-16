@@ -10,6 +10,8 @@ import (
 type RedisUsecase interface {
 	AddKeyValueSet(key string, value string, expiration int) error
 	GetValueByKey(key string) (string, error)
+	DeleteValueByKey(key string) error
+	ExistsByKey(key string) bool
 }
 
 type redisUsecase struct {
@@ -17,28 +19,37 @@ type redisUsecase struct {
 }
 
 func NewRedisUsecase(r *redis.Client) RedisUsecase{
-	return redisUsecase{r}
+	return &redisUsecase{r}
 }
 
-func (r2 redisUsecase) AddKeyValueSet(key string, value string, expiration int) error{
+func (r2 *redisUsecase) AddKeyValueSet(key string, value string, expiration int) error{
 
 	err := r2.RedisClient.Set(context.Background(), key, value, time.Duration(expiration)).Err()
-	if err != nil {
-		return err
-	}
 
-	return nil
+	return err
 }
 
-func (r2 redisUsecase) GetValueByKey(key string) (string,error) {
+func (r2 *redisUsecase) GetValueByKey(key string) (string,error) {
 	val, err := r2.RedisClient.Get(context.Background(), key).Result()
 
-	if err != nil {
-		return "", err
-	}
-	return val, nil
+	return val, err
 }
 
+func (r2 *redisUsecase) DeleteValueByKey(key string) error {
+
+	return r2.RedisClient.Del(context.Background(), key).Err()
+}
+
+func (r2 *redisUsecase) ExistsByKey(key string) bool {
+
+	err := r2.RedisClient.Exists(context.Background(), key).Err()
+
+	if err != nil {
+		return false
+	}
+
+	return true
+}
 
 
 

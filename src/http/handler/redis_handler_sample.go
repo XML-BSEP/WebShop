@@ -54,11 +54,11 @@ func (r *redisHandlerSample) GetValueByKey(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, "Error")
 	}
 
-	val, err := r.RedisUsecase.GetValueByKey(key.Key)
+	exists := r.RedisUsecase.DeleteValueByKey(key.Key)
 
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, "Error")
 	}
-	return c.JSON(http.StatusOK, val)
+	return c.JSON(http.StatusOK, exists)
 }
 
