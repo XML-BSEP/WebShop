@@ -13,6 +13,7 @@ import (
 
 type SignUpHandler interface {
 	UserRegister(ctx echo.Context) error
+	ConfirmAccount(ctx echo.Context) error
 }
 
 
@@ -63,9 +64,37 @@ func (signUp *signUp) UserRegister(ctx echo.Context) (err error){
 	go usecase.SendMail(t.Email, t.Username, code)
 
 	return ctx.JSON(http.StatusOK, "Successfull registration!")
+}
 
 
+func (signUp *signUp) ConfirmAccount(ctx echo.Context) error {
 
+	decoder := json.NewDecoder(ctx.Request().Body)
+
+	var credentials dto.ConfirmRegistrationDTO
+	_ = decoder.Decode(&credentials)
+
+	customValidator := validator2.NewCustomValidator()
+	translator, _ := customValidator.RegisterEnTranslation()
+	validateErr := customValidator.Validator.Struct(credentials)
+	errs := customValidator.TranslateError(validateErr, translator)
+	errorsString := customValidator.GetErrorsString(errs)
+
+	if validateErr != nil {
+		return ctx.JSON(http.StatusBadRequest, errorsString[0])
+	}
+
+	code := credentials.VerificationCode
+	email := credentials.Email
+
+	_, err := signUp.SignUpUsecase.IsCodeValid(ctx, email, code)
+
+	if err != nil {
+		return ctx.JSON(http.StatusBadRequest, "Entered code is not valid")
+	}
+
+
+	return ctx.JSON(http.StatusOK, "Ok")
 }
 
 

@@ -11,6 +11,7 @@ import (
 type SignUpUseCase interface {
 	RegisterNewUser(ctx echo.Context, newUser domain.UserRegistrationRequest) (string, error)
 	CheckIfExistUser(ctx echo.Context, newUser dto.NewUser) (*domain.RegisteredShopUser, error)
+	IsCodeValid(ctx echo.Context, email, code string) (*domain.UserRegistrationRequest, error)
 	Hash(password string) ([]byte, error)
 }
 
@@ -18,6 +19,25 @@ type signUp struct {
 	RedisUsecase                 RedisUsecase
 	RegisteredUserUsecase        RegisterUserUsecase
 	RandomStringGeneratorUSecase RandomStringGeneratorUsecase
+}
+
+func (s *signUp) IsCodeValid(ctx echo.Context, email, code string) (*domain.UserRegistrationRequest, error) {
+
+	userJson, err := s.RedisUsecase.GetValueByKey(email)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var userObj domain.UserRegistrationRequest
+
+	err = json.Unmarshal([]byte(userJson), &userObj)
+
+	hashedCode := userObj.VerificationCode
+
+	err = VerifyCode(hashedCode, code)
+
+	return &userObj, err
 }
 
 func (s *signUp) Hash(password string) ([]byte, error) {
@@ -55,12 +75,18 @@ func (s *signUp) RegisterNewUser(ctx echo.Context, newUser domain.UserRegistrati
 	}
 
 	expiration  := 1000000000 * 3600 * 2 //2h
-	errR := s.RedisUsecase.AddKeyValueSet(newUser.Username, string(newAcc), expiration)
+	errR := s.RedisUsecase.AddKeyValueSet(newUser.Email, string(newAcc), expiration)
 	if errR != nil {
 		return "", errR
 	}
 
 	return code, errR
+
+}
+
+func VerifyCode(hashedCode, code string) error {
+
+	return bcrypt.CompareHashAndPassword([]byte(hashedCode), []byte(code))
 
 }
 
