@@ -1,7 +1,7 @@
 package domain
 
 import (
-	"context"
+	"github.com/labstack/echo"
 	"gorm.io/gorm"
 )
 
@@ -13,11 +13,11 @@ type ShoppingCartItem struct {
 }
 
 type ShoppingCartItemUsecase interface {
-	Fetch(ctx context.Context) ([]*ShoppingCartItem, error)
-	GetByID(ctx context.Context, id uint) (*ShoppingCartItem, error)
-	Update(ctx context.Context, s *ShoppingCartItem) (*ShoppingCartItem, error)
-	Create(ctx context.Context, s *ShoppingCartItem) (*ShoppingCartItem, error)
-	Delete(ctx context.Context, id uint) error
+	Fetch(ctx echo.Context) ([]*ShoppingCartItem, error)
+	GetByID(ctx echo.Context, id uint) (*ShoppingCartItem, error)
+	Update(ctx echo.Context, s *ShoppingCartItem) (*ShoppingCartItem, error)
+	Create(ctx echo.Context, s *ShoppingCartItem) (*ShoppingCartItem, error)
+	Delete(ctx echo.Context, id uint) error
 }
 
 type ShoppingCartItemRepository interface {

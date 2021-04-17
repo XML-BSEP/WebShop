@@ -1,7 +1,7 @@
 package domain
 
 import (
-	"context"
+	"github.com/labstack/echo"
 
 	"gorm.io/gorm"
 )
@@ -14,11 +14,11 @@ type Storage struct {
 }
 
 type StorageUsecase interface {
-	Fetch(ctx context.Context) ([]*Storage, error)
-	GetByID(ctx context.Context, id uint) (*Storage, error)
-	Update(ctx context.Context, s *Storage) (*Storage, error)
-	Create(ctx context.Context, s *Storage) (*Storage, error)
-	Delete(ctx context.Context, id uint) error
+	Fetch(ctx echo.Context) ([]*Storage, error)
+	GetByID(ctx echo.Context, id uint) (*Storage, error)
+	Update(ctx echo.Context, s *Storage) (*Storage, error)
+	Create(ctx echo.Context, s *Storage) (*Storage, error)
+	Delete(ctx echo.Context, id uint) error
 }
 
 type StorageRepository interface {

@@ -17,7 +17,7 @@ type SignUpUseCase interface {
 
 type signUp struct {
 	RedisUsecase                 RedisUsecase
-	RegisteredUserUsecase        RegisterUserUsecase
+	RegisteredUserUsecase        domain.RegisteredShopUserUsecase
 	RandomStringGeneratorUSecase RandomStringGeneratorUsecase
 }
 
@@ -47,7 +47,7 @@ func (s *signUp) Hash(password string) ([]byte, error) {
 
 func (s *signUp) CheckIfExistUser(ctx echo.Context, newUser dto.NewUser) (*domain.RegisteredShopUser, error) {
 
-	acc, err  := s.RegisteredUserUsecase.GetByUsernameOrEmail(ctx, newUser.Username, newUser.Email)
+	acc, err  := s.RegisteredUserUsecase.ExistByUsernameOrEmail(ctx, newUser.Username, newUser.Email)
 	if err != nil {
 		return nil, err
 	}
@@ -90,7 +90,7 @@ func VerifyCode(hashedCode, code string) error {
 
 }
 
-func NewSignUpUsecase (redisUsecase RedisUsecase, userUsecase RegisterUserUsecase, generatorUsecase RandomStringGeneratorUsecase) SignUpUseCase {
+func NewSignUpUsecase (redisUsecase RedisUsecase, userUsecase domain.RegisteredShopUserUsecase, generatorUsecase RandomStringGeneratorUsecase) SignUpUseCase {
 	return &signUp{redisUsecase, userUsecase, generatorUsecase}
 }
 

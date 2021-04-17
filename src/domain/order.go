@@ -1,7 +1,7 @@
 package domain
 
 import (
-	"context"
+	"github.com/labstack/echo"
 	"time"
 
 	"gorm.io/gorm"
@@ -15,11 +15,11 @@ type Order struct {
 }
 
 type OrderUsecase interface {
-	Fetch(ctx context.Context) ([]*Order, error)
-	GetByID(ctx context.Context, id uint) (*Order, error)
-	Update(ctx context.Context, o *Order) (*Order, error)
-	Create(ctx context.Context, o *Order) (*Order, error)
-	Delete(ctx context.Context, id uint) error
+	Fetch(ctx echo.Context) ([]*Order, error)
+	GetByID(ctx echo.Context, id uint) (*Order, error)
+	Update(ctx echo.Context, o *Order) (*Order, error)
+	Create(ctx echo.Context, o *Order) (*Order, error)
+	Delete(ctx echo.Context, id uint) error
 }
 
 type OrderRepository interface {

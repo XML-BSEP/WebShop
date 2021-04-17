@@ -10,11 +10,11 @@ type registeredUserRepository struct {
 	ShopAccountRepository domain.ShopAccountRepository
 }
 
-func (r registeredUserRepository) GetByUsernameOrEmail(username string, email string) (*domain.RegisteredShopUser, error) {
+func (r registeredUserRepository) ExistByUsernameOrEmail(username string, email string) (*domain.RegisteredShopUser, error) {
 
 	var newUser *domain.RegisteredShopUser
 
-	err := r.Conn.Joins("ShopAccount").Find(&newUser, "username = ? or email = ?", username, email).Error
+	err := r.Conn.Joins("ShopAccount").Take(&newUser, "username = ? or email = ?", username, email).Error
 
 	return newUser, err
 

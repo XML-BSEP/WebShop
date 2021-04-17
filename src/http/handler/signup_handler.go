@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/labstack/echo"
 	"net/http"
 	"web-shop/domain"
@@ -48,11 +49,12 @@ func (signUp *signUp) UserRegister(ctx echo.Context) (err error){
 		return ctx.JSON(http.StatusBadRequest, errorsString[0])
 	}
 
-	_, errE :=  signUp.SignUpUsecase.CheckIfExistUser(ctx, t)
-	if errE != nil {
+	user, errE :=  signUp.SignUpUsecase.CheckIfExistUser(ctx, t)
+	if errE == nil {
 		return ctx.JSON(http.StatusBadRequest, "User already exist!")
 	}
 
+	fmt.Print(user)
 	newUser := mapper.NewUserDtoToRequestUser(t)
 
 

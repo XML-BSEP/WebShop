@@ -64,7 +64,7 @@ func (au *Authenticate) Login(c echo.Context) error {
 
 	}
 
-	ts, tErr := au.tk.CreateToken(u.PersonID)
+	ts, tErr := au.tk.CreateToken(uint64(u.Model.ID))
 	if tErr != nil {
 		tokenErr["token_error"] = tErr.Error()
 		return c.JSON(http.StatusUnprocessableEntity, tErr.Error())
@@ -80,9 +80,9 @@ func (au *Authenticate) Login(c echo.Context) error {
 	userData := make(map[string]interface{})
 	userData["access_token"] = ts.AccessToken
 	userData["refresh_token"] = ts.RefreshToken
-	userData["id"] = u.PersonID
-	userData["first_name"] = u.Person.Name
-	userData["last_name"] = u.Person.Surname
+	userData["id"] = u.Model.ID
+	userData["first_name"] = u.Name
+	userData["last_name"] = u.Surname
 
 	return c.JSON(http.StatusOK, userData)
 }
