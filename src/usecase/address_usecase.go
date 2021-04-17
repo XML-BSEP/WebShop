@@ -14,22 +14,22 @@ func NewAddresUsecase(r domain.AddressRepository) domain.AddressUsecase {
 }
 
 func (a *addressUseCase) Fetch(ctx context.Context) ([]*domain.Address, error) {
-	return a.AddressRepository.Fetch(ctx)
+	return a.AddressRepository.Fetch()
 }
 
 func (a *addressUseCase) GetByID(ctx context.Context, id uint) (*domain.Address, error) {
-	return a.AddressRepository.GetByID(ctx, id)
+	return a.AddressRepository.GetByID(id)
 }
 
 func (a *addressUseCase) Update(ctx context.Context, adr *domain.Address) (*domain.Address, error) {
-	return a.AddressRepository.Update(ctx, adr)
+	return a.AddressRepository.Update(adr)
 }
 
 func (a *addressUseCase) Create(ctx context.Context, adr *domain.Address) (*domain.Address, error) {
-	return a.AddressRepository.Create(ctx, adr)
+	return a.AddressRepository.Create(adr)
 }
 
 func (a *addressUseCase) Delete(ctx context.Context, id uint) error {
-	return a.AddressRepository.Delete(ctx, id)
+	return a.AddressRepository.Delete(id)
 }
 

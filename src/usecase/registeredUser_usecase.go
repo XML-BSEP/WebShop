@@ -26,27 +26,27 @@ func NewRegisteredUserUsecase(r domain.RegisteredShopUserRepository) RegisterUse
 }
 
 func (r *registeredUserUsecase) GetByUsernameOrEmail(ctx echo.Context, username string, email string) (*domain.RegisteredShopUser, error) {
-	return r.RegisteredUserRepository.GetByUsernameOrEmail(ctx, username, email)
+	return r.RegisteredUserRepository.GetByUsernameOrEmail(username, email)
 }
 
 func (r *registeredUserUsecase) Fetch(ctx context.Context) ([]*domain.RegisteredShopUser, error) {
-	return r.RegisteredUserRepository.Fetch(ctx)
+	return r.RegisteredUserRepository.Fetch()
 }
 
 func (r *registeredUserUsecase) GetByID(ctx context.Context, id uint) (*domain.RegisteredShopUser, error) {
-	return r.RegisteredUserRepository.GetByID(ctx, id)
+	return r.RegisteredUserRepository.GetByID(id)
 }
 
 func (r *registeredUserUsecase) Update(ctx context.Context, reg *domain.RegisteredShopUser) (*domain.RegisteredShopUser, error) {
-	return r.RegisteredUserRepository.Update(ctx, reg)
+	return r.RegisteredUserRepository.Update(reg)
 }
 
 func (r *registeredUserUsecase) Create(ctx echo.Context, reg *domain.RegisteredShopUser) (*domain.RegisteredShopUser, error) {
-	return r.RegisteredUserRepository.Create(nil, reg)
+	return r.RegisteredUserRepository.Create(reg)
 }
 
 func (r *registeredUserUsecase) Delete(ctx context.Context, id uint) error {
-	return r.RegisteredUserRepository.Delete(ctx, id)
+	return r.RegisteredUserRepository.Delete(id)
 }
 
 

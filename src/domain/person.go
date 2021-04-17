@@ -34,10 +34,10 @@ type PersonUsecase interface {
 }
 
 type PersonRepository interface {
-	Fetch(ctx context.Context) ([]*Person, error)
-	GetByID(ctx context.Context, id uint) (*Person, error)
-	Update(ctx context.Context, person *Person) (*Person, error)
-	Create(ctx context.Context, person *Person) (*Person, error)
-	Delete(ctx context.Context, person uint) error
+	Fetch() ([]*Person, error)
+	GetByID(id uint) (*Person, error)
+	Update(person *Person) (*Person, error)
+	Create(person *Person) (*Person, error)
+	Delete(person uint) error
 }
 

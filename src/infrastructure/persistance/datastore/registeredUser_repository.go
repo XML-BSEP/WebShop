@@ -1,11 +1,8 @@
 package datastore
 
 import (
-	"context"
-	"github.com/labstack/echo"
 	"gorm.io/gorm"
 	"web-shop/domain"
-
 )
 
 type registeredUserRepository struct {
@@ -13,7 +10,7 @@ type registeredUserRepository struct {
 	ShopAccountRepository domain.ShopAccountRepository
 }
 
-func (r registeredUserRepository) GetByUsernameOrEmail(ctx echo.Context, username string, email string) (*domain.RegisteredShopUser, error) {
+func (r registeredUserRepository) GetByUsernameOrEmail(username string, email string) (*domain.RegisteredShopUser, error) {
 
 	var newUser *domain.RegisteredShopUser
 
@@ -35,7 +32,7 @@ func (r registeredUserRepository) GetUserDetailsByAccount(account *domain.ShopAc
 	return user, err
 }
 
-func (r registeredUserRepository) Fetch(ctx context.Context) ([]*domain.RegisteredShopUser, error) {
+func (r registeredUserRepository) Fetch() ([]*domain.RegisteredShopUser, error) {
 	var(
 		users []*domain.RegisteredShopUser
 		err error
@@ -46,23 +43,23 @@ func (r registeredUserRepository) Fetch(ctx context.Context) ([]*domain.Register
 	return users, err
 }
 
-func (r registeredUserRepository) GetByID(ctx context.Context, id uint) (*domain.RegisteredShopUser, error) {
+func (r registeredUserRepository) GetByID(id uint) (*domain.RegisteredShopUser, error) {
 	user:=&domain.RegisteredShopUser{Model: gorm.Model{ID: id}}
 	err := r.Conn.First(user).Error
 	return user, err
 }
 
-func (r registeredUserRepository) Update(ctx context.Context, reg *domain.RegisteredShopUser) (*domain.RegisteredShopUser, error) {
+func (r registeredUserRepository) Update(reg *domain.RegisteredShopUser) (*domain.RegisteredShopUser, error) {
 	err := r.Conn.Save(reg).Error
 	return reg, err
 }
 
-func (r registeredUserRepository) Create(ctx context.Context, reg *domain.RegisteredShopUser) (*domain.RegisteredShopUser, error) {
+func (r registeredUserRepository) Create(reg *domain.RegisteredShopUser) (*domain.RegisteredShopUser, error) {
 	err := r.Conn.Create(reg).Error
 	return reg, err
 }
 
-func (r registeredUserRepository) Delete(ctx context.Context, id uint) error {
+func (r registeredUserRepository) Delete(id uint) error {
 	reg:=&domain.RegisteredShopUser{Model: gorm.Model{ID: id}}
 	err := r.Conn.Delete(reg).Error
 	return err

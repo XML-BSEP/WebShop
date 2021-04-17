@@ -1,7 +1,6 @@
 package datastore
 
 import (
-	"context"
 	"gorm.io/gorm"
 	"web-shop/domain"
 )
@@ -10,7 +9,7 @@ type productRepository struct {
 	Conn *gorm.DB
 }
 
-func (p *productRepository) Fetch(ctx context.Context) ([]*domain.Product, error) {
+func (p *productRepository) Fetch() ([]*domain.Product, error) {
 	var (
 		products []*domain.Product
 		err error
@@ -20,24 +19,24 @@ func (p *productRepository) Fetch(ctx context.Context) ([]*domain.Product, error
 	return products, err
 }
 
-func (p *productRepository) Update(ctx context.Context, product *domain.Product) (*domain.Product, error) {
+func (p *productRepository) Update(product *domain.Product) (*domain.Product, error) {
 	err := p.Conn.Save(product).Error
 	return product, err
 }
 
-func (p *productRepository) Create(ctx context.Context, product *domain.Product) (*domain.Product, error) {
+func (p *productRepository) Create(product *domain.Product) (*domain.Product, error) {
 	err := p.Conn.Create(product).Error
 	return  product, err
 }
 
-func (p *productRepository) Delete(ctx context.Context, id uint) error {
+func (p *productRepository) Delete(id uint) error {
 
 	product := &domain.Product{Model: gorm.Model{ID: id}}
 	err := p.Conn.Delete(product).Error
 	return err
 }
 
-func (p *productRepository) GetByID(ctx context.Context, id uint) (*domain.Product, error) {
+func (p *productRepository) GetByID(id uint) (*domain.Product, error) {
 	product := &domain.Product{Model: gorm.Model{ID: id}}
 	err := p.Conn.First(product).Error
 	return product, err

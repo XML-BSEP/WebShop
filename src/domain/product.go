@@ -30,9 +30,9 @@ type ProductUsecase interface {
 }
 
 type ProductRepository interface {
-	Fetch(ctx context.Context) ([]*Product, error)
-	GetByID(ctx context.Context, id uint) (*Product, error)
-	Update(ctx context.Context, pic *Product) (*Product, error)
-	Create(ctx context.Context, pic *Product) (*Product, error)
-	Delete(ctx context.Context, id uint) error
+	Fetch() ([]*Product, error)
+	GetByID(id uint) (*Product, error)
+	Update(pic *Product) (*Product, error)
+	Create(pic *Product) (*Product, error)
+	Delete(id uint) error
 }

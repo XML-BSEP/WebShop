@@ -2,7 +2,6 @@ package domain
 
 import (
 	"context"
-	"github.com/labstack/echo"
 	"gorm.io/gorm"
 )
 
@@ -32,12 +31,12 @@ type RegisteredShopUserUsecase interface {
 }
 
 type RegisteredShopUserRepository interface {
-	Fetch(ctx context.Context) ([]*RegisteredShopUser, error)
-	GetByID(ctx context.Context, id uint) (*RegisteredShopUser, error)
-	Update(ctx context.Context, reg *RegisteredShopUser) (*RegisteredShopUser, error)
-	Create(ctx context.Context, reg *RegisteredShopUser) (*RegisteredShopUser, error)
-	Delete(ctx context.Context, id uint) error
+	Fetch() ([]*RegisteredShopUser, error)
+	GetByID(id uint) (*RegisteredShopUser, error)
+	Update(reg *RegisteredShopUser) (*RegisteredShopUser, error)
+	Create(reg *RegisteredShopUser) (*RegisteredShopUser, error)
+	Delete(id uint) error
 	GetUserDetailsByAccount(account *ShopAccount) (*RegisteredShopUser, error)
-	GetByUsernameOrEmail(ctx echo.Context, username string, email string) (*RegisteredShopUser, error)
+	GetByUsernameOrEmail(username string, email string) (*RegisteredShopUser, error)
 
 }

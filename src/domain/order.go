@@ -23,9 +23,9 @@ type OrderUsecase interface {
 }
 
 type OrderRepository interface {
-	Fetch(ctx context.Context) ([]*Order, error)
-	GetByID(ctx context.Context, id uint) (*Order, error)
-	Update(ctx context.Context, o *Order) (*Order, error)
-	Create(ctx context.Context, o *Order) (*Order, error)
-	Delete(ctx context.Context, id uint) error
+	Fetch() ([]*Order, error)
+	GetByID(id uint) (*Order, error)
+	Update(o *Order) (*Order, error)
+	Create(o *Order) (*Order, error)
+	Delete(id uint) error
 }
