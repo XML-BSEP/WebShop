@@ -10,12 +10,13 @@ type registeredUserUsecase struct {
 	RegisteredUserRepository domain.RegisteredShopUserRepository
 }
 
+
 type RegisterUserUsecase interface {
 	GetByUsernameOrEmail(ctx echo.Context, username string, email string) (*domain.RegisteredShopUser, error)
 	Fetch(ctx context.Context) ([]*domain.RegisteredShopUser, error)
 	GetByID(ctx context.Context, id uint) (*domain.RegisteredShopUser, error)
 	Update(ctx context.Context, reg *domain.RegisteredShopUser) (*domain.RegisteredShopUser, error)
-	Create(ctx context.Context, reg *domain.RegisteredShopUser) (*domain.RegisteredShopUser, error)
+	Create(ctx echo.Context, reg *domain.RegisteredShopUser) (*domain.RegisteredShopUser, error)
 	Delete(ctx context.Context, id uint) error
 }
 
@@ -40,8 +41,8 @@ func (r *registeredUserUsecase) Update(ctx context.Context, reg *domain.Register
 	return r.RegisteredUserRepository.Update(ctx, reg)
 }
 
-func (r *registeredUserUsecase) Create(ctx context.Context, reg *domain.RegisteredShopUser) (*domain.RegisteredShopUser, error) {
-	return r.RegisteredUserRepository.Create(ctx, reg)
+func (r *registeredUserUsecase) Create(ctx echo.Context, reg *domain.RegisteredShopUser) (*domain.RegisteredShopUser, error) {
+	return r.RegisteredUserRepository.Create(nil, reg)
 }
 
 func (r *registeredUserUsecase) Delete(ctx context.Context, id uint) error {
