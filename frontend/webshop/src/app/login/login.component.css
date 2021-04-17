@@ -27,6 +27,7 @@
   width:90%;
   justify-content:center;
   height:30%;
+
 }
 #browse{
   margin-left: 5%;
@@ -53,7 +54,7 @@
 }
 #title-text{
   margin-top: 5%;
-  font-size: 6rem;
+  font-size: 5rem;
   font-weight:600;
   color:white;
   line-height:100%;

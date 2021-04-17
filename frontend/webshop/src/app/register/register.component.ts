@@ -22,8 +22,6 @@ export class RegisterComponent implements OnInit {
     'email' : new FormControl(null, [Validators.required, Validators.email]),
     'password' : new FormControl(null, [Validators.required, Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{7,}')]),
     'confirmPassword' : new FormControl(null, [Validators.required,    Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{7,}')]),
-    'secquestion' : new FormControl(null, [Validators.required]),
-    'secanswer' : new FormControl(null, [Validators.required])
   });
   }
 
@@ -34,16 +32,14 @@ export class RegisterComponent implements OnInit {
     var email = this.registrationForm.controls.email.value;
     var password = this.registrationForm.controls.password.value;
     var confirmPassword = this.registrationForm.controls.confirmPassword.value;
-    var secquestion = this.registrationForm.controls.secquestion.value;
-    var secanswer = this.registrationForm.controls.secanswer.value;
     console.log(password);
     if(password===confirmPassword){
-      this.newUser = new RegisteredUser(name, lastname, email, secquestion, secanswer, password, confirmPassword, username);
+      this.newUser = new RegisteredUser(name, lastname, email, password, confirmPassword, username);
 
     this.registrationService.registerPatient(this.newUser).subscribe(
       res=>{
         alert('Success');
-        this.router.navigate(['/home']);
+        this.router.navigate(['/regconfirm']);
       },
       error=>{
         alert("Fail - email is already in use!")
