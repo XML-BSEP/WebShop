@@ -1,7 +1,7 @@
 package domain
 
 import (
-	"context"
+	"github.com/labstack/echo"
 	"gorm.io/gorm"
 )
 
@@ -12,18 +12,18 @@ type ShopAccount struct {
 }
 
 type ShopAccountUsecase interface {
-	Fetch(ctx context.Context) ([]*ShopAccount, error)
-	GetByID(ctx context.Context, id uint) (*ShopAccount, error)
-	Update(ctx context.Context, account *ShopAccount) (*ShopAccount, error)
-	Create(ctx context.Context, account *ShopAccount) (*ShopAccount, error)
-	Delete(ctx context.Context, id uint) error
+	Fetch(ctx echo.Context) ([]*ShopAccount, error)
+	GetByID(ctx echo.Context, id uint) (*ShopAccount, error)
+	Update(ctx echo.Context, account *ShopAccount) (*ShopAccount, error)
+	Create(ctx echo.Context, account *ShopAccount) (*ShopAccount, error)
+	Delete(ctx echo.Context, id uint) error
 }
 
 type ShopAccountRepository interface {
-	Fetch(ctx context.Context) ([]*ShopAccount, error)
-	GetByID(ctx context.Context, id uint) (*ShopAccount, error)
-	Update(ctx context.Context, account *ShopAccount) (*ShopAccount, error)
-	Create(ctx context.Context, account *ShopAccount) (*ShopAccount, error)
-	Delete(ctx context.Context, id uint) error
+	Fetch() ([]*ShopAccount, error)
+	GetByID(id uint) (*ShopAccount, error)
+	Update(account *ShopAccount) (*ShopAccount, error)
+	Create(account *ShopAccount) (*ShopAccount, error)
+	Delete(id uint) error
 	GetUserDetailsByUsername(account *ShopAccount) (*ShopAccount, error)
 }

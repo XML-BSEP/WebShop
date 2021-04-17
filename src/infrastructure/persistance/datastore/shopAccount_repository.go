@@ -1,7 +1,6 @@
 package datastore
 
 import (
-	"context"
 	"gorm.io/gorm"
 	"web-shop/domain"
 )
@@ -16,7 +15,7 @@ func (s shopAccountRepository) GetUserDetailsByUsername(account *domain.ShopAcco
 	return user, err
 }
 
-func (s shopAccountRepository) Fetch(ctx context.Context) ([]*domain.ShopAccount, error) {
+func (s shopAccountRepository) Fetch() ([]*domain.ShopAccount, error) {
 	var(
 		 accounts []*domain.ShopAccount
 		 err error
@@ -27,24 +26,24 @@ func (s shopAccountRepository) Fetch(ctx context.Context) ([]*domain.ShopAccount
 	return accounts, err
 }
 
-func (s shopAccountRepository) GetByID(ctx context.Context, id uint) (*domain.ShopAccount, error) {
+func (s shopAccountRepository) GetByID(id uint) (*domain.ShopAccount, error) {
 	account:=&domain.ShopAccount{Model: gorm.Model{ID: id}}
 
 	err := s.Conn.First(account).Error
 	return account, err
 }
 
-func (s shopAccountRepository) Update(ctx context.Context, account *domain.ShopAccount) (*domain.ShopAccount, error) {
+func (s shopAccountRepository) Update(account *domain.ShopAccount) (*domain.ShopAccount, error) {
 	err := s.Conn.Save(account).Error
 	return account, err
 }
 
-func (s shopAccountRepository) Create(ctx context.Context, account *domain.ShopAccount) (*domain.ShopAccount, error) {
+func (s shopAccountRepository) Create(account *domain.ShopAccount) (*domain.ShopAccount, error) {
 	err := s.Conn.Create(account).Error
 	return account, err
 }
 
-func (s shopAccountRepository) Delete(ctx context.Context, id uint) error {
+func (s shopAccountRepository) Delete(id uint) error {
 	acc:=&domain.ShopAccount{Model: gorm.Model{ID: id}}
 	err := s.Conn.Delete(acc).Error
 	return err

@@ -14,19 +14,16 @@ type Interactor interface {
 	NewAddressRepository() domain.AddressRepository
 	NewAddressUsecase() domain.AddressUsecase
 	NewAddressHandler() handler.AddressHandler
-	NewPersonRepository() domain.PersonRepository
 	NewShopAccountRepository() domain.ShopAccountRepository
 	NewRegisteredUserRepository(repository domain.ShopAccountRepository) domain.RegisteredShopUserRepository
-	NewPersonUsecase() domain.PersonUsecase
 	NewTokenService() *auth2.Token
-	NewPersonHandler() handler.PersonHandler
 	NewAuthenticateHandler() handler.AuthenticateHandler
 	NewRedisUsecase() usecase.RedisUsecase
 	NewRedisHandler() handler.RedisHandlerSample
 	NewAppHandler() handler.AppHandler
 	NewSigUpUsecase() usecase.SignUpUseCase
-	NewRegisterUserUsecase() usecase.RegisterUserUsecase
 	NewRandomStringGeneratorUsecase() usecase.RandomStringGeneratorUsecase
+	NewRegisteredShopUserUsecase() domain.RegisteredShopUserUsecase
 }
 
 type interactor struct {
@@ -35,10 +32,8 @@ type interactor struct {
 }
 
 
-
 type appHandler struct {
 	handler.AddressHandler
-	handler.PersonHandler
 	handler.AuthenticateHandler
 	handler.SignUpHandler
 	handler.RedisHandlerSample
@@ -51,13 +46,15 @@ func NewInteractor(conn *gorm.DB) Interactor {
 func (i *interactor) NewAppHandler() handler.AppHandler {
 	appHandler := &appHandler{}
 	appHandler.AddressHandler = i.NewAddressHandler()
-	appHandler.PersonHandler = i.NewPersonHandler()
 	appHandler.AuthenticateHandler = i.NewAuthenticateHandler()
 	appHandler.SignUpHandler = i.NewSignUpHandler()
 	appHandler.RedisHandlerSample = i.NewRedisHandler()
 	return appHandler
 }
 
+func (i *interactor) NewRegisteredShopUserUsecase() domain.RegisteredShopUserUsecase {
+	return usecase.NewRegisteredShopUserUsecase(i.NewRegisteredUserRepository(i.NewShopAccountRepository()))
+}
 
 func (i *interactor) NewAuthenticateHandler() handler.AuthenticateHandler {
 	shopAccountRepo := i.NewShopAccountRepository()
@@ -80,18 +77,6 @@ func (i *interactor) NewRegisteredUserRepository(shopAccountRepo domain.ShopAcco
 func (i *interactor) NewShopAccountRepository() domain.ShopAccountRepository {
 	shopAccountRepo := datastore.NewShopAccountRepository(i.Conn)
 	return shopAccountRepo
-}
-
-func (i *interactor) NewPersonRepository() domain.PersonRepository {
-	return datastore.NewPersonRepository(i.Conn)
-}
-
-func (i *interactor) NewPersonUsecase() domain.PersonUsecase {
-	return usecase.NewPersonUsecase(i.NewPersonRepository())
-}
-
-func (i *interactor) NewPersonHandler() handler.PersonHandler {
-	return handler.NewPersonHandler(i.NewPersonUsecase())
 }
 
 func (i *interactor) NewAddressUsecase() domain.AddressUsecase {
@@ -119,18 +104,13 @@ func (i *interactor) NewRedisHandler() handler.RedisHandlerSample {
 	return handler.NewRedisHandlerSample(i.NewRedisUsecase())
 }
 
-func (i *interactor) NewRegisterUserUsecase() usecase.RegisterUserUsecase {
-	return usecase.NewRegisteredUserUsecase(i.NewRegisteredUserRepository(i.NewShopAccountRepository()))
-}
-
-
 func (i *interactor) NewRandomStringGeneratorUsecase() usecase.RandomStringGeneratorUsecase {
 	return usecase.NewRandomStringGenrator()
 }
 
 
 func (i *interactor) NewSigUpUsecase() usecase.SignUpUseCase {
-	return usecase.NewSignUpUsecase(i.NewRedisUsecase(), i.NewRegisterUserUsecase(), i.NewRandomStringGeneratorUsecase())
+	return usecase.NewSignUpUsecase(i.NewRedisUsecase(), i.NewRegisteredShopUserUsecase(), i.NewRandomStringGeneratorUsecase())
 }
 
 

@@ -1,7 +1,6 @@
 package domain
 
 import (
-	"context"
 	"github.com/labstack/echo"
 	"gorm.io/gorm"
 )
@@ -14,28 +13,24 @@ type RegisteredShopUser struct {
 	ShopAccount   ShopAccount
 	ShopAccountID uint
 
-
-	Person Person
-	PersonID uint64
-
 }
 
 type RegisteredShopUserUsecase interface {
-	Fetch(ctx context.Context) ([]*RegisteredShopUser, error)
-	GetByID(ctx context.Context, id uint) (*RegisteredShopUser, error)
-	Update(ctx context.Context, reg *RegisteredShopUser) (*RegisteredShopUser, error)
-	Create(ctx context.Context, reg *RegisteredShopUser) (*RegisteredShopUser, error)
-	Delete(ctx context.Context, id uint) error
-	GetByUsernameOrEmail(ctx context.Context, username string, email string) (*RegisteredShopUser, error)
+	Fetch(ctx echo.Context) ([]*RegisteredShopUser, error)
+	GetByID(ctx echo.Context, id uint) (*RegisteredShopUser, error)
+	Update(ctx echo.Context, reg *RegisteredShopUser) (*RegisteredShopUser, error)
+	Create(ctx echo.Context, reg *RegisteredShopUser) (*RegisteredShopUser, error)
+	Delete(ctx echo.Context, id uint) error
+	ExistByUsernameOrEmail(ctx echo.Context, username string, email string) (*RegisteredShopUser, error)
 }
 
 type RegisteredShopUserRepository interface {
-	Fetch(ctx context.Context) ([]*RegisteredShopUser, error)
-	GetByID(ctx context.Context, id uint) (*RegisteredShopUser, error)
-	Update(ctx context.Context, reg *RegisteredShopUser) (*RegisteredShopUser, error)
-	Create(ctx context.Context, reg *RegisteredShopUser) (*RegisteredShopUser, error)
-	Delete(ctx context.Context, id uint) error
+	Fetch() ([]*RegisteredShopUser, error)
+	GetByID(id uint) (*RegisteredShopUser, error)
+	Update(reg *RegisteredShopUser) (*RegisteredShopUser, error)
+	Create(reg *RegisteredShopUser) (*RegisteredShopUser, error)
+	Delete(id uint) error
 	GetUserDetailsByAccount(account *ShopAccount) (*RegisteredShopUser, error)
-	GetByUsernameOrEmail(ctx echo.Context, username string, email string) (*RegisteredShopUser, error)
+	ExistByUsernameOrEmail(username string, email string) (*RegisteredShopUser, error)
 
 }

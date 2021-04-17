@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"context"
 	"github.com/labstack/echo"
 	"net/http"
 	"web-shop/domain"
@@ -20,12 +19,9 @@ func NewAddressHandler(u domain.AddressUsecase) AddressHandler {
 }
 
 func (a *addressHandler) GetAddresses(c echo.Context) error {
-	ctx := c.Request().Context()
-	if ctx == nil {
-		ctx = context.Background()
-	}
 
-	addresses, err := a.AddressUsecase.Fetch(ctx)
+
+	addresses, err := a.AddressUsecase.Fetch(c)
 
 	if err != nil {
 		return echo.NewHTTPError(http.StatusNotFound, "Addreses does not exists")

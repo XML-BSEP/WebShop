@@ -1,7 +1,7 @@
 package domain
 
 import (
-	"context"
+	"github.com/labstack/echo"
 )
 
 type Address struct {
@@ -13,18 +13,18 @@ type Address struct {
 }
 
 type AddressUsecase interface {
-	Fetch(ctx context.Context) ([]*Address, error)
-	GetByID(ctx context.Context, id uint) (*Address, error)
-	Update(ctx context.Context, adr *Address) (*Address, error)
-	Create(ctx context.Context, adr *Address) (*Address, error)
-	Delete(ctx context.Context, id uint) error
+	Fetch(ctx echo.Context) ([]*Address, error)
+	GetByID(ctx echo.Context, id uint) (*Address, error)
+	Update(ctx echo.Context, adr *Address) (*Address, error)
+	Create(ctx echo.Context, adr *Address) (*Address, error)
+	Delete(ctx echo.Context, id uint) error
 }
 
 type AddressRepository interface {
-	Fetch(ctx context.Context) ([]*Address, error)
-	GetByID(ctx context.Context, id uint) (*Address, error)
-	Update(ctx context.Context, adr *Address)(*Address, error)
-	Create(ctx context.Context, adr *Address) (*Address, error)
-	Delete(ctx context.Context, id uint) error
+	Fetch() ([]*Address, error)
+	GetByID(id uint) (*Address, error)
+	Update(adr *Address)(*Address, error)
+	Create(adr *Address) (*Address, error)
+	Delete(id uint) error
 }
 
