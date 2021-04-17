@@ -92,27 +92,7 @@
 
             </mat-form-field>
           </div>
-          <div>
-            <mat-form-field appearance="fill" id="text-ff">
-              <mat-label>Security question*</mat-label>
-              <input matInput placeholder="Security question"
-                    formControlName="secquestion" >
-              <mat-error
-                *ngIf="!registrationForm.get('secquestion').valid && registrationForm.get('secquestion').touched && registrationForm.get('secquestion').errors['required']">
-                Please enter security question</mat-error>
-            </mat-form-field>
-          </div>
 
-          <div>
-            <mat-form-field appearance="fill" id="text-ff">
-              <mat-label>Answer security question*</mat-label>
-              <input matInput placeholder="Answer"
-                    formControlName="secanswer" >
-              <mat-error
-                *ngIf="!registrationForm.get('secanswer').valid && registrationForm.get('secanswer').touched && registrationForm.get('secanswer').errors['required']">
-                Please enter answer to security question</mat-error>
-            </mat-form-field>
-          </div>
 
           </form>
           <button mat-raised-button id="register" (click)="register()">Register</button>

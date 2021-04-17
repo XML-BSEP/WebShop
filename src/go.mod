@@ -5,7 +5,7 @@ go 1.14
 require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
-	github.com/go-redis/redis/v8 v8.8.0 // indirect
+	github.com/go-redis/redis/v8 v8.8.0
 	github.com/jackc/pgx/v4 v4.10.1 // indirect
 	github.com/labstack/echo v3.3.10+incompatible
 	github.com/labstack/gommon v0.3.0 // indirect

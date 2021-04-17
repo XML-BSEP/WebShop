@@ -11,6 +11,7 @@ import { ErrorInterceptor, JwtInterceptor } from './helpers';
 import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
+import { RegistrationConfirmationComponent } from './registration-confirmation/registration-confirmation.component';
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import { RegisterComponent } from './register/register.component';
     AppComponent,
     LoginComponent,
     HomeComponent,
-    RegisterComponent
+    RegisterComponent,
+    RegistrationConfirmationComponent
   ],
   imports: [
     BrowserModule,

@@ -9,8 +9,6 @@ import (
 type RegisteredShopUser struct {
 	gorm.Model
 	Email	string	`json:"email" gorm:"unique"`
-	SecurityQuestion	string	`json:"question"`
-	SecurityAnswer	string	`json:"answer"`
 	Name	string	`json:"name"`
 	Surname	string	`json:"surname"`
 	ShopAccount   ShopAccount
