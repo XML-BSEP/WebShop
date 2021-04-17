@@ -1,7 +1,6 @@
 package datastore
 
 import (
-	"context"
 	"gorm.io/gorm"
 	"web-shop/domain"
 )
@@ -10,7 +9,7 @@ type shoppingCartReporsitory struct {
 	Conn *gorm.DB
 }
 
-func (s *shoppingCartReporsitory) Fetch(ctx context.Context) ([]*domain.ShoppingCart, error) {
+func (s *shoppingCartReporsitory) Fetch() ([]*domain.ShoppingCart, error) {
 	var (
 		shoppingCarts []*domain.ShoppingCart
 		err error
@@ -20,24 +19,24 @@ func (s *shoppingCartReporsitory) Fetch(ctx context.Context) ([]*domain.Shopping
 	return shoppingCarts, err
 }
 
-func (s *shoppingCartReporsitory) Update(ctx context.Context, shoppingCart *domain.ShoppingCart) (*domain.ShoppingCart, error) {
+func (s *shoppingCartReporsitory) Update(shoppingCart *domain.ShoppingCart) (*domain.ShoppingCart, error) {
 	err := s.Conn.Save(shoppingCart).Error
 	return shoppingCart, err
 }
 
-func (s *shoppingCartReporsitory) Create(ctx context.Context, shoppingCart *domain.ShoppingCart) (*domain.ShoppingCart, error) {
+func (s *shoppingCartReporsitory) Create(shoppingCart *domain.ShoppingCart) (*domain.ShoppingCart, error) {
 	err := s.Conn.Create(shoppingCart).Error
 	return  shoppingCart, err
 }
 
-func (s *shoppingCartReporsitory) Delete(ctx context.Context, id uint) error {
+func (s *shoppingCartReporsitory) Delete(id uint) error {
 
 	shoppingCart := &domain.ShoppingCart{Model: gorm.Model{ID: id}}
 	err := s.Conn.Delete(shoppingCart).Error
 	return err
 }
 
-func (s *shoppingCartReporsitory) GetByID(ctx context.Context, id uint) (*domain.ShoppingCart, error) {
+func (s *shoppingCartReporsitory) GetByID(id uint) (*domain.ShoppingCart, error) {
 	shoppingCart := &domain.ShoppingCart{Model: gorm.Model{ID: id}}
 	err := s.Conn.First(shoppingCart).Error
 	return shoppingCart, err

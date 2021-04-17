@@ -21,9 +21,9 @@ type ShoppingCartUsecase interface {
 }
 
 type ShoppingCartRepository interface {
-	Fetch(ctx context.Context) ([]*ShoppingCart, error)
-	GetByID(ctx context.Context, id uint) (*ShoppingCart, error)
-	Update(ctx context.Context, s *ShoppingCart) (*ShoppingCart, error)
-	Create(ctx context.Context, s *ShoppingCart) (*ShoppingCart, error)
-	Delete(ctx context.Context, id uint) error
+	Fetch() ([]*ShoppingCart, error)
+	GetByID(d uint) (*ShoppingCart, error)
+	Update(s *ShoppingCart) (*ShoppingCart, error)
+	Create(s *ShoppingCart) (*ShoppingCart, error)
+	Delete(id uint) error
 }

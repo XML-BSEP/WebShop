@@ -22,9 +22,9 @@ type StorageUsecase interface {
 }
 
 type StorageRepository interface {
-	Fetch(ctx context.Context) ([]*Storage, error)
-	GetByID(ctx context.Context, id uint) (*Storage, error)
-	Update(ctx context.Context, s *Storage) (*Storage, error)
-	Create(ctx context.Context, s *Storage) (*Storage, error)
-	Delete(ctx context.Context, id uint) error
+	Fetch() ([]*Storage, error)
+	GetByID(id uint) (*Storage, error)
+	Update(s *Storage) (*Storage, error)
+	Create(s *Storage) (*Storage, error)
+	Delete(id uint) error
 }
