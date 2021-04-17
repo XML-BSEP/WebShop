@@ -8,6 +8,7 @@ import (
 	"web-shop/infrastructure/dto"
 	"web-shop/infrastructure/mapper"
 	"web-shop/usecase"
+	validator2 "web-shop/validator"
 )
 
 type SignUpHandler interface {
@@ -36,15 +37,27 @@ func (signUp *signUp) UserRegister(ctx echo.Context) (err error){
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	_, errE :=  signUp.SignUpUsecase.CheckIfExistUser(ctx, t)
-	if errE != nil {
-		ctx.JSON(http.StatusBadRequest, "User does not exists!")
+	customValidator := validator2.NewCustomValidator()
+	translator, _ := customValidator.RegisterEnTranslation()
+	err = customValidator.Validator.Struct(t)
+	errs := customValidator.TranslateError(err, translator)
+	errorsString := customValidator.GetErrorsString(errs)
+
+	if err != nil {
+		return ctx.JSON(http.StatusBadRequest, errorsString[0])
 	}
 
+	_, errE :=  signUp.SignUpUsecase.CheckIfExistUser(ctx, t)
+	if errE != nil {
+		return ctx.JSON(http.StatusBadRequest, "User already exist!")
+	}
 
-	code, errR := signUp.SignUpUsecase.RegisterNewUser(ctx, mapper.NewUserDtoToRequestUser(t))
+	newUser := mapper.NewUserDtoToRequestUser(t)
+
+
+	code, errR := signUp.SignUpUsecase.RegisterNewUser(ctx, newUser)
 	if errR != nil {
-		ctx.JSON(http.StatusBadRequest, "Redis failed!")
+		return ctx.JSON(http.StatusBadRequest, "Redis failed!")
 	}
 
 	go usecase.SendMail(t.Email, t.Username, code)
@@ -54,3 +67,5 @@ func (signUp *signUp) UserRegister(ctx echo.Context) (err error){
 
 
 }
+
+
