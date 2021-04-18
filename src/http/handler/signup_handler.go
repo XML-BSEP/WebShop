@@ -39,16 +39,6 @@ func (signUp *signUp) UserRegister(ctx echo.Context) (err error){
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	customValidator := validator2.NewCustomValidator()
-	translator, _ := customValidator.RegisterEnTranslation()
-	err = customValidator.Validator.Struct(t)
-	errs := customValidator.TranslateError(err, translator)
-	errorsString := customValidator.GetErrorsString(errs)
-
-	if err != nil {
-		return ctx.JSON(http.StatusBadRequest, errorsString[0])
-	}
-
 	user, errE :=  signUp.SignUpUsecase.CheckIfExistUser(ctx, t)
 	if errE == nil {
 		return ctx.JSON(http.StatusBadRequest, "User already exist!")
@@ -57,7 +47,21 @@ func (signUp *signUp) UserRegister(ctx echo.Context) (err error){
 	fmt.Print(user)
 	newUser := mapper.NewUserDtoToRequestUser(t)
 
+	customValidator := validator2.NewCustomValidator()
+	translator, _ := customValidator.RegisterEnTranslation()
+	errValidation := customValidator.Validator.Struct(newUser)
+	errs := customValidator.TranslateError(errValidation, translator)
+	errorsString := customValidator.GetErrorsString(errs)
 
+	if errValidation != nil {
+		return ctx.JSON(http.StatusBadRequest, errorsString[0])
+	}
+
+	passwordCompare := signUp.SignUpUsecase.ValidatePassword(t.Password, t.ConfirmedPassword)
+
+	if !passwordCompare {
+		return ctx.JSON(http.StatusBadRequest, "Enter same passwords")
+	}
 	code, errR := signUp.SignUpUsecase.RegisterNewUser(ctx, newUser)
 	if errR != nil {
 		return ctx.JSON(http.StatusBadRequest, "Redis failed!")
@@ -65,7 +69,7 @@ func (signUp *signUp) UserRegister(ctx echo.Context) (err error){
 
 	go usecase.SendMail(t.Email, t.Username, code)
 
-	return ctx.JSON(http.StatusOK, "Successfull registration!")
+	return ctx.JSON(http.StatusOK, "Successfull registration, please check your mail!")
 }
 
 
@@ -82,6 +86,8 @@ func (signUp *signUp) ConfirmAccount(ctx echo.Context) error {
 	errs := customValidator.TranslateError(validateErr, translator)
 	errorsString := customValidator.GetErrorsString(errs)
 
+
+
 	if validateErr != nil {
 		return ctx.JSON(http.StatusBadRequest, errorsString[0])
 	}
@@ -89,12 +95,17 @@ func (signUp *signUp) ConfirmAccount(ctx echo.Context) error {
 	code := credentials.VerificationCode
 	email := credentials.Email
 
-	_, err := signUp.SignUpUsecase.IsCodeValid(ctx, email, code)
+	user, err := signUp.SignUpUsecase.IsCodeValid(ctx, email, code)
 
 	if err != nil {
 		return ctx.JSON(http.StatusBadRequest, "Entered code is not valid")
 	}
 
+	_, err2 := signUp.SignUpUsecase.ConfirmAccount(ctx, user)
+
+	if err2 != nil {
+		return ctx.JSON(http.StatusBadRequest, "Znaci...")
+	}
 
 	return ctx.JSON(http.StatusOK, "Ok")
 }

@@ -12,7 +12,9 @@ type SignUpUseCase interface {
 	RegisterNewUser(ctx echo.Context, newUser domain.UserRegistrationRequest) (string, error)
 	CheckIfExistUser(ctx echo.Context, newUser dto.NewUser) (*domain.RegisteredShopUser, error)
 	IsCodeValid(ctx echo.Context, email, code string) (*domain.UserRegistrationRequest, error)
+	ConfirmAccount(ctx echo.Context, user *domain.UserRegistrationRequest) (*domain.RegisteredShopUser, error)
 	Hash(password string) ([]byte, error)
+	ValidatePassword(password, confirmPassword string) bool
 }
 
 type signUp struct {
@@ -55,7 +57,21 @@ func (s *signUp) CheckIfExistUser(ctx echo.Context, newUser dto.NewUser) (*domai
 
 }
 
+func (s *signUp) ConfirmAccount(ctx echo.Context, user *domain.UserRegistrationRequest) (*domain.RegisteredShopUser, error) {
 
+	newUser := domain.RegisteredShopUser{
+		Name: user.Name,
+		Surname: user.Surname,
+		Email: user.Email,
+		ShopAccount: domain.ShopAccount{Username: user.Username, Password: user.Password},
+	}
+
+	s.RedisUsecase.DeleteValueByKey(newUser.Email)
+	return s.RegisteredUserUsecase.Create(ctx, &newUser)
+
+
+
+}
 
 func (s *signUp) RegisterNewUser(ctx echo.Context, newUser domain.UserRegistrationRequest) (string, error) {
 
@@ -94,6 +110,9 @@ func NewSignUpUsecase (redisUsecase RedisUsecase, userUsecase domain.RegisteredS
 	return &signUp{redisUsecase, userUsecase, generatorUsecase}
 }
 
+func (s *signUp) ValidatePassword(password, confirmPassword string) bool {
+	return password == confirmPassword
+}
 
 
 
