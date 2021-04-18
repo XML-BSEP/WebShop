@@ -90,7 +90,6 @@ func SendMail(subjectMail string, subjectName string, verCode string) error {
 		return  err
 	}
 
-	println("POSLAO")
 	return nil
 
 }
