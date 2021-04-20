@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/labstack/echo"
 	"net/http"
+	"unicode"
 	"web-shop/domain"
 	"web-shop/infrastructure/dto"
 	"web-shop/infrastructure/mapper"
@@ -47,6 +48,7 @@ func (signUp *signUp) UserRegister(ctx echo.Context) (err error){
 	fmt.Print(user)
 	newUser := mapper.NewUserDtoToRequestUser(t)
 
+
 	customValidator := validator2.NewCustomValidator()
 	translator, _ := customValidator.RegisterEnTranslation()
 	errValidation := customValidator.Validator.Struct(newUser)
@@ -55,6 +57,10 @@ func (signUp *signUp) UserRegister(ctx echo.Context) (err error){
 
 	if errValidation != nil {
 		return ctx.JSON(http.StatusBadRequest, errorsString[0])
+	}
+
+	if pasval1, pasval2, pasval3, pasval4 := verifyPassword(newUser.Password); pasval1 == false || pasval2 == false || pasval3 == false || pasval4 == false {
+		return ctx.JSON(http.StatusBadRequest, "Password must have minimum 1 uppercase letter, 1 lowercase letter, 1 digit and 1 special character and needs to be minimum 8 characters long")
 	}
 
 	passwordCompare := signUp.SignUpUsecase.ValidatePassword(t.Password, t.ConfirmedPassword)
@@ -108,6 +114,30 @@ func (signUp *signUp) ConfirmAccount(ctx echo.Context) error {
 	}
 
 	return ctx.JSON(http.StatusOK, "Ok")
+}
+
+
+func verifyPassword(s string) (eightOrMore, number, upper, special bool)  {
+	letters := 0
+	for _, c := range s {
+		switch {
+		case unicode.IsNumber(c):
+			number = true
+			letters++
+		case unicode.IsUpper(c):
+			upper = true
+			letters++
+		case unicode.IsPunct(c) || unicode.IsSymbol(c):
+			special = true
+			letters++
+		case unicode.IsLetter(c) || c == ' ':
+			letters++
+		default:
+			return false, false, false, false
+		}
+	}
+	eightOrMore = letters >= 8
+	return
 }
 
 
