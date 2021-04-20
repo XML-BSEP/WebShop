@@ -1,10 +1,12 @@
 package usecase
 
 import (
+	"bytes"
 	"crypto/rsa"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/pkg/errors"
+	"html/template"
 	"net/smtp"
 	"os"
 	"time"
@@ -76,22 +78,56 @@ func SendMail(subjectMail string, subjectName string, verCode string) error {
 
 	emailAuth := smtp.PlainAuth("", emailFrom, emailPassword, emailHost)
 
+	t, _  := template.ParseFiles("src/assets/mail_template/template.html")
+	var body bytes.Buffer
+	headers := "MIME-version: 1.0;\nContent-Type: text/html;"
+	body.Write([]byte(fmt.Sprintf("Subject: Email verification by Duke Strategic Techologies\n%s\n\n", headers)))
+
+	t.Execute(&body, struct {
+		UserName string
+		Code string
+	}{
+		UserName: subjectName,
+		Code: verCode,
+	})
+
+	/*
 	msg := []byte(
 		"To: " + subjectMail + "\r\n" +
 			"Subject: " + "Email verification by Duke Strategic Techologies" + "\r\n" +
 			"Dear " + subjectName + ",\nWe just need to verify your email address before you can access DukeStrategic\n " +
 			"\nVerify your email address " + verCode +
-			"\n\nThanks! ,\nDuke Strategic Technologies")
-
+			"\n\nThanks! ,\nDuke Strategic Technologies")*/
 
 	to := []string{subjectMail}
 
+	/*
 	if err := smtp.SendMail(adr, emailAuth, emailFrom, to, msg); err != nil {
 		return  err
 	}
+	*/
+
+	if err := smtp.SendMail(adr, emailAuth, emailFrom, to, body.Bytes()); err != nil {
+		return  err
+	}
+
+
 
 	return nil
 
+}
+
+func ParseTemplate(templateFileName string, data interface{}) (string, error) {
+	t, err := template.ParseFiles(templateFileName)
+	if err != nil {
+		return "", err
+	}
+	buf := new(bytes.Buffer)
+	if err = t.Execute(buf, data); err != nil {
+		return "", err
+	}
+	body := buf.String()
+	return body, nil
 }
 
 func tokenLink(subject string, mail string) string{
