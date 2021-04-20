@@ -1,10 +1,11 @@
 package handler
 
 import (
+	"encoding/json"
 	"github.com/labstack/echo"
-	"golang.org/x/crypto/bcrypt"
 	"net/http"
 	"web-shop/domain"
+	"web-shop/infrastructure/dto"
 	auth2 "web-shop/security/auth"
 	password_verification2 "web-shop/security/password-verification"
 )
@@ -38,12 +39,16 @@ func NewAuthenticate(uApp domain.RegisteredShopUserRepository, tk auth2.TokenInt
 }
 
 func (au *Authenticate) Login(c echo.Context) error {
-	var account *domain.ShopAccount
+	var account *dto.AuthenticationDto
 	var tokenErr = map[string]string{}
 
-	if err := c.Bind(&account); err != nil {
-		return c.JSON(http.StatusUnprocessableEntity, invalidJson)
 
+	decoder := json.NewDecoder(c.Request().Body)
+
+	err := decoder.Decode(&account)
+
+	if err != nil {
+		return c.JSON(http.StatusUnprocessableEntity, invalidJson)
 	}
 
 	validateUser := ValidateLoginInput(account)
@@ -53,10 +58,18 @@ func (au *Authenticate) Login(c echo.Context) error {
 
 	}
 
-	u, userErr := au.us.GetUserDetailsByAccount(account)
+	u, userErr := au.us.GetUserDetailsFromEmail(account.Email)
+	if userErr != nil {
+		return userErr
+	}
+	accDetails, accErr := au.us.GetAccountDetailsFromUser(u)
 
-	err := password_verification2.VerifyPassword(account.Password, u.ShopAccount.Password)
-	if err != nil && err == bcrypt.ErrMismatchedHashAndPassword {
+	if accErr != nil {
+		return accErr
+	}
+
+	err = password_verification2.VerifyPassword(account.Password, accDetails.Password)
+	if err != nil {
 		return c.JSON(http.StatusForbidden, invalidPassword)
 
 	}
@@ -114,12 +127,12 @@ func (au *Authenticate) Logout(c echo.Context) error {
 }
 
 // ValidateLoginInput /*
-func ValidateLoginInput(account *domain.ShopAccount) map[string]string {
+func ValidateLoginInput(account *dto.AuthenticationDto) map[string]string {
 	var errorMessages = make(map[string]string)
 	if account.Password == "" {
 		errorMessages["password_required"] = passwordIsRequired
 	}
-	if account.Username == "" {
+	if account.Email == "" {
 		errorMessages["username_required"] = usernameIsRequired
 	}
 	return errorMessages
