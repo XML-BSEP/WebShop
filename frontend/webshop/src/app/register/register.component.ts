@@ -39,7 +39,7 @@ export class RegisterComponent implements OnInit {
     this.registrationService.registerPatient(this.newUser).subscribe(
       res=>{
         alert('Success');
-        this.router.navigate(['/regconfirm']);
+        this.router.navigate(['/regconfirm'], {state: {data: email}});
       },
       error=>{
         alert("Fail - email is already in use!")

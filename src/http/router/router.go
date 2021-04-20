@@ -12,5 +12,5 @@ func NewRouter(e *echo.Echo, h handler.AppHandler) {
 	e.POST("/register", h.UserRegister)
 	e.POST("/redisPost", h.AddKeyValueSet)
 	e.POST("/redisVal", h.GetValueByKey)
-	e.POST("confirmAccount", h.ConfirmAccount)
+	e.POST("/confirmAccount", h.ConfirmAccount)
 }
