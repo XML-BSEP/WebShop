@@ -65,7 +65,7 @@ func (i *interactor) NewAuthenticateHandler() handler.AuthenticateHandler {
 }
 
 func (i *interactor) NewTokenService() *auth2.Token {
-	tk := auth2.NewToken()
+	tk := auth2.NewToken(i.NewRedisUsecase())
 	return tk
 }
 

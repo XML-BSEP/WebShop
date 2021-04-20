@@ -12,6 +12,7 @@ import (
 type AuthenticateHandler interface {
 	Login(c echo.Context) error
 	Logout(c echo.Context) error
+	ExtractMetadata(c echo.Context) error
 }
 
 const (
@@ -27,6 +28,7 @@ type Authenticate struct {
 	us domain.RegisteredShopUserRepository
 	tk auth2.TokenInterface
 }
+
 
 func NewAuthenticate(uApp domain.RegisteredShopUserRepository, tk auth2.TokenInterface) AuthenticateHandler {
 	return &Authenticate{
@@ -87,20 +89,27 @@ func (au *Authenticate) Login(c echo.Context) error {
 	return c.JSON(http.StatusOK, userData)
 }
 
+func (au *Authenticate) ExtractMetadata(c echo.Context) error {
+
+	details, _ := au.tk.ExtractTokenMetadata(c.Request())
+	return c.JSON(http.StatusOK, details)
+
+
+}
+
 func (au *Authenticate) Logout(c echo.Context) error {
-
-
 	_, err := au.tk.ExtractTokenMetadata(c.Request())
 	if err != nil {
 		return c.JSON(http.StatusUnauthorized, "Unauthorized")
 
 	}
 
-	// deleteErr := au.rd.DeleteTokens(metadata)
-	// if deleteErr != nil {
-	// 	return c.JSON(http.StatusUnauthorized, deleteErr.Error())
+	err = au.tk.InvalidateToken(c.Request())
 
-	// }
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, "Bad Request")
+	}
+
 	return c.JSON(http.StatusOK, successfulLogout)
 }
 

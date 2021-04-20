@@ -1,30 +1,36 @@
-package auth
+ package auth
 
-import (
-	"fmt"
-	"github.com/dgrijalva/jwt-go"
-	"github.com/twinj/uuid"
-	"net/http"
-	"os"
-	"strconv"
-	"strings"
-	"time"
-	"web-shop/domain/auth"
-)
+ import (
+	 "fmt"
+	 "github.com/dgrijalva/jwt-go"
+	 "github.com/twinj/uuid"
+	 "net/http"
+	 "os"
+	 "strconv"
+	 "strings"
+	 "time"
+	 "web-shop/domain/auth"
+	 "web-shop/usecase"
+ )
 
 
-type Token struct{}
 
-func NewToken() *Token {
-	return &Token{}
+type Token struct {
+	RedisUsecase                 usecase.RedisUsecase
+}
+
+ func NewToken(redisUsecase usecase.RedisUsecase) *Token {
+	return &Token{
+		RedisUsecase : redisUsecase,
+	}
 }
 
 type TokenInterface interface {
 	CreateToken(userid uint64) (*auth.TokenDetails, error)
-	ExtractTokenMetadata(*http.Request) (*auth.AccessDetails, error)
+	ExtractTokenMetadata(r *http.Request) (*auth.AccessDetails, error)
+	InvalidateToken(r *http.Request) error
 }
 
-var _ TokenInterface = &Token{}
 
 func (t *Token) CreateToken(userid uint64) (*auth.TokenDetails, error) {
 	td := &auth.TokenDetails{}
@@ -106,7 +112,7 @@ func (t *Token) ExtractTokenMetadata(r *http.Request) (*auth.AccessDetails, erro
 		return nil, err
 	}
 	claims, ok := token.Claims.(jwt.MapClaims)
-	if ok && token.Valid {
+	if ok && token.Valid && !t.RedisUsecase.ExistsByKey(token.Raw) {
 		accessUuid, ok := claims["access_uuid"].(string)
 		if !ok {
 			return nil, err
@@ -121,4 +127,25 @@ func (t *Token) ExtractTokenMetadata(r *http.Request) (*auth.AccessDetails, erro
 		}, nil
 	}
 	return nil, err
+}
+
+func (t *Token) InvalidateToken(r *http.Request) error {
+	token, err := VerifyToken(r)
+	if err != nil {
+		return err
+	}
+	claims, ok := token.Claims.(jwt.MapClaims)
+
+	if ok && token.Valid && !t.RedisUsecase.ExistsByKey(token.Raw) {
+		userId, err := strconv.ParseUint(fmt.Sprintf("%.f", claims["user_id"]), 10, 64)
+
+		if err != nil {
+			return err
+		}
+
+		t.RedisUsecase.AddKeyValueSet(token.Raw, strconv.FormatUint(userId, 10), int(claims["exp"].(float64)))
+		return nil
+	}
+
+	return fmt.Errorf("token already not valid")
 }
