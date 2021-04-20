@@ -10,6 +10,17 @@ type registeredUserRepository struct {
 	ShopAccountRepository domain.ShopAccountRepository
 }
 
+func (r registeredUserRepository) GetAccountDetailsFromUser(u *domain.RegisteredShopUser) (*domain.ShopAccount, error) {
+	user, err := r.ExistByUsernameOrEmail("", u.Email)
+	account, err := r.ShopAccountRepository.GetByID(user.ShopAccountID)
+	if err != nil {
+		return nil, err
+	}
+	return account, nil
+
+
+}
+
 func (r registeredUserRepository) ExistByUsernameOrEmail(username string, email string) (*domain.RegisteredShopUser, error) {
 
 	var newUser *domain.RegisteredShopUser
@@ -20,15 +31,10 @@ func (r registeredUserRepository) ExistByUsernameOrEmail(username string, email 
 
 }
 
-func (r registeredUserRepository) GetUserDetailsByAccount(account *domain.ShopAccount) (*domain.RegisteredShopUser, error) {
-	realAccount, accErr := r.ShopAccountRepository.GetUserDetailsByUsername(account)
-
-	if accErr != nil {
-		return nil, accErr
-	}
+func (r registeredUserRepository) GetUserDetailsFromEmail(email string) (*domain.RegisteredShopUser, error) {
 
 	user := &domain.RegisteredShopUser{}
-	err := r.Conn.Where("shop_account_id = ?", realAccount.ID).Take(&user).Error
+	err := r.Conn.Where("email = ?", email).Take(&user).Error
 	return user, err
 }
 

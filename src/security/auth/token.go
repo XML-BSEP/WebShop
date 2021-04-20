@@ -1,30 +1,35 @@
-package auth
+ package auth
 
-import (
-	"fmt"
-	"github.com/dgrijalva/jwt-go"
-	"github.com/twinj/uuid"
-	"net/http"
-	"os"
-	"strconv"
-	"strings"
-	"time"
-	"web-shop/domain/auth"
-)
+ import (
+	 "fmt"
+	 "github.com/dgrijalva/jwt-go"
+	 "github.com/twinj/uuid"
+	 "net/http"
+	 "os"
+	 "strconv"
+	 "strings"
+	 "time"
+	 "web-shop/domain/auth"
+	 "web-shop/usecase"
+ )
 
 
-type Token struct{}
 
-func NewToken() *Token {
-	return &Token{}
+type Token struct {
+	RedisUsecase                 usecase.RedisUsecase
+}
+
+ func NewToken(redisUsecase usecase.RedisUsecase) *Token {
+	return &Token{
+		RedisUsecase : redisUsecase,
+	}
 }
 
 type TokenInterface interface {
 	CreateToken(userid uint64) (*auth.TokenDetails, error)
-	ExtractTokenMetadata(*http.Request) (*auth.AccessDetails, error)
+	ExtractTokenMetadata(r *http.Request) (*auth.AccessDetails, error)
 }
 
-var _ TokenInterface = &Token{}
 
 func (t *Token) CreateToken(userid uint64) (*auth.TokenDetails, error) {
 	td := &auth.TokenDetails{}
@@ -122,3 +127,4 @@ func (t *Token) ExtractTokenMetadata(r *http.Request) (*auth.AccessDetails, erro
 	}
 	return nil, err
 }
+

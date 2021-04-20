@@ -30,7 +30,8 @@ type RegisteredShopUserRepository interface {
 	Update(reg *RegisteredShopUser) (*RegisteredShopUser, error)
 	Create(reg *RegisteredShopUser) (*RegisteredShopUser, error)
 	Delete(id uint) error
-	GetUserDetailsByAccount(account *ShopAccount) (*RegisteredShopUser, error)
+	GetUserDetailsFromEmail(email string) (*RegisteredShopUser, error)
 	ExistByUsernameOrEmail(username string, email string) (*RegisteredShopUser, error)
+	GetAccountDetailsFromUser(u *RegisteredShopUser)  (*ShopAccount, error)
 
 }

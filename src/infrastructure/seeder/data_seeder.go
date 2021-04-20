@@ -49,9 +49,11 @@ func seedAddresses(conn *gorm.DB) {
 
 func seedShopAccounts(conn *gorm.DB) {
 	accRepo := datastore.NewShopAccountRepository(conn)
-	acc := domain.ShopAccount{Username: "password", Password: "$2y$12$1duXzw4C3iYpZpU14rh0A.cjbF2kWdqKlUfsMWJOpRGmcFFHfok36 "}
+
+	acc := domain.ShopAccount{Username: "password", Password: "$2y$12$1duXzw4C3iYpZpU14rh0A.cjbF2kWdqKlUfsMWJOpRGmcFFHfok36"}
 	accRepo.Create(&acc)
-	acc = domain.ShopAccount{Username: "password1", Password: "$2y$12$1duXzw4C3iYpZpU14rh0A.cjbF2kWdqKlUfsMWJOpRGmcFFHfok36 "}
+	acc = domain.ShopAccount{Username: "password1", Password: "$2y$12$1duXzw4C3iYpZpU14rh0A.cjbF2kWdqKlUfsMWJOpRGmcFFHfok36"}
+
 	accRepo.Create(&acc)
 
 }
