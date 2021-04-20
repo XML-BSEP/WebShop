@@ -13,10 +13,18 @@ type AuthInterface interface {
 	FetchAuth(string) (uint64, error)
 	DeleteRefresh(string) error
 	DeleteTokens(*auth.AccessDetails) error
+	AlreadyDeleted(metadata *auth.AccessDetails) bool
 }
 
 type RedisUseCase struct {
 	redisUseCase usecase.RedisUsecase
+}
+
+func (tk *RedisUseCase) AlreadyDeleted(metadata *auth.AccessDetails) bool {
+	if tk.redisUseCase.ExistsByKey(metadata.TokenUuid) {
+		return true
+	}
+	return false
 }
 
 var _ AuthInterface = &RedisUseCase{}
@@ -32,6 +40,10 @@ func (tk *RedisUseCase) CreateAuth(userid uint, td *auth.TokenDetails) error {
 	now := time.Now()
 
 	err := tk.redisUseCase.SetToken(td.TokenUuid, strconv.Itoa(int(userid)), at.Sub(now))
+
+	if tk.redisUseCase.ExistsByKey(td.TokenUuid) {
+		return nil
+	}
 	if err != nil {
 		return err
 	}

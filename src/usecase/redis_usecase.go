@@ -48,13 +48,10 @@ func (r2 *redisUsecase) DeleteValueByKey(key string) error {
 }
 
 func (r2 *redisUsecase) ExistsByKey(key string) bool {
-
-	err := r2.RedisClient.Exists(context.Background(), key).Err()
-
-	if err != nil {
+	err := r2.RedisClient.Get(context.Background(), key).Err()
+	if err == redis.Nil{
 		return false
 	}
-
 	return true
 }
 

@@ -1,10 +1,11 @@
 package handler
 
 import (
+	"encoding/json"
 	"github.com/labstack/echo"
-	"golang.org/x/crypto/bcrypt"
 	"net/http"
 	"web-shop/domain"
+	"web-shop/infrastructure/dto"
 	auth2 "web-shop/security/auth"
 	password_verification2 "web-shop/security/password-verification"
 )
@@ -20,6 +21,7 @@ const (
 	invalidJson        = "Invalid JSON!"
 	invalidPassword    = "Invalid password"
 	successfulLogout   = "Successfully logged out!"
+	invalidEmail = "Invalid email!"
 )
 
 
@@ -38,12 +40,16 @@ func NewAuthenticate(uApp domain.RegisteredShopUserRepository, tk auth2.TokenInt
 }
 
 func (au *Authenticate) Login(c echo.Context) error {
-	var account *domain.ShopAccount
+	var account *dto.AuthenticationDto
 	var tokenErr = map[string]string{}
 
-	if err := c.Bind(&account); err != nil {
-		return c.JSON(http.StatusUnprocessableEntity, invalidJson)
 
+	decoder := json.NewDecoder(c.Request().Body)
+
+	err := decoder.Decode(&account)
+
+	if err != nil {
+		return c.JSON(http.StatusUnprocessableEntity, invalidJson)
 	}
 
 	validateUser := ValidateLoginInput(account)
@@ -52,19 +58,25 @@ func (au *Authenticate) Login(c echo.Context) error {
 		return c.JSON(http.StatusUnprocessableEntity, validateUser)
 	}
 
-	u, userErr := au.us.GetUserDetailsByAccount(account)
+	u, userErr := au.us.GetUserDetailsFromEmail(account.Email)
 
-	err := password_verification2.VerifyPassword(account.Password, u.ShopAccount.Password)
-	if err != nil && err == bcrypt.ErrMismatchedHashAndPassword {
+	if userErr != nil {
+		return c.JSON(http.StatusInternalServerError, invalidEmail)
+
+	}
+
+	accDetails, accErr := au.us.GetAccountDetailsFromUser(u)
+
+	if accErr != nil {
+		return accErr
+	}
+
+	err = password_verification2.VerifyPassword(account.Password, accDetails.Password)
+	if err != nil {
 		return c.JSON(http.StatusForbidden, invalidPassword)
 
 	}
-
-	if userErr != nil {
-		return c.JSON(http.StatusInternalServerError, userErr)
-
-	}
-
+	
 	ts, tErr := au.tk.CreateToken(uint64(u.Model.ID))
 	if tErr != nil {
 		tokenErr["token_error"] = tErr.Error()
@@ -88,8 +100,8 @@ func (au *Authenticate) Login(c echo.Context) error {
 	return c.JSON(http.StatusOK, userData)
 }
 
-func (au *Authenticate) Logout(c echo.Context) error {
 
+func (au *Authenticate) Logout(c echo.Context) error {
 
 	metadata, err := au.tk.ExtractTokenMetadata(c.Request())
 	if err != nil {
@@ -98,21 +110,21 @@ func (au *Authenticate) Logout(c echo.Context) error {
 	}
 
 	deleteErr := au.au.DeleteTokens(metadata)
+
 	if deleteErr != nil {
 		c.JSON(http.StatusUnauthorized, deleteErr.Error())
 		return deleteErr
-	}
 
+	}
 	return c.JSON(http.StatusOK, successfulLogout)
 }
 
-// ValidateLoginInput /*
-func ValidateLoginInput(account *domain.ShopAccount) map[string]string {
+func ValidateLoginInput(account *dto.AuthenticationDto) map[string]string {
 	var errorMessages = make(map[string]string)
 	if account.Password == "" {
 		errorMessages["password_required"] = passwordIsRequired
 	}
-	if account.Username == "" {
+	if account.Email == "" {
 		errorMessages["username_required"] = usernameIsRequired
 	}
 	return errorMessages
