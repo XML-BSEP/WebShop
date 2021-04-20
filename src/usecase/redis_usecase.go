@@ -12,6 +12,7 @@ type RedisUsecase interface {
 	GetValueByKey(key string) (string, error)
 	DeleteValueByKey(key string) error
 	ExistsByKey(key string) bool
+	SetToken(key string, value string, time time.Duration) error
 }
 
 type redisUsecase struct {
@@ -20,6 +21,12 @@ type redisUsecase struct {
 
 func NewRedisUsecase(r *redis.Client) RedisUsecase{
 	return &redisUsecase{r}
+}
+
+
+func (r2 *redisUsecase) SetToken(key string, value string, time time.Duration) error {
+	err := r2.RedisClient.Set(context.Background(), key, value, time).Err()
+	return err
 }
 
 func (r2 *redisUsecase) AddKeyValueSet(key string, value string, expiration int) error{

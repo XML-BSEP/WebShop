@@ -60,8 +60,9 @@ func (i *interactor) NewAuthenticateHandler() handler.AuthenticateHandler {
 	shopAccountRepo := i.NewShopAccountRepository()
 	userRepo := i.NewRegisteredUserRepository(shopAccountRepo)
 	tk := i.NewTokenService()
+	au := i.NewAuthService()
 
-	return handler.NewAuthenticate(userRepo, tk)
+	return handler.NewAuthenticate(userRepo, tk, au)
 }
 
 func (i *interactor) NewTokenService() *auth2.Token {
@@ -111,6 +112,10 @@ func (i *interactor) NewRandomStringGeneratorUsecase() usecase.RandomStringGener
 
 func (i *interactor) NewSigUpUsecase() usecase.SignUpUseCase {
 	return usecase.NewSignUpUsecase(i.NewRedisUsecase(), i.NewRegisteredShopUserUsecase(), i.NewRandomStringGeneratorUsecase())
+}
+
+func (i *interactor) NewAuthService() auth2.AuthInterface {
+	return auth2.NewAuth(i.NewRedisUsecase())
 }
 
 

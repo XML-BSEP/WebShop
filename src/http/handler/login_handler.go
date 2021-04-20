@@ -26,12 +26,14 @@ const (
 type Authenticate struct {
 	us domain.RegisteredShopUserRepository
 	tk auth2.TokenInterface
+	au auth2.AuthInterface
 }
 
-func NewAuthenticate(uApp domain.RegisteredShopUserRepository, tk auth2.TokenInterface) AuthenticateHandler {
+func NewAuthenticate(uApp domain.RegisteredShopUserRepository, tk auth2.TokenInterface, au auth2.AuthInterface) AuthenticateHandler {
 	return &Authenticate{
 		us: uApp,
 		tk: tk,
+		au: au,
 	}
 }
 
@@ -48,7 +50,6 @@ func (au *Authenticate) Login(c echo.Context) error {
 
 	if len(validateUser) > 0 {
 		return c.JSON(http.StatusUnprocessableEntity, validateUser)
-
 	}
 
 	u, userErr := au.us.GetUserDetailsByAccount(account)
@@ -71,11 +72,11 @@ func (au *Authenticate) Login(c echo.Context) error {
 
 	}
 
-	//saveErr := au.rd.CreateAuth(u.PersonID, ts)
-	//if saveErr != nil {
-	//	return c.JSON(http.StatusInternalServerError, saveErr.Error())
+	saveErr := au.au.CreateAuth(u.ID, ts)
+	if saveErr != nil {
+		return c.JSON(http.StatusInternalServerError, saveErr.Error())
 
-	//}
+	}
 
 	userData := make(map[string]interface{})
 	userData["access_token"] = ts.AccessToken
@@ -90,17 +91,18 @@ func (au *Authenticate) Login(c echo.Context) error {
 func (au *Authenticate) Logout(c echo.Context) error {
 
 
-	_, err := au.tk.ExtractTokenMetadata(c.Request())
+	metadata, err := au.tk.ExtractTokenMetadata(c.Request())
 	if err != nil {
 		return c.JSON(http.StatusUnauthorized, "Unauthorized")
 
 	}
 
-	// deleteErr := au.rd.DeleteTokens(metadata)
-	// if deleteErr != nil {
-	// 	return c.JSON(http.StatusUnauthorized, deleteErr.Error())
+	deleteErr := au.au.DeleteTokens(metadata)
+	if deleteErr != nil {
+		c.JSON(http.StatusUnauthorized, deleteErr.Error())
+		return deleteErr
+	}
 
-	// }
 	return c.JSON(http.StatusOK, successfulLogout)
 }
 
