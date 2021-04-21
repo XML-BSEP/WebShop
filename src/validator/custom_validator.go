@@ -16,7 +16,7 @@ type customValidator struct {
 const (
 	FIRST_NAME = "[A-Z][a-zA-Z]*"
 	SURNAME = "[A-Z][a-zA-Z]*"
-	PASSWORD = "?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\\d$@$!%*?&].{7,}"
+	PASSWORD = `(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\\d$@$!%*?&].{7,}`
 
 )
 
@@ -82,7 +82,7 @@ func registerSurnameValidation(cv *customValidator) error {
 }
 
 func registerPasswordValidation(cv *customValidator) error {
-	return cv.Validator.RegisterValidation("pass", func(f1 validator.FieldLevel) bool {
+	return cv.Validator.RegisterValidation("password", func(f1 validator.FieldLevel) bool {
 		mathced, _ := regexp.Match(PASSWORD, []byte(f1.Field().String()))
 		return mathced
 	})
@@ -107,11 +107,12 @@ func registerEnSurnameTranslation(tr ut.Translator, cv *customValidator) {
 }
 
 func registerEnPasswordTranslation(tr ut.Translator, cv *customValidator) {
-	_ = cv.Validator.RegisterTranslation("pass", tr, func(ut ut.Translator) error {
-		return ut.Add("pass", PASSWORD_ERR_MSG, true)
+	_ = cv.Validator.RegisterTranslation("password", tr, func(ut ut.Translator) error {
+		return ut.Add("password", PASSWORD_ERR_MSG, true)
 	}, func(ut ut.Translator, fe validator.FieldError) string {
-		t, _ := ut.T("pass", fe.Field())
+		t, _ := ut.T("password", fe.Field())
 		return t
 	})
 }
+
 
