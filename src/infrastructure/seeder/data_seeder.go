@@ -2,7 +2,6 @@ package seeder
 
 import (
 	"web-shop/domain"
-	"web-shop/infrastructure/database"
 	"web-shop/infrastructure/persistance/datastore"
 
 	"gorm.io/gorm"
@@ -14,19 +13,19 @@ type Seed struct {
 }
 
 func MigrateData() {
-	conn := database.NewDBConnection()
+	//conn := database.NewDBConnection()
 
-	conn.AutoMigrate(&domain.Address{})
+	//conn.AutoMigrate(&domain.Address{})
 	//conn.AutoMigrate(&domain.Person{})
-	conn.AutoMigrate(&domain.ShopAccount{})
-	conn.AutoMigrate(&domain.RegisteredShopUser{})
+	//conn.AutoMigrate(&domain.ShopAccount{})
+	//conn.AutoMigrate(&domain.RegisteredShopUser{})
 	//conn.AutoMigrate(&domain.Product{})
 	//conn.AutoMigrate(&domain.Storage{})
 
-	seedAddresses(conn)
+	//seedAddresses(conn)
 	//seedPersons(conn)
-	seedShopAccounts(conn)
-	seedRegisteredUsers(conn)
+	//seedShopAccounts(conn)
+	//seedRegisteredUsers(conn)
 	//seedProducts(conn)
 	//seedStorages(conn)
 }

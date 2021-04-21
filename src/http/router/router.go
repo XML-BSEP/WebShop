@@ -13,4 +13,6 @@ func NewRouter(e *echo.Echo, h handler.AppHandler) {
 	e.POST("/redisPost", h.AddKeyValueSet)
 	e.POST("/redisVal", h.GetValueByKey)
 	e.POST("/confirmAccount", h.ConfirmAccount)
+	e.POST("/getProductsInPriceRange", h.GetProductsWithPriceRange)
+
 }

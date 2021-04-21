@@ -24,6 +24,9 @@ type Interactor interface {
 	NewSigUpUsecase() usecase.SignUpUseCase
 	NewRandomStringGeneratorUsecase() usecase.RandomStringGeneratorUsecase
 	NewRegisteredShopUserUsecase() domain.RegisteredShopUserUsecase
+	NewProductRepository() domain.ProductRepository
+	NewProductUsecase() domain.ProductUsecase
+	NewProductHandler() handler.ProductHandler
 }
 
 type interactor struct {
@@ -31,13 +34,14 @@ type interactor struct {
 
 }
 
-
 type appHandler struct {
 	handler.AddressHandler
 	handler.AuthenticateHandler
 	handler.SignUpHandler
 	handler.RedisHandlerSample
+	handler.ProductHandler
 }
+
 
 func NewInteractor(conn *gorm.DB) Interactor {
 	return &interactor{conn}
@@ -49,7 +53,18 @@ func (i *interactor) NewAppHandler() handler.AppHandler {
 	appHandler.AuthenticateHandler = i.NewAuthenticateHandler()
 	appHandler.SignUpHandler = i.NewSignUpHandler()
 	appHandler.RedisHandlerSample = i.NewRedisHandler()
+	appHandler.ProductHandler = i.NewProductHandler()
 	return appHandler
+}
+func (i *interactor) NewProductUsecase() domain.ProductUsecase {
+	return usecase.NewProductUseCase(i.NewProductRepository())
+}
+func (i *interactor) NewProductRepository() domain.ProductRepository {
+	return datastore.NewProductRepository(i.Conn)
+}
+
+func (i *interactor) NewProductHandler() handler.ProductHandler{
+	return handler.NewProductHandler(i.NewProductUsecase())
 }
 
 func (i *interactor) NewRegisteredShopUserUsecase() domain.RegisteredShopUserUsecase {
@@ -112,6 +127,7 @@ func (i *interactor) NewRandomStringGeneratorUsecase() usecase.RandomStringGener
 func (i *interactor) NewSigUpUsecase() usecase.SignUpUseCase {
 	return usecase.NewSignUpUsecase(i.NewRedisUsecase(), i.NewRegisteredShopUserUsecase(), i.NewRandomStringGeneratorUsecase())
 }
+
 
 
 

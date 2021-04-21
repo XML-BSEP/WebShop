@@ -27,6 +27,7 @@ type ProductUsecase interface {
 	Update(ctx echo.Context, pic *Product) (*Product, error)
 	Create(ctx echo.Context, pic *Product) (*Product, error)
 	Delete(ctx echo.Context, id uint) error
+	GetWithPriceRange(low uint, high uint)([]*Product, error)
 }
 
 type ProductRepository interface {
@@ -35,4 +36,5 @@ type ProductRepository interface {
 	Update(pic *Product) (*Product, error)
 	Create(pic *Product) (*Product, error)
 	Delete(id uint) error
+	GetWithPriceRange(low uint, high uint)([]*Product, error)
 }
