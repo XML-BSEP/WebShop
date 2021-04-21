@@ -8,6 +8,35 @@ import (
 type productUseCase struct {
 	ProductRepository domain.ProductRepository
 }
+
+func (p *productUseCase) GetProductsWithConditionOrderedByPrice(low uint, high uint, category string, limit int, offset int, order int) ([]*domain.Product, error) {
+	return p.ProductRepository.GetProductsWithConditionOrderedByPrice(low,high,category,limit,offset,order)
+}
+
+func (p *productUseCase) GetProductsWithConditionOrderedByName(low uint, high uint, category string, limit int, offset int, order int) ([]*domain.Product, error) {
+	return p.ProductRepository.GetProductsWithConditionOrderedByName(low,high,category,limit,offset,order)
+}
+
+func (p *productUseCase) GetByNameOrderByPrice(name string, limit int, offset int, order int) ([]*domain.Product, error) {
+	return p.ProductRepository.GetByNameOrderByPrice(name, limit, offset, order)
+}
+
+func (p *productUseCase) GetByNameOrderByName(name string, limit int, offset int, order int) ([]*domain.Product, error) {
+	return p.ProductRepository.GetByNameOrderByName(name, limit, offset, order)
+}
+
+func (p *productUseCase) GetByName(name string, limit int, offset int) ([]*domain.Product, error) {
+	return p.ProductRepository.GetByName(name, limit, offset)
+}
+
+func (p *productUseCase) GetProductsWithCondition(low uint, high uint, category string, limit int, offset int) ([]*domain.Product, error) {
+	return p.ProductRepository.GetProductsWithCondition(low, high, category, limit, offset)
+}
+
+func (p *productUseCase) GetProductsWithCategory(category string) ([]*domain.Product, error) {
+	return p.ProductRepository.GetProductsWithCategory(category)
+}
+
 func (p *productUseCase) GetWithPriceRange(low uint, high uint) ([]*domain.Product, error){
 	return p.ProductRepository.GetWithPriceRange(low, high)
 }

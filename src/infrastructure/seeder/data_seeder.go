@@ -2,6 +2,7 @@ package seeder
 
 import (
 	"web-shop/domain"
+	"web-shop/infrastructure/database"
 	"web-shop/infrastructure/persistance/datastore"
 
 	"gorm.io/gorm"
@@ -13,20 +14,20 @@ type Seed struct {
 }
 
 func MigrateData() {
-	//conn := database.NewDBConnection()
+	conn := database.NewDBConnection()
 
 	//conn.AutoMigrate(&domain.Address{})
 	//conn.AutoMigrate(&domain.Person{})
 	//conn.AutoMigrate(&domain.ShopAccount{})
 	//conn.AutoMigrate(&domain.RegisteredShopUser{})
-	//conn.AutoMigrate(&domain.Product{})
+	conn.AutoMigrate(&domain.Product{})
 	//conn.AutoMigrate(&domain.Storage{})
 
 	//seedAddresses(conn)
 	//seedPersons(conn)
 	//seedShopAccounts(conn)
 	//seedRegisteredUsers(conn)
-	//seedProducts(conn)
+	seedProducts(conn)
 	//seedStorages(conn)
 }
 
@@ -73,9 +74,9 @@ func seedRegisteredUsers(conn *gorm.DB) {
 func seedProducts(conn *gorm.DB) {
 	prodRepo := datastore.NewProductRepository(conn)
 
-	product1 := domain.Product{Name: "Product1", Price: 6969, Image: "assets/randompic1.jpg", Currency: 1}
-	product2 := domain.Product{Name: "Product2", Price: 69420, Image: "assets/randompic2.jpg", Currency: 1}
-	product3 := domain.Product{Name: "Product3", Price: 1512, Image: "assets/randompic4.jpg", Currency: 1}
+	product1 := domain.Product{Name: "Product1", Price: 6969, Image: "assets/randompic1.jpg", Currency: 1, Category: "Tech", Available: 123}
+	product2 := domain.Product{Name: "Product2", Price: 69420, Image: "assets/randompic2.jpg", Currency: 1, Category: "Tech", Available: 0}
+	product3 := domain.Product{Name: "Product3", Price: 1512, Image: "assets/randompic4.jpg", Currency: 1, Category: "Clothes", Available: 69}
 
 	prodRepo.Create(&product1)
 	prodRepo.Create(&product2)

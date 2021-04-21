@@ -19,6 +19,8 @@ type Product struct {
 	Price uint64
 	Image string
 	Currency Currency
+	Category string
+	Available uint
 }
 
 type ProductUsecase interface {
@@ -28,6 +30,13 @@ type ProductUsecase interface {
 	Create(ctx echo.Context, pic *Product) (*Product, error)
 	Delete(ctx echo.Context, id uint) error
 	GetWithPriceRange(low uint, high uint)([]*Product, error)
+	GetProductsWithCategory(category string)([]*Product, error)
+	GetProductsWithCondition(low uint, high uint, category string, limit int, offset int)([]*Product, error)
+	GetByName(name string, limit int, offset int)([]*Product, error)
+	GetProductsWithConditionOrderedByPrice(low uint, high uint, category string, limit int, offset int, order int)([]*Product, error)
+	GetProductsWithConditionOrderedByName(low uint, high uint, category string, limit int, offset int, order int)([]*Product, error)
+	GetByNameOrderByPrice(name string, limit int, offset int, order int)([]*Product, error)
+	GetByNameOrderByName(name string, limit int, offset int, order int)([]*Product, error)
 }
 
 type ProductRepository interface {
@@ -37,4 +46,12 @@ type ProductRepository interface {
 	Create(pic *Product) (*Product, error)
 	Delete(id uint) error
 	GetWithPriceRange(low uint, high uint)([]*Product, error)
+	GetProductsWithCategory(category string)([]*Product, error)
+	GetProductsWithCondition(low uint, high uint, category string, limit int, offset int)([]*Product, error)
+	GetByName(name string, limit int, offset int)([]*Product, error)
+	GetProductsWithConditionOrderedByPrice(low uint, high uint, category string, limit int, offset int, order int)([]*Product, error)
+	GetProductsWithConditionOrderedByName(low uint, high uint, category string, limit int, offset int, order int)([]*Product, error)
+	GetByNameOrderByPrice(name string, limit int, offset int, order int)([]*Product, error)
+	GetByNameOrderByName(name string, limit int, offset int, order int)([]*Product, error)
+
 }
