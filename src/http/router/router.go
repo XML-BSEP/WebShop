@@ -21,5 +21,6 @@ func NewRouter(e *echo.Echo, h handler.AppHandler) {
 	e.POST("/getProductsWithCategoryInPriceRangeOrderByName", h.GetProductsWithConditionOrderedByName)
 	e.POST("/getByNameOrderedByName", h.GetByNameOrderByName)
 	e.POST("/getByNameOrderedByPrice", h.GetByNameOrderByPrice)
+	e.POST("/placeOrder", h.PlaceOrder)
 
 }

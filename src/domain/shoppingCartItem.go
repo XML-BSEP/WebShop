@@ -8,6 +8,7 @@ import (
 type ShoppingCartItem struct {
 	gorm.Model
 	Product        Product
+	ProductID	   uint
 	Amount         uint
 	ShoppingCartID uint
 }

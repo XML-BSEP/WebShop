@@ -20,14 +20,17 @@ func MigrateData() {
 	//conn.AutoMigrate(&domain.Person{})
 	//conn.AutoMigrate(&domain.ShopAccount{})
 	//conn.AutoMigrate(&domain.RegisteredShopUser{})
-	conn.AutoMigrate(&domain.Product{})
+	//conn.AutoMigrate(&domain.Product{})
 	//conn.AutoMigrate(&domain.Storage{})
+	conn.AutoMigrate(&domain.Order{})
+	conn.AutoMigrate(&domain.ShoppingCart{})
+	conn.AutoMigrate(&domain.ShoppingCartItem{})
 
 	//seedAddresses(conn)
 	//seedPersons(conn)
 	//seedShopAccounts(conn)
 	//seedRegisteredUsers(conn)
-	seedProducts(conn)
+	//seedProducts(conn)
 	//seedStorages(conn)
 }
 

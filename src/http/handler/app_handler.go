@@ -7,4 +7,5 @@ type AppHandler interface {
 	SignUpHandler
 	RedisHandlerSample
 	ProductHandler
+	OrderHandler
 }

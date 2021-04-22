@@ -27,6 +27,8 @@ type Interactor interface {
 	NewProductRepository() domain.ProductRepository
 	NewProductUsecase() domain.ProductUsecase
 	NewProductHandler() handler.ProductHandler
+	NewOrderUsecase() domain.OrderUsecase
+	NewOrderRepository() domain.OrderRepository
 }
 
 type interactor struct {
@@ -34,12 +36,15 @@ type interactor struct {
 
 }
 
+
+
 type appHandler struct {
 	handler.AddressHandler
 	handler.AuthenticateHandler
 	handler.SignUpHandler
 	handler.RedisHandlerSample
 	handler.ProductHandler
+	handler.OrderHandler
 }
 
 
@@ -54,8 +59,20 @@ func (i *interactor) NewAppHandler() handler.AppHandler {
 	appHandler.SignUpHandler = i.NewSignUpHandler()
 	appHandler.RedisHandlerSample = i.NewRedisHandler()
 	appHandler.ProductHandler = i.NewProductHandler()
+	appHandler.OrderHandler = i.NewOrderHandler()
 	return appHandler
 }
+func (i *interactor) NewOrderHandler() handler.OrderHandler{
+	return handler.NewOrderHandler(i.NewOrderUsecase())
+}
+func (i *interactor) NewOrderUsecase() domain.OrderUsecase {
+	return usecase.NewOrderUsecase(i.NewOrderRepository())
+}
+
+func (i *interactor) NewOrderRepository() domain.OrderRepository {
+	return datastore.NewOrderRepository(i.Conn)
+}
+
 func (i *interactor) NewProductUsecase() domain.ProductUsecase {
 	return usecase.NewProductUseCase(i.NewProductRepository())
 }
