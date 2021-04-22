@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/labstack/echo"
+	middleware2 "github.com/labstack/echo/middleware"
 	"web-shop/http/middleware"
 	"web-shop/http/router"
 	"web-shop/infrastructure/database"
@@ -20,6 +21,8 @@ func main() {
 	handler := i.NewAppHandler()
 
 	e := echo.New()
+
+	e.Use(middleware2.Secure())
 
 	middleware.NewMiddleware(e)
 	router.NewRouter(e, handler)

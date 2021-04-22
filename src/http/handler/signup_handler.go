@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/labstack/echo"
 	"net/http"
+	"strings"
 	"unicode"
 	"web-shop/domain"
 	"web-shop/infrastructure/dto"
@@ -48,6 +49,9 @@ func (signUp *signUp) UserRegister(ctx echo.Context) (err error){
 	fmt.Print(user)
 	newUser := mapper.NewUserDtoToRequestUser(t)
 
+	if strings.Contains(newUser.Username, " ") {
+		return ctx.JSON(http.StatusBadRequest, "Invalid username")
+	}
 
 	customValidator := validator2.NewCustomValidator()
 	translator, _ := customValidator.RegisterEnTranslation()
