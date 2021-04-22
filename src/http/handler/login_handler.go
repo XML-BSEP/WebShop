@@ -61,7 +61,6 @@ func (au *Authenticate) Login(c echo.Context) error {
 
 	if userErr != nil {
 		return c.JSON(http.StatusInternalServerError, userErr)
-
 	}
 
 	ts, tErr := au.tk.CreateToken(uint64(u.Model.ID))
