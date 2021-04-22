@@ -12,6 +12,7 @@ import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
 import { RegistrationConfirmationComponent } from './registration-confirmation/registration-confirmation.component';
+import { AdminNavBarComponent } from './nav-bars/admin-nav-bar/admin-nav-bar.component';
 
 
 @NgModule({
@@ -20,7 +21,8 @@ import { RegistrationConfirmationComponent } from './registration-confirmation/r
     LoginComponent,
     HomeComponent,
     RegisterComponent,
-    RegistrationConfirmationComponent
+    RegistrationConfirmationComponent,
+    AdminNavBarComponent
   ],
   imports: [
     BrowserModule,
