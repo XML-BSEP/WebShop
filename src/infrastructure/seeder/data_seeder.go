@@ -22,7 +22,7 @@ func MigrateData() {
 	conn.AutoMigrate(&domain.RegisteredShopUser{})
 	//conn.AutoMigrate(&domain.Product{})
 	//conn.AutoMigrate(&domain.Storage{})
-
+	seedRoles(conn)
 	seedAddresses(conn)
 	//seedPersons(conn)
 	seedShopAccounts(conn)
@@ -65,10 +65,13 @@ func seedRegisteredUsers(conn *gorm.DB) {
 	acc1, _ := datastore.NewShopAccountRepository(conn).GetByID(1)
 	acc2, _ := datastore.NewShopAccountRepository(conn).GetByID(2)
 
-	regUser1 := domain.RegisteredShopUser{Email: "a@a.com", ShopAccount: *acc1}
+	role1, _ := datastore.NewRoleRepository(conn).GetByID(1)
+	role2, _ := datastore.NewRoleRepository(conn).GetByID(2)
+
+	regUser1 := domain.RegisteredShopUser{Email: "a@a.com", ShopAccount: *acc1, Role: *role1}
 	regRepo.Create(&regUser1)
 
-	regUser2 := domain.RegisteredShopUser{Email: "a2@a.com", ShopAccount: *acc2}
+	regUser2 := domain.RegisteredShopUser{Email: "a2@a.com", ShopAccount: *acc2, Role: *role2}
 	regRepo.Create(&regUser2)
 
 }
@@ -103,6 +106,15 @@ func seedStorages(conn *gorm.DB) {
 	storageRepo.Create(&s3)
 }
 
+func seedRoles(conn *gorm.DB) {
+	roleRepo := datastore.NewRoleRepository(conn)
+
+	r1 := &domain.Role{RoleName: "admin"}
+	r2 := &domain.Role{RoleName: "user"}
+
+	roleRepo.Create(r1)
+	roleRepo.Create(r2)
+}
 func seedShoppingCarts(conn *gorm.DB) {
 	// prodRepo := datastore.NewProductRepository(conn)
 	// p1, _ := datastore.NewProductRepository(conn).GetByID(context.TODO(), 1)

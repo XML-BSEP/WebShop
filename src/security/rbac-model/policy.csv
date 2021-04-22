@@ -1,0 +1,6 @@
+p, admin, /member/logout, *
+p, admin, /member/addresses, *
+p, user, /member/addresses, *
+p, user, /member/logout, *
+g, 1, admin
+g, 2, user

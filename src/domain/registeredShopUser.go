@@ -12,6 +12,8 @@ type RegisteredShopUser struct {
 	Surname	string	`json:"surname"`
 	ShopAccount   ShopAccount
 	ShopAccountID uint
+	Role Role
+	RoleId uint
 
 }
 

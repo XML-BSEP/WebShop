@@ -13,12 +13,12 @@ type AuthInterface interface {
 	FetchAuth(string) (uint64, error)
 	DeleteRefresh(string) error
 	DeleteTokens(*auth.AccessDetails) error
-	AlreadyDeleted(metadata *auth.AccessDetails) bool
 }
 
 type RedisUseCase struct {
 	redisUseCase usecase.RedisUsecase
 }
+
 
 func (tk *RedisUseCase) AlreadyDeleted(metadata *auth.AccessDetails) bool {
 	if tk.redisUseCase.ExistsByKey(metadata.TokenUuid) {
@@ -92,3 +92,5 @@ func (tk *RedisUseCase) DeleteRefresh(refreshUuid string) error {
 	}
 	return nil
 }
+
+

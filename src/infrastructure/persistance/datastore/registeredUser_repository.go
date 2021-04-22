@@ -51,7 +51,7 @@ func (r registeredUserRepository) Fetch() ([]*domain.RegisteredShopUser, error) 
 
 func (r registeredUserRepository) GetByID(id uint) (*domain.RegisteredShopUser, error) {
 	user:=&domain.RegisteredShopUser{Model: gorm.Model{ID: id}}
-	err := r.Conn.First(user).Error
+	err := r.Conn.Joins("roles").First(user).Error
 	return user, err
 }
 
