@@ -6,22 +6,14 @@ import (
 	"web-shop/http/middleware"
 )
 
-func NewRouter(e *echo.Echo, h handler.AppHandler) {
+func NewRouter(e *echo.Echo, h handler.AppHandler, authMiddleware middleware.AuthMiddleware) {
 
-
-	e.POST("/login", h.Login)
-	g := e.Group("/member")
-	g.Use(middleware.Auth2())
+	e.POST("/login", h.Login, authMiddleware.Authenticated())
+	e.POST("/register", h.UserRegister, authMiddleware.Authenticated())
+	e.POST("/confirmAccount", h.ConfirmAccount, authMiddleware.Authenticated())
+	g := e.Group("")
+	g.Use(authMiddleware.Auth())
 	g.GET("/addresses", h.GetAddresses)
-
-	/*e.GET("/addresses", h.GetAddresses)
-	e.POST("/login", h.Login)
-	e.POST("/logout", h.Logout)
-	e.POST("/register", h.UserRegister)
-	e.POST("/redisPost", h.AddKeyValueSet)
-	e.POST("/redisVal", h.GetValueByKey)
-	e.POST("/confirmAccount", h.ConfirmAccount)*/
-
-
+	g.POST("/logout", h.Logout)
 
 }

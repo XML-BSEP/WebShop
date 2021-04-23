@@ -1,4 +1,6 @@
 p, admin, /*, *
-p, user, /member/*, *
+p, user, /addresses, *
 p, anonymous, /login, *
+p, anonymous, /register, *
+p, anonymous, /confirmAccount, *
 
