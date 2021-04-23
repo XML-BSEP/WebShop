@@ -15,6 +15,7 @@ import { RegistrationConfirmationComponent } from './registration-confirmation/r
 import { AdminNavBarComponent } from './nav-bars/admin-nav-bar/admin-nav-bar.component';
 import { NotUserNavBarComponent } from './nav-bars/not-user-nav-bar/not-user-nav-bar.component';
 import { CustomerNavBarComponent } from './nav-bars/customer-nav-bar/customer-nav-bar.component';
+import { AddProductComponent } from './product/add-product/add-product.component';
 
 
 @NgModule({
@@ -26,7 +27,8 @@ import { CustomerNavBarComponent } from './nav-bars/customer-nav-bar/customer-na
     RegistrationConfirmationComponent,
     AdminNavBarComponent,
     NotUserNavBarComponent,
-    CustomerNavBarComponent
+    CustomerNavBarComponent,
+    AddProductComponent
   ],
   imports: [
     BrowserModule,

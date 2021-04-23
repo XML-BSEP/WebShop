@@ -1,3 +1,4 @@
+import { AddProductComponent } from './product/add-product/add-product.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { HomeComponent } from './home/home.component';
@@ -26,6 +27,10 @@ const routes: Routes = [
 {
   path:'regconfirm',
   component: RegistrationConfirmationComponent
+},
+{
+  path:'addProduct',
+  component: AddProductComponent
 }
 ];
 
