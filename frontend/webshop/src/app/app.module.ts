@@ -13,6 +13,8 @@ import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
 import { RegistrationConfirmationComponent } from './registration-confirmation/registration-confirmation.component';
 import { AdminNavBarComponent } from './nav-bars/admin-nav-bar/admin-nav-bar.component';
+import { NotUserNavBarComponent } from './nav-bars/not-user-nav-bar/not-user-nav-bar.component';
+import { CustomerNavBarComponent } from './nav-bars/customer-nav-bar/customer-nav-bar.component';
 
 
 @NgModule({
@@ -22,7 +24,9 @@ import { AdminNavBarComponent } from './nav-bars/admin-nav-bar/admin-nav-bar.com
     HomeComponent,
     RegisterComponent,
     RegistrationConfirmationComponent,
-    AdminNavBarComponent
+    AdminNavBarComponent,
+    NotUserNavBarComponent,
+    CustomerNavBarComponent
   ],
   imports: [
     BrowserModule,

@@ -24,7 +24,7 @@ export class AuthenticationService {
   }
 
 public getUserValue() : AuthenticatedUser {
-    console.log("Token" + this.currentUserSubject.value.token.accessToken);
+   // console.log("Token" + this.currentUserSubject.value.token.accessToken);
     return this.currentUserSubject.value;
 }
 
