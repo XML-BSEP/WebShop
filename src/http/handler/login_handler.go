@@ -76,7 +76,7 @@ func (au *Authenticate) Login(c echo.Context) error {
 		return c.JSON(http.StatusForbidden, invalidPassword)
 
 	}
-	
+
 	ts, tErr := au.tk.CreateToken(uint64(u.Model.ID))
 	if tErr != nil {
 		tokenErr["token_error"] = tErr.Error()

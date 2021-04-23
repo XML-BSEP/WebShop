@@ -6,27 +6,30 @@ import (
 	"github.com/labstack/echo"
 	"log"
 	"net/http"
+	"web-shop/domain"
 	"web-shop/security/auth"
 )
 
-/*func TokenAuthMiddleware(c echo.Context)  echo.MiddlewareFunc {
+type AuthMiddleware struct {
+	ur domain.RegisteredShopUserRepository
+	redisUseCase auth.RedisUseCase
+}
 
-	err := auth.TokenValid(c.Request())
-	if err != nil {
-		c.JSON(http.StatusUnauthorized, "user hasn't logged in yet")
-		return echo.ErrForbidden
+func NewAuthMiddleware(userRepo domain.RegisteredShopUserRepository, redisUseCase auth.RedisUseCase ) *AuthMiddleware {
+	return &AuthMiddleware{
+		ur: userRepo,
+		redisUseCase: redisUseCase,
 	}
+}
 
-	return nil
-}*/
-
-func Auth2() echo.MiddlewareFunc {
+func (au *AuthMiddleware) Auth2() echo.MiddlewareFunc {
 
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
-
+			role := ""
 			token := c.Request().Header.Get("Authorization")
 			if token == "" {
+				role = "anonymous"
 				return c.JSON(http.StatusUnauthorized, "user hasn't logged in yet")
 			}
 			err := auth.TokenValid(c.Request())
@@ -39,9 +42,14 @@ func Auth2() echo.MiddlewareFunc {
 
 			if err != nil {
 				return c.JSON(http.StatusUnauthorized, "unauthorized")
+			} else {
+				role, err = au.ur.GetRoleById(metadata.UserId)
+				if err != nil {
+					return c.JSON(http.StatusUnauthorized, "unauthorized")
+				}
 			}
 
-			ok, err := enforce(metadata.UserId, c.Request().URL.Path, c.Request().Method)
+			ok, err := enforce(role, c.Request().URL.Path, c.Request().Method)
 
 			if err != nil {
 				log.Println(err)
@@ -59,47 +67,12 @@ func Auth2() echo.MiddlewareFunc {
 	}
 }
 
-/*func Authorize(adapter persist.Adapter, next echo.HandlerFunc) echo.MiddlewareFunc {
-	return func(c echo.Context){
-
-
-		err := auth.TokenValid(c.Request())
-		if err != nil {
-			c.JSON(http.StatusUnauthorized, "user hasn't logged in yet")
-			c.Error(err)
-			return err
-		}
-
-
-		metadata, err := auth.NewToken2().ExtractTokenMetadata(c.Request())
-
-
-		if err != nil {
-			c.JSON(http.StatusUnauthorized, "unauthorized")
-			return err
-		}
-
-		ok, err := enforce(metadata.UserId, c.Request().URL.Path, c.Request().Method, adapter)
-
-		if err != nil {
-			log.Println(err)
-			c.JSON(http.StatusInternalServerError, "error occurred when authorizing user")
-			return err
-		}
-		if !ok {
-			c.JSON(http.StatusForbidden, "forbidden")
-			return err
-		}
-		return next(c)
-	}
-}*/
-
-func enforce(id uint64, obj string, act string) (bool, error) {
+func enforce(role string, obj string, act string) (bool, error) {
 	enforcer, _ := casbin.NewEnforcer("src/security/rbac-model/rbac_model.conf", "src/security/rbac-model/policy.csv")
 	err := enforcer.LoadPolicy()
 	if err != nil {
 		return false, fmt.Errorf("failed to load policy from DB: %w", err)
 	}
-	ok, _ := enforcer.Enforce(id, obj, act)
+	ok, _ := enforcer.Enforce(role, obj, act)
 	return ok, nil
 }
