@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
+import { ProductsPageComponent } from './products-page/products-page/products-page.component';
 import { RegisterComponent } from './register/register.component';
 import { RegistrationConfirmationComponent } from './registration-confirmation/registration-confirmation.component';
 
@@ -26,6 +27,10 @@ const routes: Routes = [
 {
   path:'regconfirm',
   component: RegistrationConfirmationComponent
+},
+{
+  path: 'products',
+  component: ProductsPageComponent
 }
 ];
 

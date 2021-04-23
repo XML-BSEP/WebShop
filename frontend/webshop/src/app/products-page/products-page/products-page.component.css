@@ -1,0 +1,49 @@
+
+.example-card {
+    max-width: 19vw;
+    width: 19vw;
+    padding-top: 20px;
+
+  }
+  
+.row {
+  padding-top: 20px;
+}
+
+.paginator{
+  width: 60vw;
+  height: 100px;
+  margin-top: 20px;
+ 
+}
+.footer {
+  height: 20px;
+  max-height: 20px;
+}
+.col {
+  padding: 0;
+}
+.example-header-image {
+  background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+  background-size: cover;
+}
+
+.row-paginator {
+  display:flex;
+  justify-content:center;
+}
+
+.row-search {
+  display:flex;
+  justify-content:center;
+}
+.search-form {
+  min-width: 150px;
+  max-width: 500px;
+  width: 100%;
+}
+  
+.example-full-width {
+  width: 100%;
+}
+

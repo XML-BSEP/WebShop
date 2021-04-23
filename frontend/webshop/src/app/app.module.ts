@@ -13,6 +13,8 @@ import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
 import { RegistrationConfirmationComponent } from './registration-confirmation/registration-confirmation.component';
 import { AdminNavBarComponent } from './nav-bars/admin-nav-bar/admin-nav-bar.component';
+import { ProductsPageComponent } from './products-page/products-page/products-page.component';
+import { MatInputModule } from '@angular/material/input';
 
 
 @NgModule({
@@ -22,7 +24,8 @@ import { AdminNavBarComponent } from './nav-bars/admin-nav-bar/admin-nav-bar.com
     HomeComponent,
     RegisterComponent,
     RegistrationConfirmationComponent,
-    AdminNavBarComponent
+    AdminNavBarComponent,
+    ProductsPageComponent
   ],
   imports: [
     BrowserModule,
@@ -31,7 +34,8 @@ import { AdminNavBarComponent } from './nav-bars/admin-nav-bar/admin-nav-bar.com
     MaterialModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    MatInputModule
   ],
   providers: [{provide : HTTP_INTERCEPTORS, useClass : JwtInterceptor, multi : true},
     {provide : HTTP_INTERCEPTORS, useClass : ErrorInterceptor, multi : true}],
