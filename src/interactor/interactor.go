@@ -24,6 +24,11 @@ type Interactor interface {
 	NewSigUpUsecase() usecase.SignUpUseCase
 	NewRandomStringGeneratorUsecase() usecase.RandomStringGeneratorUsecase
 	NewRegisteredShopUserUsecase() domain.RegisteredShopUserUsecase
+	NewProductRepository() domain.ProductRepository
+	NewProductUsecase() domain.ProductUsecase
+	NewProductHandler() handler.ProductHandler
+	NewOrderUsecase() domain.OrderUsecase
+	NewOrderRepository() domain.OrderRepository
 }
 
 type interactor struct {
@@ -32,12 +37,16 @@ type interactor struct {
 }
 
 
+
 type appHandler struct {
 	handler.AddressHandler
 	handler.AuthenticateHandler
 	handler.SignUpHandler
 	handler.RedisHandlerSample
+	handler.ProductHandler
+	handler.OrderHandler
 }
+
 
 func NewInteractor(conn *gorm.DB) Interactor {
 	return &interactor{conn}
@@ -49,7 +58,30 @@ func (i *interactor) NewAppHandler() handler.AppHandler {
 	appHandler.AuthenticateHandler = i.NewAuthenticateHandler()
 	appHandler.SignUpHandler = i.NewSignUpHandler()
 	appHandler.RedisHandlerSample = i.NewRedisHandler()
+	appHandler.ProductHandler = i.NewProductHandler()
+	appHandler.OrderHandler = i.NewOrderHandler()
 	return appHandler
+}
+func (i *interactor) NewOrderHandler() handler.OrderHandler{
+	return handler.NewOrderHandler(i.NewOrderUsecase())
+}
+func (i *interactor) NewOrderUsecase() domain.OrderUsecase {
+	return usecase.NewOrderUsecase(i.NewOrderRepository())
+}
+
+func (i *interactor) NewOrderRepository() domain.OrderRepository {
+	return datastore.NewOrderRepository(i.Conn)
+}
+
+func (i *interactor) NewProductUsecase() domain.ProductUsecase {
+	return usecase.NewProductUseCase(i.NewProductRepository())
+}
+func (i *interactor) NewProductRepository() domain.ProductRepository {
+	return datastore.NewProductRepository(i.Conn)
+}
+
+func (i *interactor) NewProductHandler() handler.ProductHandler{
+	return handler.NewProductHandler(i.NewProductUsecase())
 }
 
 func (i *interactor) NewRegisteredShopUserUsecase() domain.RegisteredShopUserUsecase {
@@ -117,6 +149,7 @@ func (i *interactor) NewSigUpUsecase() usecase.SignUpUseCase {
 func (i *interactor) NewAuthService() auth2.AuthInterface {
 	return auth2.NewAuth(i.NewRedisUsecase())
 }
+
 
 
 
