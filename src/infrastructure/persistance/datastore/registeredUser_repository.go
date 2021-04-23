@@ -10,6 +10,14 @@ type registeredUserRepository struct {
 	ShopAccountRepository domain.ShopAccountRepository
 }
 
+func (r registeredUserRepository) GetRoleById(id uint) (string, error) {
+	user, err := r.GetByID(id)
+	if err != nil {
+		return "", err
+	}
+	return user.Role.RoleName, nil
+}
+
 func (r registeredUserRepository) GetAccountDetailsFromUser(u *domain.RegisteredShopUser) (*domain.ShopAccount, error) {
 	user, err := r.ExistByUsernameOrEmail("", u.Email)
 	account, err := r.ShopAccountRepository.GetByID(user.ShopAccountID)
@@ -51,7 +59,7 @@ func (r registeredUserRepository) Fetch() ([]*domain.RegisteredShopUser, error) 
 
 func (r registeredUserRepository) GetByID(id uint) (*domain.RegisteredShopUser, error) {
 	user:=&domain.RegisteredShopUser{Model: gorm.Model{ID: id}}
-	err := r.Conn.Joins("roles").First(user).Error
+	err := r.Conn.Joins("Role").First(&user).Error
 	return user, err
 }
 

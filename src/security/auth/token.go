@@ -95,6 +95,7 @@ func VerifyToken(r *http.Request) (*jwt.Token, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	return token, nil
 }
 

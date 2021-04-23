@@ -76,7 +76,7 @@ func (au *Authenticate) Login(c echo.Context) error {
 		return c.JSON(http.StatusForbidden, invalidPassword)
 
 	}
-	
+
 	ts, tErr := au.tk.CreateToken(uint64(u.Model.ID))
 	if tErr != nil {
 		tokenErr["token_error"] = tErr.Error()
@@ -94,9 +94,12 @@ func (au *Authenticate) Login(c echo.Context) error {
 	userData["access_token"] = ts.AccessToken
 	userData["refresh_token"] = ts.RefreshToken
 	userData["id"] = u.Model.ID
-	userData["first_name"] = u.Name
-	userData["last_name"] = u.Surname
-
+	role, err := au.us.GetRoleById(u.Model.ID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, invalidEmail)
+	}
+	userData["role"] = role
+	
 	return c.JSON(http.StatusOK, userData)
 }
 
