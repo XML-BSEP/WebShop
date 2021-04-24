@@ -8,7 +8,7 @@
           <h1 id="title-text">Add your product!</h1>
         </div>
         <div class="stepper-area">
-          <mat-horizontal-stepper [linear]="false" #stepper>
+          <mat-horizontal-stepper [linear]="!isLinear" #stepper>
             <mat-step [stepControl]="nameCategoryGroup">
               <div class="step">
                 <form [formGroup]="nameCategoryGroup">
@@ -27,7 +27,7 @@
 
                       <label class="label-field">Product category:</label>
                       <mat-form-field  class="input-field">
-                        <mat-label>Favorite food</mat-label>
+                        <mat-label>Product category</mat-label>
                         <mat-select formControlName="productCategory">
                           <mat-option *ngFor="let food of foods" [value]="food.value">
                             {{food.viewValue}}
@@ -35,13 +35,13 @@
                         </mat-select>
                         <mat-error
                     *ngIf="!nameCategoryGroup.get('productCategory').valid && nameCategoryGroup.get('productCategory').touched && nameCategoryGroup.get('productCategory').errors['required']">
-                    Please enter product name</mat-error>
+                    Please select product category</mat-error>
                       </mat-form-field>
 
                     </div>
 
                   <div>
-                    <button  mat-raised-button matStepperNext color="primary" class="next-button" [disabled]="!nameCategoryGroup.valid">Next</button>
+                    <button  mat-raised-button color="primary" class="next-button" [disabled]="!nameCategoryGroup.valid" matStepperNext >Next</button>
                   </div>
                 </form>
               </div>
@@ -60,8 +60,10 @@
                     <input matInput placeholder="Enter product price" formControlName="price" required>
                     <mat-error
                 *ngIf="!descriptionPriceGroup.get('price').valid && descriptionPriceGroup.get('price').touched && descriptionPriceGroup.get('price').errors['required']">
-                Please enter product name</mat-error>
-
+                Please enter product price</mat-error>
+                <mat-error
+                *ngIf="!descriptionPriceGroup.get('price').valid && descriptionPriceGroup.get('price').touched && descriptionPriceGroup.get('price').errors['pattern']">
+                Price must be a number</mat-error>
                   </mat-form-field>
 
 
@@ -93,14 +95,12 @@
               </div>
             </mat-step>
 
-            <mat-step [stepControl]="picturesGroup" label="Select pictures">
+            <mat-step label="Select pictures">
               <div class="step">
 
-              <form [formGroup]="picturesGroup">
 
-                <div class="step-field">
-                  <div class="formfields"></div>
-                  <label class="label-field">Select pictures:</label>
+                <div class="step-field" style="margin-top: -2%;">
+                  <label class="label-field">Select pictures one at a time [{{current}}/4]:</label>
                   <!-- <mat-form-field class="input-field"> -->
                     <!-- <input
                     style="display: none"
@@ -111,18 +111,28 @@
                     <input
                     style="display: none"
                     type="file" (change)="onFileChanged($event)"
-                    #fileInput accept="image/x-png,image/gif,image/jpeg">
-                  <button (click)="fileInput.click()" mat-raised-button color="primary" class="upload-file" [disabled]="!choose">Select File</button>
+                    #fileInput accept="image/x-png,image/gif,image/jpeg" multiple>
+                  <button (click)="fileInput.click()" mat-raised-button color="primary" class="upload-file" [disabled]="current==4">Select File</button>
                 </div>
-                <div class="step-field">
-                  <label class="upload-field">{{fileName}}</label>
+                <!-- <div id="images-table">
+
+                </div> -->
+                <div class="step-field1">
+                  <mat-list id="images-list">
+                    <mat-list-item *ngFor="let img of images" id="list-item">
+                        <label id="picture-name">{{img.fileName}}</label>
+                          <img [src]="img.file" id="image-preview"/>
+                        <button mat-raised-button id="remove-button" (click)="removeImg(img)" >Remove</button>
+                    </mat-list-item>
+                  </mat-list>
+                  <!-- <label class="upload-field">{{fileName}}</label> -->
+
                 </div>
 
                 <div>
                   <button mat-raised-button color="primary" class="back-button" matStepperPrevious>Back</button>
-                  <button mat-raised-button color="primary" class="next1-button" matStepperNext>Add</button>
+                  <button mat-raised-button color="primary" class="next1-button" [disabled]="this.current<4" (click)="addProduct()">Add</button>
                 </div>
-              </form>
               </div>
             </mat-step>
 

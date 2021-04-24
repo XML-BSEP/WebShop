@@ -34,7 +34,8 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
     ProductsPageComponent,
     NotUserNavBarComponent,
     CustomerNavBarComponent,
-    AddProductComponent
+    AddProductComponent,
+    ForgotPasswordComponent
   ],
   imports: [
     BrowserModule,

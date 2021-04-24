@@ -14,4 +14,6 @@ export class ProductServiceService {
   getProducts() : Observable<Product[]> {
     return this.http.get<Product[]>(`${environment.baseUrl}/${environment.products}`)
   }
+
+
 }

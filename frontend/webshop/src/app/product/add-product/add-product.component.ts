@@ -1,4 +1,6 @@
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NewProduct } from './../../model/newProduct';
+import { Image } from './../../model/image';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { Base64 } from 'js-base64';
 
@@ -15,6 +17,8 @@ export class AddProductComponent implements OnInit {
   nameCategoryGroup: FormGroup;
   descriptionPriceGroup: FormGroup;
   picturesGroup : FormGroup;
+  images: Image[] = new Array();
+  isLinear : Boolean = false;
   submitedPictures: String[] = [];
 
   foods: Food[] = [
@@ -24,8 +28,11 @@ export class AddProductComponent implements OnInit {
   ];
   currency : Number;
   fileName : String="";
+  imgFile : string;
   upload : Boolean = false;
   choose : Boolean = true;
+  current=0;
+  numberRegEx = /\-?\d*\.?\d{1,2}/;
 
   constructor(private _formBuilder: FormBuilder) { }
 
@@ -33,47 +40,49 @@ export class AddProductComponent implements OnInit {
 
     this.nameCategoryGroup = this._formBuilder.group({
       productName: ['', Validators.required],
-      productCategory: ['', Validators.required]
-
+      productCategory: ['', Validators.required],
     });
 
     this.descriptionPriceGroup = this._formBuilder.group({
       description: ['', Validators.required],
-      price: ['', Validators.required],
-      currency:['1', Validators.required],
+      'price' : new FormControl(null,[ Validators.required,  Validators.pattern(this.numberRegEx)]),
+      currency:['1', Validators.required]
     });
 
-    this.picturesGroup = this._formBuilder.group({
-      pictures: ['', Validators.required],
-    });
 
   }
-  onFileChanged(event) {
-    const file = event.target.files[0]
-    this.fileName = file.name;
+  onFileChanged(e) {
+    const reader = new FileReader();
+    if(this.current<4){
+      if(e.target.files && e.target.files.length) {
+        const [file] = e.target.files;
+          reader.readAsDataURL(file);
 
-    let reader = new FileReader();
-    reader.readAsDataURL(file);
+          reader.onload = () => {
+            this.imgFile = reader.result as string;
+            this.fileName = file.name;
+            this.images.push(new Image(this.fileName, this.imgFile));
 
-    reader.onload = function () {
-      console.log(reader.result);
-    };
-    reader.onerror = function (error) {
-      console.log('Error: ', error);
-    };
+            this.current++;
+            console.log(this.current);
+          };
+      }
+
+    }
+
+  }
+  removeImg(img){
+    this.images = this.images.filter(obj => obj !== img);
+    this.current--;
   }
 
-//   createBase64Image(file){
-//     const reader= new FileReader();
-
-//     reader.onload = (e) =>{
-//       let img = e.target.result;
-//       //img.replace("data:image\/(png|jpg|jpeg);base64", "");
-//         this.submitedPictures.push(img);
-//         this.submitedPictures.append()
-//     }
-
-//     reader.readAsDataURL(file);
-// }
-
+  addProduct(){
+    var blobs : String[] = new Array();
+    for(let i=0; i<this.images.length;i++){
+      blobs.push(this.images[i].file);
+    }
+    console.log(this.descriptionPriceGroup.controls.currency.value)
+    var newProduct = new NewProduct(this.nameCategoryGroup.controls.productName.value, this.nameCategoryGroup.controls.productCategory.value, this.descriptionPriceGroup.controls.price.value, this.descriptionPriceGroup.controls.description.value, blobs, this.descriptionPriceGroup.controls.currency.value);
+    console.log(newProduct);
+  }
 }
