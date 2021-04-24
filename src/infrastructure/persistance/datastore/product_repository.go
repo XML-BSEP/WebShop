@@ -141,7 +141,7 @@ func (p *productRepository) Fetch() ([]*domain.Product, error) {
 		err error
 	)
 
-	err = p.Conn.Joins("Category").Order("id desc").Find(&products).Error
+	err = p.Conn.Preload("Images").Joins("Category").Order("id desc").Find(&products).Error
 	return products, err
 }
 

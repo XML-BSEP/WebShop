@@ -2,7 +2,7 @@
 .example-card {
     max-width: 40vh;
     min-width: 40vh;
-    
+    max-height: 80vh;
     padding-top: 20px;
     
   }

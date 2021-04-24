@@ -12,9 +12,9 @@ func NewRouter(e *echo.Echo, h handler.AppHandler, authMiddleware middleware.Aut
 	e.POST("/register", h.UserRegister, authMiddleware.Authenticated())
 	e.POST("/confirmAccount", h.ConfirmAccount, authMiddleware.Authenticated())
 	e.GET("/products", h.FetchProducts)
-	g := e.Group("")
+	g := e.Group("\\/")
 	g.Use(authMiddleware.Auth())
-	g.GET("/addresses", h.GetAddresses)
-	g.POST("/logout", h.Logout)
+	g.GET("addresses", h.GetAddresses)
+	g.POST("logout", h.Logout)
 
 }

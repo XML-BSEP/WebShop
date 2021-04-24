@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"web-shop/domain"
 	"web-shop/infrastructure/dto"
+	"web-shop/infrastructure/mapper"
 )
 
 type ProductHandler interface {
@@ -33,7 +34,15 @@ func (p *productHandler) FetchProducts(ctx echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, "No results")
 	}
 
-	return ctx.JSON(http.StatusOK, products)
+
+
+	var productsRet = make([]dto.ProductViewDTO, len(products))
+
+	for i, p := range products {
+		productsRet[i] = mapper.NewProductToProductViewDTO(*p)
+	}
+
+	return ctx.JSON(http.StatusOK, productsRet)
 }
 
 func (p productHandler) FilterByCategory(ctx echo.Context) error {

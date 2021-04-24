@@ -18,7 +18,6 @@ type Product struct {
 	Name  string `json:"name"`
 	Price uint64 `json:"price"`
 	Currency Currency `json:"currency"`
-	Category string `json:"category"`
 	Available uint `json:"available"`
 	Description string `json:"description"`
 	Images []Image
