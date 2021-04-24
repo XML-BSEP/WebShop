@@ -15,6 +15,7 @@ import { RegistrationConfirmationComponent } from './registration-confirmation/r
 import { AdminNavBarComponent } from './nav-bars/admin-nav-bar/admin-nav-bar.component';
 import { ProductsPageComponent } from './products-page/products-page/products-page.component';
 import { MatInputModule } from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
 
 
 @NgModule({
@@ -35,7 +36,8 @@ import { MatInputModule } from '@angular/material/input';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    MatInputModule
+    MatInputModule,
+    MatSelectModule
   ],
   providers: [{provide : HTTP_INTERCEPTORS, useClass : JwtInterceptor, multi : true},
     {provide : HTTP_INTERCEPTORS, useClass : ErrorInterceptor, multi : true}],

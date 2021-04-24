@@ -17,10 +17,27 @@ type ProductHandler interface {
 	GetProductsWithConditionOrderedByName(ctx echo.Context) error
 	GetByNameOrderByPrice(ctx echo.Context) error
 	GetByNameOrderByName(ctx echo.Context) error
+	FilterByCategory(ctx echo.Context) error
+	FetchProducts(ctx echo.Context) error
 }
 
 type productHandler struct {
 	ProductUseCase domain.ProductUsecase
+}
+
+func (p *productHandler) FetchProducts(ctx echo.Context) error {
+
+	products, err := p.ProductUseCase.Fetch(ctx)
+
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "No results")
+	}
+
+	return ctx.JSON(http.StatusOK, products)
+}
+
+func (p productHandler) FilterByCategory(ctx echo.Context) error {
+	panic("implement me")
 }
 
 func (p productHandler) GetProductsWithConditionOrderedByPrice(ctx echo.Context) error{

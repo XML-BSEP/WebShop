@@ -1,6 +1,7 @@
 package seeder
 
 import (
+	"fmt"
 	"web-shop/domain"
 	"web-shop/infrastructure/database"
 	"web-shop/infrastructure/persistance/datastore"
@@ -16,19 +17,23 @@ type Seed struct {
 func MigrateData() {
 	conn := database.NewDBConnection()
 
-	//conn.AutoMigrate(&domain.Address{})
-	//conn.AutoMigrate(&domain.Person{})
-	//conn.AutoMigrate(&domain.ShopAccount{})
-	//conn.AutoMigrate(&domain.RegisteredShopUser{})
-	//conn.AutoMigrate(&domain.Product{})
-	//conn.AutoMigrate(&domain.Storage{})
+	conn.AutoMigrate(&domain.Address{})
+	//conn.AutoMigrate(&domain.{})
+	conn.AutoMigrate(&domain.ShopAccount{})
+	conn.AutoMigrate(&domain.RegisteredShopUser{})
+	conn.AutoMigrate(&domain.Product{})
+	conn.AutoMigrate(&domain.Storage{})
+	conn.AutoMigrate(&domain.Category{})
 	seedRoles(conn)
 	seedAddresses(conn)
+
+
 	//seedPersons(conn)
-	//seedShopAccounts(conn)
-	//seedRegisteredUsers(conn)
-	//seedProducts(conn)
-	//seedStorages(conn)
+	seedShopAccounts(conn)
+	seedRegisteredUsers(conn)
+	seedStorages(conn)
+	seedCategories(conn)
+	seedProducts(conn)
 }
 
 func seedAddresses(conn *gorm.DB) {
@@ -78,15 +83,29 @@ func seedRegisteredUsers(conn *gorm.DB) {
 
 func seedProducts(conn *gorm.DB) {
 	prodRepo := datastore.NewProductRepository(conn)
+	catRepo := datastore.NewCategoryRepository(conn)
 
-	product1 := domain.Product{Name: "Product1", Price: 6969, Image: "assets/randompic1.jpg", Currency: 1, Category: "Tech", Available: 123}
-	product2 := domain.Product{Name: "Product2", Price: 69420, Image: "assets/randompic2.jpg", Currency: 1, Category: "Tech", Available: 0}
-	product3 := domain.Product{Name: "Product3", Price: 1512, Image: "assets/randompic4.jpg", Currency: 1, Category: "Clothes", Available: 69}
+	cat1, _ := catRepo.GetByID(1)
+	cat2, _ := catRepo.GetByID(2)
+	product1 := domain.Product{Name: "Product1", Price: 6969, Image: "assets/randompic1.jpg", Currency: 1, Available: 123, Category: *cat1}
+	product2 := domain.Product{Name: "Product2", Price: 69420, Image: "assets/randompic2.jpg", Currency: 1, Available: 0, Category: *cat1}
+	product3 := domain.Product{Name: "Product3", Price: 1512, Image: "assets/randompic4.jpg", Currency: 1, Available: 69, Category: *cat2}
 
 	prodRepo.Create(&product1)
 	prodRepo.Create(&product2)
 	prodRepo.Create(&product3)
 
+}
+
+func seedCategories(conn *gorm.DB) {
+	catRepo := datastore.NewCategoryRepository(conn)
+
+	category1 := domain.Category{Name: "Tech"}
+	category2 := domain.Category{Name: "Makeup"}
+
+	cat, _ := catRepo.Create(&category1)
+	fmt.Print(cat)
+	catRepo.Create(&category2)
 }
 
 func seedStorages(conn *gorm.DB) {

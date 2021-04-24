@@ -9,6 +9,16 @@ type productRepository struct {
 	Conn *gorm.DB
 }
 
+func (p *productRepository) FilterByCategory(category string, priceRangeStart uint, priceRangeEnd uint, limit int, offset int, order string) ([]*domain.Product, error) {
+	var(
+		products []*domain.Product
+		err error
+	)
+	err = p.Conn.Joins("category").Limit(limit).Offset(offset).Where("category = ? and price <= ? and price >= ? order by ?", category, priceRangeEnd, priceRangeStart, order).Find(&products).Error
+
+	return products, err
+}
+
 func (p *productRepository) GetProductsWithConditionOrderedByPrice(low uint, high uint, category string, limit int, offset int, order int) ([]*domain.Product, error) {
 	var(
 		products []*domain.Product
@@ -131,7 +141,7 @@ func (p *productRepository) Fetch() ([]*domain.Product, error) {
 		err error
 	)
 
-	err = p.Conn.Order("id desc").Find(&products).Error
+	err = p.Conn.Joins("Category").Order("id desc").Find(&products).Error
 	return products, err
 }
 

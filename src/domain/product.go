@@ -15,12 +15,14 @@ const (
 
 type Product struct {
 	gorm.Model
-	Name  string
-	Price uint64
-	Image string
-	Currency Currency
-	Category string
-	Available uint
+	Name  string `json:"name"`
+	Price uint64 `json:"price"`
+	Image string 	`json:"image"`
+	Currency Currency `json:"currency"`
+	Available uint `json:"available"`
+	Description string `json:"description"`
+	Category Category
+	CategoryId uint
 }
 
 type ProductUsecase interface {
@@ -37,6 +39,7 @@ type ProductUsecase interface {
 	GetProductsWithConditionOrderedByName(low uint, high uint, category string, limit int, offset int, order int)([]*Product, error)
 	GetByNameOrderByPrice(name string, limit int, offset int, order int)([]*Product, error)
 	GetByNameOrderByName(name string, limit int, offset int, order int)([]*Product, error)
+	FilterByCategory(category string, priceRangeStart uint, priceRangeEnd uint, limit int, offset int, order string) ([]*Product, error)
 }
 
 type ProductRepository interface {
@@ -53,5 +56,5 @@ type ProductRepository interface {
 	GetProductsWithConditionOrderedByName(low uint, high uint, category string, limit int, offset int, order int)([]*Product, error)
 	GetByNameOrderByPrice(name string, limit int, offset int, order int)([]*Product, error)
 	GetByNameOrderByName(name string, limit int, offset int, order int)([]*Product, error)
-
+	FilterByCategory(category string, priceRangeStart uint, priceRangeEnd uint, limit int, offset int, order string) ([]*Product, error)
 }

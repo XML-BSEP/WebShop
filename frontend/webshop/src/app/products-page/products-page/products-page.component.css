@@ -1,9 +1,10 @@
-
+@import "~bootstrap/dist/css/bootstrap.css";
 .example-card {
-    max-width: 19vw;
-    width: 19vw;
+    max-width: 40vh;
+    min-width: 40vh;
+    
     padding-top: 20px;
-
+    
   }
   
 .row {
@@ -21,7 +22,7 @@
   max-height: 20px;
 }
 .col {
-  padding: 0;
+  margin-top: 25px;
 }
 .example-header-image {
   background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
@@ -37,6 +38,29 @@
   display:flex;
   justify-content:center;
 }
+
+.col-search {
+  display:flex;
+  justify-content:center;
+  min-width: 48vh;
+  max-width: 48vh;
+}
+
+.search-button {
+  width: 5em !important; 
+  height: 2.8em !important; 
+  min-width: unset!important;
+}
+
+.custom-col {
+  padding-top: 20px;
+}
+
+.col-search2 {
+  position: center;
+  justify-content: center;
+}
+
 .search-form {
   min-width: 150px;
   max-width: 500px;
@@ -47,3 +71,10 @@
   width: 100%;
 }
 
+.row {
+  display: flex;
+}
+
+.row > div {
+  flex: 1;
+}
