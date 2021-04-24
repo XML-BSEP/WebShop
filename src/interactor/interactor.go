@@ -84,6 +84,8 @@ func (i *interactor) NewProductHandler() handler.ProductHandler{
 	return handler.NewProductHandler(i.NewProductUsecase())
 }
 
+
+
 func (i *interactor) NewRegisteredShopUserUsecase() domain.RegisteredShopUserUsecase {
 	return usecase.NewRegisteredShopUserUsecase(i.NewRegisteredUserRepository(i.NewShopAccountRepository()))
 }
