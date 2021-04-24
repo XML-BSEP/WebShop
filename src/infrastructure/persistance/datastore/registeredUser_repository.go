@@ -10,6 +10,11 @@ type registeredUserRepository struct {
 	ShopAccountRepository domain.ShopAccountRepository
 }
 
+func (r registeredUserRepository) SaveNewPassword(account *domain.ShopAccount) error {
+	_, err := r.ShopAccountRepository.Update(account)
+	return err
+}
+
 func (r registeredUserRepository) GetAccountDetailsFromUser(u *domain.RegisteredShopUser) (*domain.ShopAccount, error) {
 	user, err := r.ExistByUsernameOrEmail("", u.Email)
 	account, err := r.ShopAccountRepository.GetByID(user.ShopAccountID)

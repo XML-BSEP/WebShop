@@ -6,11 +6,13 @@ import (
 	"net/http"
 	"unicode"
 	"web-shop/domain"
+	"web-shop/infrastructure/dto"
+	password_verification "web-shop/security/password-verification"
 	"web-shop/usecase"
 )
 
 type resetPassword struct {
-	RegistoredShopUserUsecase domain.RegisteredShopUserUsecase
+	RegisteredShopUserUsecase    domain.RegisteredShopUserUsecase
 	RandomStringGeneratorUsecase usecase.RandomStringGeneratorUsecase
 }
 
@@ -18,6 +20,7 @@ type resetPassword struct {
 
 type ResetPasswordHandler interface {
 	SendResetMail(ctx echo.Context) error
+	ResetPassword(ctx echo.Context) error
 }
 
 
@@ -39,7 +42,7 @@ func (r *resetPassword) SendResetMail(ctx echo.Context) (err error) {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	user, errE :=  r.RegistoredShopUserUsecase.ExistByUsernameOrEmail(ctx, "", req.Email)
+	user, errE :=  r.RegisteredShopUserUsecase.ExistByUsernameOrEmail(ctx, "", req.Email)
 	if errE != nil {
 		return ctx.JSON(http.StatusBadRequest, "User not found!")
 	}
@@ -48,8 +51,39 @@ func (r *resetPassword) SendResetMail(ctx echo.Context) (err error) {
 	code = r.RandomStringGeneratorUsecase.RandomStringGenerator(8)
 
 	go usecase.SendRestartPasswordMail(user.Email , code)
+	hashedCode, err := password_verification.Hash(code)
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, "Error")
+	}
+
+
+	r.RegisteredShopUserUsecase.SaveCodeToRedis(string(hashedCode), req.Email)
 
 	return ctx.JSON(http.StatusOK, "Successfully mail sent!")
+}
+
+func (r *resetPassword) ResetPassword(ctx echo.Context) error {
+	decoder := json.NewDecoder(ctx.Request().Body)
+
+	var resetDto dto.ResetPassDTO
+
+	err := decoder.Decode(&resetDto)
+
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	if pasval1, pasval2, pasval3, pasval4 := verifyPassword(resetDto.Password); pasval1 == false || pasval2 == false || pasval3 == false || pasval4 == false {
+		return ctx.JSON(http.StatusBadRequest, "Password must have minimum 1 uppercase letter, 1 lowercase letter, 1 digit and 1 special character and needs to be minimum 8 characters long")
+	}
+
+	errorMessage := r.RegisteredShopUserUsecase.ResetPassword(resetDto)
+
+	if errorMessage != "" {
+		return ctx.JSON(http.StatusInternalServerError, errorMessage)
+	}
+
+	return ctx.JSON(http.StatusOK, "password successfully changed")
 
 
 }

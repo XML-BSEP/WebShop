@@ -60,7 +60,7 @@ func (i *interactor) NewAppHandler() handler.AppHandler {
 
 
 func (i *interactor) NewRegisteredShopUserUsecase() domain.RegisteredShopUserUsecase {
-	return usecase.NewRegisteredShopUserUsecase(i.NewRegisteredUserRepository(i.NewShopAccountRepository()))
+	return usecase.NewRegisteredShopUserUsecase(i.NewRegisteredUserRepository(i.NewShopAccountRepository()), i.NewRedisUsecase())
 }
 
 func (i *interactor) NewAuthenticateHandler() handler.AuthenticateHandler {
