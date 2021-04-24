@@ -1,6 +1,7 @@
 package interactor
 
 import (
+
 	"gorm.io/gorm"
 	"web-shop/domain"
 	"web-shop/http/handler"
@@ -24,6 +25,7 @@ type Interactor interface {
 	NewSigUpUsecase() usecase.SignUpUseCase
 	NewRandomStringGeneratorUsecase() usecase.RandomStringGeneratorUsecase
 	NewRegisteredShopUserUsecase() domain.RegisteredShopUserUsecase
+	NewResetPasswordHandler() handler.ResetPasswordHandler
 }
 
 type interactor struct {
@@ -37,6 +39,7 @@ type appHandler struct {
 	handler.AuthenticateHandler
 	handler.SignUpHandler
 	handler.RedisHandlerSample
+	handler.ResetPasswordHandler
 }
 
 
@@ -50,13 +53,14 @@ func (i *interactor) NewAppHandler() handler.AppHandler {
 	appHandler.AuthenticateHandler = i.NewAuthenticateHandler()
 	appHandler.SignUpHandler = i.NewSignUpHandler()
 	appHandler.RedisHandlerSample = i.NewRedisHandler()
+	appHandler.ResetPasswordHandler = i.NewResetPasswordHandler()
 	return appHandler
 }
 
 
 
 func (i *interactor) NewRegisteredShopUserUsecase() domain.RegisteredShopUserUsecase {
-	return usecase.NewRegisteredShopUserUsecase(i.NewRegisteredUserRepository(i.NewShopAccountRepository()))
+	return usecase.NewRegisteredShopUserUsecase(i.NewRegisteredUserRepository(i.NewShopAccountRepository()), i.NewRedisUsecase())
 }
 
 func (i *interactor) NewAuthenticateHandler() handler.AuthenticateHandler {
@@ -119,6 +123,11 @@ func (i *interactor) NewSigUpUsecase() usecase.SignUpUseCase {
 
 func (i *interactor) NewAuthService() auth2.AuthInterface {
 	return auth2.NewAuth(i.NewRedisUsecase())
+}
+
+
+func (i *interactor) NewResetPasswordHandler() handler.ResetPasswordHandler {
+	return  handler.NewResetPasswordHandler(i.NewRegisteredShopUserUsecase(), i.NewRandomStringGeneratorUsecase())
 }
 
 

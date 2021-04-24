@@ -10,6 +10,12 @@ type registeredUserRepository struct {
 	ShopAccountRepository domain.ShopAccountRepository
 }
 
+
+func (r registeredUserRepository) SaveNewPassword(account *domain.ShopAccount) error {
+	_, err := r.ShopAccountRepository.Update(account)
+	return err
+}
+
 func (r registeredUserRepository) GetRoleById(id uint) (string, error) {
 	user, err := r.GetByID(id)
 	if err != nil {
