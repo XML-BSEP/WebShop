@@ -31,7 +31,7 @@ public getUserValue() : AuthenticatedUser {
 login(credentials: Authentication){
 
 
-    return this.http.post<AuthenticatedUser>(`${environment.baseUrl}/${environment.auth}/${environment.login}`, credentials)
+    return this.http.post<AuthenticatedUser>(`${environment.baseUrl}/${environment.login}`, credentials)
     .pipe(map(response => {
       localStorage.setItem('currentUser', JSON.stringify(response));
       console.log(response.token);
@@ -42,9 +42,12 @@ login(credentials: Authentication){
 
 logout() {
       // remove user from local storage to log user out
+      
+      this.http.post(`${environment.baseUrl}/${environment.login}`, null);
       localStorage.removeItem('currentUser');
       localStorage.removeItem('userId');
+      localStorage.removeItem('role');
       this.currentUserSubject.next(null);
-      this.router.navigate(['/']);
-}
+      this.router.navigate(['/login']);
+  }
 }

@@ -13,9 +13,14 @@ import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
 import { RegistrationConfirmationComponent } from './registration-confirmation/registration-confirmation.component';
 import { AdminNavBarComponent } from './nav-bars/admin-nav-bar/admin-nav-bar.component';
+import { ProductsPageComponent } from './products-page/products-page/products-page.component';
+import { MatInputModule } from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
 import { NotUserNavBarComponent } from './nav-bars/not-user-nav-bar/not-user-nav-bar.component';
 import { CustomerNavBarComponent } from './nav-bars/customer-nav-bar/customer-nav-bar.component';
 import { AddProductComponent } from './product/add-product/add-product.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+
 
 
 @NgModule({
@@ -26,9 +31,10 @@ import { AddProductComponent } from './product/add-product/add-product.component
     RegisterComponent,
     RegistrationConfirmationComponent,
     AdminNavBarComponent,
+    ProductsPageComponent,
     NotUserNavBarComponent,
     CustomerNavBarComponent,
-    AddProductComponent,
+    AddProductComponent
   ],
   imports: [
     BrowserModule,
@@ -37,7 +43,9 @@ import { AddProductComponent } from './product/add-product/add-product.component
     MaterialModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    MatInputModule,
+    MatSelectModule
   ],
   providers: [{provide : HTTP_INTERCEPTORS, useClass : JwtInterceptor, multi : true},
     {provide : HTTP_INTERCEPTORS, useClass : ErrorInterceptor, multi : true}],

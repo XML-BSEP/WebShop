@@ -15,7 +15,7 @@ export class AddProductComponent implements OnInit {
   nameCategoryGroup: FormGroup;
   descriptionPriceGroup: FormGroup;
   picturesGroup : FormGroup;
-  submitedPictures: String[];
+  submitedPictures: String[] = [];
 
   foods: Food[] = [
     {value: 'steak-0', viewValue: 'Steak'},
@@ -30,7 +30,7 @@ export class AddProductComponent implements OnInit {
   constructor(private _formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
-    this.submitedPictures = new Array();
+
     this.nameCategoryGroup = this._formBuilder.group({
       productName: ['', Validators.required],
       productCategory: ['', Validators.required]
@@ -54,14 +54,26 @@ export class AddProductComponent implements OnInit {
 
     let reader = new FileReader();
     reader.readAsDataURL(file);
+
     reader.onload = function () {
-      this.submitedPictures.append(reader.result)
-      console.log(this.submitedPictures);
+      console.log(reader.result);
     };
     reader.onerror = function (error) {
       console.log('Error: ', error);
     };
   }
 
+//   createBase64Image(file){
+//     const reader= new FileReader();
+
+//     reader.onload = (e) =>{
+//       let img = e.target.result;
+//       //img.replace("data:image\/(png|jpg|jpeg);base64", "");
+//         this.submitedPictures.push(img);
+//         this.submitedPictures.append()
+//     }
+
+//     reader.readAsDataURL(file);
+// }
 
 }
