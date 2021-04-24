@@ -1,6 +1,7 @@
 package seeder
 
 import (
+	"time"
 	"web-shop/domain"
 	"web-shop/infrastructure/database"
 	"web-shop/infrastructure/persistance/datastore"
@@ -20,14 +21,15 @@ func MigrateData() {
 	//conn.AutoMigrate(&domain.Person{})
 	conn.AutoMigrate(&domain.ShopAccount{})
 	conn.AutoMigrate(&domain.RegisteredShopUser{})
-	//conn.AutoMigrate(&domain.Product{})
+	conn.AutoMigrate(&domain.Product{})
+	conn.AutoMigrate(&domain.Image{})
 	//conn.AutoMigrate(&domain.Storage{})
 	seedRoles(conn)
 	seedAddresses(conn)
 	//seedPersons(conn)
 	seedShopAccounts(conn)
 	seedRegisteredUsers(conn)
-	//seedProducts(conn)
+	seedProducts(conn)
 	//seedStorages(conn)
 }
 
@@ -78,10 +80,21 @@ func seedRegisteredUsers(conn *gorm.DB) {
 
 func seedProducts(conn *gorm.DB) {
 	prodRepo := datastore.NewProductRepository(conn)
+	images1 := make([]domain.Image, 2)
+	images1[0] = domain.Image{Path: "assets/randompic1.jpg", Timestamp: time.Now().Add(40)}
+	images1[1] = domain.Image{Path: "assets/randompic2.jpg", Timestamp: time.Now().Add(40)}
 
-	product1 := domain.Product{Name: "Product1", Price: 6969, Image: "assets/randompic1.jpg", Currency: 1}
-	product2 := domain.Product{Name: "Product2", Price: 69420, Image: "assets/randompic2.jpg", Currency: 1}
-	product3 := domain.Product{Name: "Product3", Price: 1512, Image: "assets/randompic4.jpg", Currency: 1}
+	images2 := make([]domain.Image, 2)
+	images2[0] = domain.Image{Path: "assets/randompic3.jpg", Timestamp: time.Now().Add(10)}
+	images2[1] = domain.Image{Path: "assets/randompic4.jpg", Timestamp: time.Now().Add(15)}
+
+	images3 := make([]domain.Image, 2)
+	images3[0] = domain.Image{Path: "assets/randompic5.jpg", Timestamp: time.Now()}
+	images3[1] = domain.Image{Path: "assets/randompic6.jpg", Timestamp: time.Now()}
+
+	product1 := domain.Product{Name: "Product1", Price: 6969, Images: images1, Currency: 1}
+	product2 := domain.Product{Name: "Product2", Price: 69420, Images: images2, Currency: 1}
+	product3 := domain.Product{Name: "Product3", Price: 1512, Images: images3, Currency: 1}
 
 	prodRepo.Create(&product1)
 	prodRepo.Create(&product2)

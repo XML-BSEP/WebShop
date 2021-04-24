@@ -39,6 +39,7 @@ type appHandler struct {
 	handler.RedisHandlerSample
 }
 
+
 func NewInteractor(conn *gorm.DB) Interactor {
 	return &interactor{conn}
 }
@@ -51,6 +52,8 @@ func (i *interactor) NewAppHandler() handler.AppHandler {
 	appHandler.RedisHandlerSample = i.NewRedisHandler()
 	return appHandler
 }
+
+
 
 func (i *interactor) NewRegisteredShopUserUsecase() domain.RegisteredShopUserUsecase {
 	return usecase.NewRegisteredShopUserUsecase(i.NewRegisteredUserRepository(i.NewShopAccountRepository()))

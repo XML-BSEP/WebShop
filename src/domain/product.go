@@ -15,10 +15,13 @@ const (
 
 type Product struct {
 	gorm.Model
-	Name  string
-	Price uint64
-	Image string
-	Currency Currency
+	Name  string `json:"name"`
+	Price uint64 `json:"price"`
+	Currency Currency `json:"currency"`
+	Category string `json:"category"`
+	Available uint `json:"available"`
+	Description string `json:"description"`
+	Images []Image
 }
 
 type ProductUsecase interface {
