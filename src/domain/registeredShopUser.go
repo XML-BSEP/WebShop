@@ -39,5 +39,5 @@ type RegisteredShopUserRepository interface {
 	ExistByUsernameOrEmail(username string, email string) (*RegisteredShopUser, error)
 	GetAccountDetailsFromUser(u *RegisteredShopUser)  (*ShopAccount, error)
 	SaveNewPassword(account *ShopAccount) error
-
+	GetRoleById(id uint) (string, error)
 }
