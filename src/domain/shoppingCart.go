@@ -9,7 +9,8 @@ import (
 type ShoppingCart struct {
 	gorm.Model
 	ShoppingCartItems []ShoppingCartItem
-	Buyer             RegisteredShopUser
+	OrderID 		  uint
+	Buyer             string
 }
 
 type ShoppingCartUsecase interface {

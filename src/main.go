@@ -6,14 +6,13 @@ import (
 	"web-shop/http/middleware"
 	"web-shop/http/router"
 	"web-shop/infrastructure/database"
-	"web-shop/infrastructure/seeder"
 	"web-shop/interactor"
 )
 
 func main() {
 
 
-	seeder.MigrateData()
+	//seeder.MigrateData()
 
 	conn := database.NewDBConnection()
 	i := interactor.NewInteractor(conn)

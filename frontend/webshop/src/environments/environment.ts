@@ -8,8 +8,9 @@ export const environment = {
   login:"login",
   auth:"auth",
   registration : "register",
+  confirmAccount : "confirmAccount",
+  products : "products",
   logout : "logout",
-  confirmAccount : "confirmAccount"
 };
 
 /*

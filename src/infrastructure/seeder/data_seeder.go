@@ -1,6 +1,7 @@
 package seeder
 
 import (
+	"fmt"
 	"time"
 	"web-shop/domain"
 	"web-shop/infrastructure/database"
@@ -18,17 +19,24 @@ func MigrateData() {
 	conn := database.NewDBConnection()
 
 	conn.AutoMigrate(&domain.Address{})
-	//conn.AutoMigrate(&domain.Person{})
+	//conn.AutoMigrate(&domain.{})
 	conn.AutoMigrate(&domain.ShopAccount{})
 	conn.AutoMigrate(&domain.RegisteredShopUser{})
 	conn.AutoMigrate(&domain.Product{})
+	conn.AutoMigrate(&domain.Storage{})
+	conn.AutoMigrate(&domain.Category{})
 	conn.AutoMigrate(&domain.Image{})
 	//conn.AutoMigrate(&domain.Storage{})
 	seedRoles(conn)
 	seedAddresses(conn)
+
+
 	//seedPersons(conn)
 	seedShopAccounts(conn)
 	seedRegisteredUsers(conn)
+	seedStorages(conn)
+	seedCategories(conn)
+	seedProducts(conn)
 	seedProducts(conn)
 	//seedStorages(conn)
 }
@@ -80,26 +88,42 @@ func seedRegisteredUsers(conn *gorm.DB) {
 
 func seedProducts(conn *gorm.DB) {
 	prodRepo := datastore.NewProductRepository(conn)
+	catRepo := datastore.NewCategoryRepository(conn)
+
+	cat1, _ := catRepo.GetByID(1)
+	cat2, _ := catRepo.GetByID(2)
+
 	images1 := make([]domain.Image, 2)
-	images1[0] = domain.Image{Path: "assets/randompic1.jpg", Timestamp: time.Now().Add(40)}
-	images1[1] = domain.Image{Path: "assets/randompic2.jpg", Timestamp: time.Now().Add(40)}
+	images1[0] = domain.Image{Path: "randompic1.jpg", Timestamp: time.Now().Add(40)}
+	images1[1] = domain.Image{Path: "randompic2.jpg", Timestamp: time.Now().Add(40)}
 
 	images2 := make([]domain.Image, 2)
-	images2[0] = domain.Image{Path: "assets/randompic3.jpg", Timestamp: time.Now().Add(10)}
-	images2[1] = domain.Image{Path: "assets/randompic4.jpg", Timestamp: time.Now().Add(15)}
+	images2[0] = domain.Image{Path: "randompic3.jpg", Timestamp: time.Now().Add(10)}
+	images2[1] = domain.Image{Path: "randompic4.jpg", Timestamp: time.Now().Add(15)}
 
 	images3 := make([]domain.Image, 2)
-	images3[0] = domain.Image{Path: "assets/randompic5.jpg", Timestamp: time.Now()}
-	images3[1] = domain.Image{Path: "assets/randompic6.jpg", Timestamp: time.Now()}
+	images3[0] = domain.Image{Path: "randompic5.jpg", Timestamp: time.Now()}
+	images3[1] = domain.Image{Path: "randompic6.jpg", Timestamp: time.Now()}
 
-	product1 := domain.Product{Name: "Product1", Price: 6969, Images: images1, Currency: 1}
-	product2 := domain.Product{Name: "Product2", Price: 69420, Images: images2, Currency: 1}
-	product3 := domain.Product{Name: "Product3", Price: 1512, Images: images3, Currency: 1}
+	product1 := domain.Product{Name: "Product1", Price: 6969, Images: images1, Currency: 1, Category: *cat1}
+	product2 := domain.Product{Name: "Product2", Price: 69420, Images: images2, Currency: 1, Category: *cat2}
+	product3 := domain.Product{Name: "Product3", Price: 1512, Images: images3, Currency: 1, Category: *cat1}
 
 	prodRepo.Create(&product1)
 	prodRepo.Create(&product2)
 	prodRepo.Create(&product3)
 
+}
+
+func seedCategories(conn *gorm.DB) {
+	catRepo := datastore.NewCategoryRepository(conn)
+
+	category1 := domain.Category{Name: "Tech"}
+	category2 := domain.Category{Name: "Makeup"}
+
+	cat, _ := catRepo.Create(&category1)
+	fmt.Print(cat)
+	catRepo.Create(&category2)
 }
 
 func seedStorages(conn *gorm.DB) {
