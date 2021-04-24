@@ -17,10 +17,11 @@ type Product struct {
 	gorm.Model
 	Name  string `json:"name"`
 	Price uint64 `json:"price"`
-	Image string 	`json:"image"`
 	Currency Currency `json:"currency"`
+	Category string `json:"category"`
 	Available uint `json:"available"`
 	Description string `json:"description"`
+	Images []Image
 	Category Category
 	CategoryId uint
 }
