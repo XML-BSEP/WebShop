@@ -78,7 +78,7 @@ func seedRegisteredUsers(conn *gorm.DB) {
 	role1, _ := datastore.NewRoleRepository(conn).GetByID(1)
 	role2, _ := datastore.NewRoleRepository(conn).GetByID(2)
 
-	regUser1 := domain.RegisteredShopUser{Email: "a@a.com", ShopAccount: *acc1, Role: *role1}
+	regUser1 := domain.RegisteredShopUser{Email: "vlajkovj31@gmail.com", ShopAccount: *acc1, Role: *role1}
 	regRepo.Create(&regUser1)
 
 	regUser2 := domain.RegisteredShopUser{Email: "a2@a.com", ShopAccount: *acc2, Role: *role2}

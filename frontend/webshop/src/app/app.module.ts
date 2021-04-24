@@ -16,6 +16,11 @@ import { AdminNavBarComponent } from './nav-bars/admin-nav-bar/admin-nav-bar.com
 import { ProductsPageComponent } from './products-page/products-page/products-page.component';
 import { MatInputModule } from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
+import { NotUserNavBarComponent } from './nav-bars/not-user-nav-bar/not-user-nav-bar.component';
+import { CustomerNavBarComponent } from './nav-bars/customer-nav-bar/customer-nav-bar.component';
+import { AddProductComponent } from './product/add-product/add-product.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+
 
 
 @NgModule({
@@ -26,7 +31,11 @@ import {MatSelectModule} from '@angular/material/select';
     RegisterComponent,
     RegistrationConfirmationComponent,
     AdminNavBarComponent,
-    ProductsPageComponent
+    ProductsPageComponent,
+    NotUserNavBarComponent,
+    CustomerNavBarComponent,
+    AddProductComponent,
+    ForgotPasswordComponent
   ],
   imports: [
     BrowserModule,

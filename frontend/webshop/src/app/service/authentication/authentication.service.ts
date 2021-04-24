@@ -24,7 +24,7 @@ export class AuthenticationService {
   }
 
 public getUserValue() : AuthenticatedUser {
-    console.log("Token" + this.currentUserSubject.value.token.accessToken);
+   // console.log("Token" + this.currentUserSubject.value.token.accessToken);
     return this.currentUserSubject.value;
 }
 
@@ -42,9 +42,12 @@ login(credentials: Authentication){
 
 logout() {
       // remove user from local storage to log user out
+      
+      this.http.post(`${environment.baseUrl}/${environment.login}`, null);
       localStorage.removeItem('currentUser');
       localStorage.removeItem('userId');
+      localStorage.removeItem('role');
       this.currentUserSubject.next(null);
-      this.router.navigate(['/']);
-}
+      this.router.navigate(['/login']);
+  }
 }
