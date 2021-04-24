@@ -99,7 +99,7 @@ func (au *Authenticate) Login(c echo.Context) error {
 		c.JSON(http.StatusInternalServerError, invalidEmail)
 	}
 	userData["role"] = role
-	
+
 	return c.JSON(http.StatusOK, userData)
 }
 
