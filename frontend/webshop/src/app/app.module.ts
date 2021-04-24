@@ -28,7 +28,7 @@ import { AddProductComponent } from './product/add-product/add-product.component
     AdminNavBarComponent,
     NotUserNavBarComponent,
     CustomerNavBarComponent,
-    AddProductComponent
+    AddProductComponent,
   ],
   imports: [
     BrowserModule,

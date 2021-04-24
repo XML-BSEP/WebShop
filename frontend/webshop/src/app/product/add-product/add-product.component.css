@@ -139,6 +139,18 @@
   margin-top:5%;
   margin-left: 5%;
 }
+.upload-file{
+  width:20%;
+  height:5%;
+  margin-top: 5%;
+  margin-left:5%;
+}
+.upload-field{
+  width:20%;
+  height:5%;
+  font-size: 18px;
+  margin-bottom:5%;
+}
 #right-part{
   width:50%;
   height:100%;
