@@ -16,6 +16,8 @@ import { AdminNavBarComponent } from './nav-bars/admin-nav-bar/admin-nav-bar.com
 import { NotUserNavBarComponent } from './nav-bars/not-user-nav-bar/not-user-nav-bar.component';
 import { CustomerNavBarComponent } from './nav-bars/customer-nav-bar/customer-nav-bar.component';
 import { AddProductComponent } from './product/add-product/add-product.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+
 
 
 @NgModule({
@@ -29,6 +31,7 @@ import { AddProductComponent } from './product/add-product/add-product.component
     NotUserNavBarComponent,
     CustomerNavBarComponent,
     AddProductComponent
+    ForgotPasswordComponent
   ],
   imports: [
     BrowserModule,
