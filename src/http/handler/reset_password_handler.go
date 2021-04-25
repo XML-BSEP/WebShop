@@ -3,7 +3,9 @@ package handler
 import (
 	"encoding/json"
 	"github.com/labstack/echo"
+	"github.com/microcosm-cc/bluemonday"
 	"net/http"
+	"strings"
 	"unicode"
 	"web-shop/domain"
 	"web-shop/infrastructure/dto"
@@ -38,6 +40,9 @@ func (r *resetPassword) SendResetMail(ctx echo.Context) (err error) {
 	var req Email
 	err = decoder.Decode(&req)
 
+	policy := bluemonday.UGCPolicy();
+	req.Email = strings.TrimSpace(policy.Sanitize(req.Email))
+
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
@@ -68,6 +73,11 @@ func (r *resetPassword) ResetPassword(ctx echo.Context) error {
 	var resetDto dto.ResetPassDTO
 
 	err := decoder.Decode(&resetDto)
+
+	policy := bluemonday.UGCPolicy();
+	resetDto.Email = strings.TrimSpace(policy.Sanitize(resetDto.Email))
+	resetDto.Password = strings.TrimSpace(policy.Sanitize(resetDto.Password))
+	resetDto.VerificationCode = strings.TrimSpace(policy.Sanitize(resetDto.VerificationCode))
 
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())

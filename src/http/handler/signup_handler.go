@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/labstack/echo"
+	"github.com/microcosm-cc/bluemonday"
 	"net/http"
 	"strings"
 	"unicode"
@@ -96,6 +97,9 @@ func (signUp *signUp) ConfirmAccount(ctx echo.Context) error {
 	errs := customValidator.TranslateError(validateErr, translator)
 	errorsString := customValidator.GetErrorsString(errs)
 
+	policy := bluemonday.UGCPolicy();
+	credentials.Email = strings.TrimSpace(policy.Sanitize(credentials.Email))
+	credentials.VerificationCode = strings.TrimSpace(policy.Sanitize(credentials.VerificationCode))
 
 
 	if validateErr != nil {
