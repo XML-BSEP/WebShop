@@ -19,12 +19,14 @@ type Token struct {
 	RedisUsecase                 usecase.RedisUsecase
 }
 
- func NewToken(redisUsecase usecase.RedisUsecase) *Token {
+func NewToken(redisUsecase usecase.RedisUsecase) *Token {
 	return &Token{
 		RedisUsecase : redisUsecase,
 	}
 }
-
+func NewToken2() *Token {
+	return &Token{nil}
+}
 type TokenInterface interface {
 	CreateToken(userid uint64) (*auth.TokenDetails, error)
 	ExtractTokenMetadata(r *http.Request) (*auth.AccessDetails, error)
@@ -93,6 +95,7 @@ func VerifyToken(r *http.Request) (*jwt.Token, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	return token, nil
 }
 

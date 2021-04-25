@@ -9,9 +9,11 @@ func NewMiddleware(e *echo.Echo) {
 	e.Use(middleware.Recover())
 	e.Use(middleware.Logger())
 	e.Pre(middleware.HTTPSRedirect())
+	e.Static("/static", "src/assets")
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{"*"},
 		AllowMethods: []string{echo.GET, echo.POST, echo.PUT, echo.DELETE, echo.PATCH, echo.HEAD},
+
 	}))
 
 

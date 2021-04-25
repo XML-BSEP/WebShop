@@ -19,7 +19,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.loginForm = new FormGroup({
-      'username' : new FormControl(null, [Validators.required, Validators.email]),
+      'username' : new FormControl(null, [Validators.required]),
       'password' : new FormControl(null, Validators.required)
     });
   }
@@ -37,12 +37,13 @@ export class LoginComponent implements OnInit {
     this.authService.login(this.credentials).subscribe(
       result => {
         localStorage.setItem('userId',String(result.id))
+        localStorage.setItem('roole',String(result.role))
         this.router.navigate(['/'])
 
 
       },
       error=>{
-        alert("Wrong username or password")
+        alert(error)
         this.router.navigate(['/login']);
 
       });

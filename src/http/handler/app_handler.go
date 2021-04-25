@@ -6,4 +6,7 @@ type AppHandler interface {
 	AddressHandler
 	SignUpHandler
 	RedisHandlerSample
+	ProductHandler
+	OrderHandler
+	ResetPasswordHandler
 }

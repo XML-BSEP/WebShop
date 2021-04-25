@@ -3,6 +3,7 @@ package domain
 import (
 	"github.com/labstack/echo"
 	"gorm.io/gorm"
+	"web-shop/infrastructure/dto"
 )
 
 type RegisteredShopUser struct {
@@ -12,6 +13,8 @@ type RegisteredShopUser struct {
 	Surname	string	`json:"surname"`
 	ShopAccount   ShopAccount
 	ShopAccountID uint
+	Role Role
+	RoleId uint
 
 }
 
@@ -22,6 +25,8 @@ type RegisteredShopUserUsecase interface {
 	Create(ctx echo.Context, reg *RegisteredShopUser) (*RegisteredShopUser, error)
 	Delete(ctx echo.Context, id uint) error
 	ExistByUsernameOrEmail(ctx echo.Context, username string, email string) (*RegisteredShopUser, error)
+	ResetPassword(dto dto.ResetPassDTO) string
+	SaveCodeToRedis(code string, email string) error
 }
 
 type RegisteredShopUserRepository interface {
@@ -33,5 +38,6 @@ type RegisteredShopUserRepository interface {
 	GetUserDetailsFromEmail(email string) (*RegisteredShopUser, error)
 	ExistByUsernameOrEmail(username string, email string) (*RegisteredShopUser, error)
 	GetAccountDetailsFromUser(u *RegisteredShopUser)  (*ShopAccount, error)
-
+	SaveNewPassword(account *ShopAccount) error
+	GetRoleById(id uint) (string, error)
 }
