@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup, Validators, FormControl} from '@angular/forms';
+import { ResetPasswordService} from '../service/reset-password/reset-password.service'
+import { ResetMail } from '../model/resetMail';
+import { ResetPass } from '../model/resetPass';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-forgot-password',
@@ -12,8 +16,12 @@ export class ForgotPasswordComponent implements OnInit {
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
   thirdFormGroup : FormGroup;
+  resetMail : ResetMail;
+  code : string;
+  resetPass : ResetPass;
+  email : string;
 
-  constructor(private _formBuilder: FormBuilder) { }
+  constructor(private _formBuilder: FormBuilder, private resetPasswordSerivce : ResetPasswordService, private router : Router) { }
 
   ngOnInit() {
     this.firstFormGroup = new FormGroup({
@@ -29,13 +37,25 @@ export class ForgotPasswordComponent implements OnInit {
   }
 
   sendMail(){
-    var email = this.firstFormGroup.controls.email.value;
-    console.log(email)
+    this.email = this.firstFormGroup.controls.email.value;
+    console.log(this.email)
+    this.resetMail = new ResetMail(this.email)
+    
+    this.resetPasswordSerivce.resetPasswordMail(this.resetMail).subscribe(
+      res=>{
+        alert('Check your mail');
+      },
+      error=>{
+        alert("Fail - email is not in use!");
+      }
+      )
+
   }
 
   verifyCode() {
-    var code = this.secondFormGroup.controls.code.value;
-    console.log(code)
+    this.code = this.secondFormGroup.controls.code.value;
+    console.log(this.code) 
+  
   }
 
   
@@ -45,6 +65,19 @@ export class ForgotPasswordComponent implements OnInit {
 
     var confirmPassword = this.thirdFormGroup.controls.confirmPassword.value;
     console.log(confirmPassword)
+
+    this.resetPass = new ResetPass(this.email, password, confirmPassword, this.code)
+
+    this.resetPasswordSerivce.resetPassword(this.resetPass).subscribe(
+      res=>{
+        alert("Successfully changed password");
+        this.router.navigate(['/login']);
+      },
+      error=>{
+        alert(error);
+      }
+      )
+
   }
 
 }
