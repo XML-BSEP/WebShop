@@ -14,6 +14,7 @@ func NewRouter(e *echo.Echo, h handler.AppHandler, authMiddleware middleware.Aut
 	e.POST("/confirmAccount", h.ConfirmAccount, authMiddleware.Authenticated())
 	e.POST("/resetPasswordMail", h.SendResetMail, authMiddleware.Authenticated())
 	e.POST("/resetPassword", h.ResetPassword, authMiddleware.Authenticated())
+	e.POST("/refresh", h.Refresh, authMiddleware.Authenticated())
 	g := e.Group("")
 	g.Use(authMiddleware.Auth())
 	g.GET("/addresses", h.GetAddresses)
