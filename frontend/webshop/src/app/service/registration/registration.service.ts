@@ -11,7 +11,7 @@ export class RegistrationService {
 
   constructor(private https : HttpClient) { }
 
-  registerPatient(data : RegisteredUser){
+  register(data : RegisteredUser){
     return this.https.post(`${environment.baseUrl}/${environment.registration}`,data, {responseType : 'text'});
   }
 

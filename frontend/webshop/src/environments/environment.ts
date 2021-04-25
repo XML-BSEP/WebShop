@@ -11,6 +11,8 @@ export const environment = {
   confirmAccount : "confirmAccount",
   products : "products",
   logout : "logout",
+  categories : "categories",
+  addProduct : "addProduct"
 };
 
 /*

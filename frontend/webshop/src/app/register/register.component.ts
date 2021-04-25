@@ -36,7 +36,7 @@ export class RegisterComponent implements OnInit {
     if(password===confirmPassword){
       this.newUser = new RegisteredUser(name, lastname, email, password, confirmPassword, username);
 
-    this.registrationService.registerPatient(this.newUser).subscribe(
+    this.registrationService.register(this.newUser).subscribe(
       res=>{
         alert('Success');
         this.router.navigate(['/regconfirm'], {state: {data: email}});

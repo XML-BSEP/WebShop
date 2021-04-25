@@ -1,4 +1,4 @@
-p, admin, /*, *
+p, admin, /addProduct, *
 p, user, /addresses, *
 p, anonymous, /login, *
 p, anonymous, /register, *

@@ -1,12 +1,18 @@
 package usecase
 
 import (
+	"encoding/base64"
 	"github.com/labstack/echo"
+	"os"
+	"strconv"
+	"strings"
 	"web-shop/domain"
+	"web-shop/infrastructure/dto"
 )
 
 type productUseCase struct {
 	ProductRepository domain.ProductRepository
+	CategoryRepository domain.CategoryRepository
 }
 
 func (p *productUseCase) FilterByCategory(category string, priceRangeStart uint, priceRangeEnd uint, limit int, offset int, order string) ([]*domain.Product, error) {
@@ -56,7 +62,48 @@ func (p *productUseCase) Update(ctx echo.Context, pic *domain.Product) (*domain.
 	return p.ProductRepository.Update(pic)
 }
 
-func (p *productUseCase) Create(ctx echo.Context, pic *domain.Product) (*domain.Product, error) {
+func (p *productUseCase) Create(ctx echo.Context, newProd *dto.NewProduct) (*domain.Product, error) {
+	var pic *domain.Product
+	var cat *domain.Category
+	cat, _ = p.CategoryRepository.GetByName(newProd.Category)
+
+	if cat != nil {
+		pic.Category = *cat
+	}
+	list, _ := p.ProductRepository.Fetch()
+	len := len(list)
+	t := strconv.Itoa(len)
+	path := "../assets/"+t
+	os.Mkdir(path, 0755)
+	os.Chdir("../assets")
+
+	for i,_ := range newProd.Images{
+		s := strings.Split(newProd.Images[i], ",")
+		a := strings.Split(s[0], "/")
+		format:= strings.Split(a[1], ";")
+
+		dec, err := base64.StdEncoding.DecodeString(newProd.Images[i])
+		if err != nil {
+			panic(err)
+		}
+
+		f, err := os.Create(strconv.Itoa(i)+"."+format[0])
+
+		if err != nil {
+			panic(err)
+		}
+		defer f.Close()
+
+		if _, err := f.Write(dec); err != nil {
+			panic(err)
+		}
+		if err := f.Sync(); err != nil {
+			panic(err)
+		}
+
+	}
+
+
 	return p.ProductRepository.Create(pic)
 }
 
@@ -65,6 +112,6 @@ func (p *productUseCase) Delete(ctx echo.Context, id uint) error {
 }
 
 
-func NewProductUseCase(p domain.ProductRepository) domain.ProductUsecase {
-	return &productUseCase{p}
+func NewProductUseCase(p domain.ProductRepository, c domain.CategoryRepository) domain.ProductUsecase {
+	return &productUseCase{p,c}
 }

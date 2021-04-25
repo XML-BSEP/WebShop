@@ -29,8 +29,8 @@
                       <mat-form-field  class="input-field">
                         <mat-label>Product category</mat-label>
                         <mat-select formControlName="productCategory">
-                          <mat-option *ngFor="let food of foods" [value]="food.value">
-                            {{food.viewValue}}
+                          <mat-option *ngFor="let c of allCategories" [value]="c.category">
+                            {{c.category}}
                           </mat-option>
                         </mat-select>
                         <mat-error

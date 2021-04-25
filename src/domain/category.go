@@ -17,6 +17,8 @@ type CategoryUsecase interface {
 	Update(ctx echo.Context, pic *Category) (*Category, error)
 	Create(ctx echo.Context, pic *Category) (*Category, error)
 	Delete(ctx echo.Context, id uint) error
+	GetByName(name string)(*Category, error)
+
 }
 
 type CategoryRepository interface {
@@ -25,4 +27,5 @@ type CategoryRepository interface {
 	Update(pic *Category) (*Category, error)
 	Create(pic *Category) (*Category, error)
 	Delete(id uint) error
+	GetByName(name string)(*Category, error)
 }

@@ -7,7 +7,7 @@
           <h1 id="title-text">Welcome to Queen's Virtual Store</h1>
         </div>
         <div id="browse">
-          <button mat-raised-button id="browse-button" >Browse store</button>
+          <button mat-raised-button id="browse-button" routerLink="/products">Browse store</button>
 
         </div>
       </div>
@@ -44,6 +44,8 @@
             <button mat-raised-button id="login" (click)="login()"><mat-icon>login</mat-icon>Login</button>
             <!-- POSTAVLJEN NEKI BLANKO PLACEHOLDER ZA URL -->
             <p id="not-signed">Dont have an account? <a href="/registration"> Sign up!</a></p>
+            <p id="forgotten-password"><a href="/forgotPassword"> Forgotten password?</a></p>
+
       </mat-card>
       </div>
     </div>

@@ -9,4 +9,5 @@ type AppHandler interface {
 	ProductHandler
 	OrderHandler
 	ResetPasswordHandler
+	CategoryHandler
 }
