@@ -11,6 +11,7 @@ export const environment = {
   confirmAccount : "confirmAccount",
   products : "products",
   logout : "logout",
+  filterSearch : "filterSearch"
 };
 
 /*

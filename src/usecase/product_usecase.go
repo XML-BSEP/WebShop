@@ -9,8 +9,18 @@ type productUseCase struct {
 	ProductRepository domain.ProductRepository
 }
 
-func (p *productUseCase) FilterByCategory(category string, priceRangeStart uint, priceRangeEnd uint, limit int, offset int, order string) ([]*domain.Product, error) {
-	return p.ProductRepository.FilterByCategory(category, priceRangeStart, priceRangeEnd, limit, offset, order)
+func (p *productUseCase) Count() (int64, error) {
+	return p.ProductRepository.Count()
+}
+
+func (p *productUseCase) FilterByCategory(name string, category string, priceRangeStart uint, priceRangeEnd uint, limit int, offset int, order string) ([]*domain.Product, error) {
+	if name == "" {
+		name = "%"
+	}
+	if category == "" {
+		category = "%"
+	}
+	return p.ProductRepository.FilterByCategory(name, category, priceRangeStart, priceRangeEnd, limit, offset, order)
 }
 
 func (p *productUseCase) GetProductsWithConditionOrderedByPrice(low uint, high uint, category string, limit int, offset int, order int) ([]*domain.Product, error) {

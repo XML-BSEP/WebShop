@@ -1,4 +1,7 @@
+import { ThrowStmt } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
+import { PageEvent } from '@angular/material/paginator';
+import { FilterSearch } from 'src/app/model/filterSearch';
 import { Product } from 'src/app/model/product';
 import { ProductServiceService } from 'src/app/service/product/product-service.service';
 
@@ -10,14 +13,41 @@ import { ProductServiceService } from 'src/app/service/product/product-service.s
 export class ProductsPageComponent implements OnInit {
 
   products : Product[]
+  itemsCount : number;
+  pageSize : number;
+  pageSizeOptions = [5, 10, 25]
+  filterSearch : FilterSearch
   constructor(private prodService : ProductServiceService) { }
 
   ngOnInit(): void {
-    this.getProducts()
+    this.pageSize = 5;
+    this.filterSearch = new FilterSearch("", "", 0, 10000000, this.pageSize, 0, "price asc")
+   
+    this.getProducts(this.filterSearch)
   }
 
-  getProducts() {
-      this.prodService.getProducts().subscribe(data => {this.products = data})
+  getProducts(filterSearch : FilterSearch) {
+      this.prodService.getProducts(filterSearch).subscribe(
+        data => {
+          this.products = []
+          console.log("Pre: " + this.products.length)
+          this.products = data
+          console.log("Posle: " + this.products.length)
+          this.itemsCount = data[0].count
+        })
   }
 
+  load(event : PageEvent) {
+      this.pageSize = event.pageSize
+      this.filterSearch.category = ""
+      this.filterSearch.name = ""
+      this.filterSearch.offset = (event.pageIndex) * this.pageSize
+      console.log("Velicina stranice: " + this.pageSize)
+      this.filterSearch.limit = (event.pageIndex + 1) * this.pageSize;
+      this.filterSearch.priceRangeStart = 0
+      this.filterSearch.priceRangeEnd = 1000000
+      this.filterSearch.order = "price asc"
+      this.getProducts(this.filterSearch)
+      console.log(event.pageSize)
+  }
 }
