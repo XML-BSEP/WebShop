@@ -2,9 +2,13 @@ package handler
 
 import (
 	"encoding/json"
+	"fmt"
+	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo"
 	"github.com/microcosm-cc/bluemonday"
 	"net/http"
+	"os"
+	"strconv"
 	"strings"
 	"web-shop/domain"
 	"web-shop/infrastructure/dto"
@@ -15,6 +19,7 @@ import (
 type AuthenticateHandler interface {
 	Login(c echo.Context) error
 	Logout(c echo.Context) error
+	Refresh(c echo.Context) error
 }
 
 const (
@@ -24,6 +29,10 @@ const (
 	invalidPassword    = "Invalid password"
 	successfulLogout   = "Successfully logged out!"
 	invalidEmail = "Invalid email!"
+	cannotFindUiid = "Cannot get uuid"
+	parseError = "Error while parsing occured"
+	unauthorized = "Unauthorized"
+	refreshTokenExpired = "Refresh token expired"
 )
 
 
@@ -44,7 +53,6 @@ func NewAuthenticate(uApp domain.RegisteredShopUserRepository, tk auth2.TokenInt
 func (au *Authenticate) Login(c echo.Context) error {
 	var account *dto.AuthenticationDto
 	var tokenErr = map[string]string{}
-
 
 	decoder := json.NewDecoder(c.Request().Body)
 
@@ -137,4 +145,78 @@ func ValidateLoginInput(account *dto.AuthenticationDto) map[string]string {
 		errorMessages["username_required"] = usernameIsRequired
 	}
 	return errorMessages
+}
+
+func (au *Authenticate) Refresh(c echo.Context) error {
+	mapToken := map[string]string{}
+
+	decoder := json.NewDecoder(c.Request().Body)
+
+	err := decoder.Decode(&mapToken)
+
+	if err != nil {
+		return c.JSON(http.StatusUnprocessableEntity, invalidJson)
+	}
+	refreshToken := mapToken["refresh_token"]
+
+	token, err := jwt.Parse(refreshToken, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+		}
+		return []byte(os.Getenv("REFRESH_SECRET")), nil
+	})
+
+	if err != nil {
+		return c.JSON(http.StatusUnauthorized, err.Error())
+	}
+
+	if _, ok := token.Claims.(jwt.Claims); !ok && !token.Valid {
+		return c.JSON(http.StatusUnauthorized, err)
+	}
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if ok && token.Valid {
+		refreshUuid, ok := claims["refresh_uuid"].(string) //convert the interface to string
+		if !ok {
+			return c.JSON(http.StatusUnprocessableEntity, cannotFindUiid)
+		}
+		userId, err := strconv.ParseUint(fmt.Sprintf("%.f", claims["user_id"]), 10, 64)
+		if err != nil {
+			return c.JSON(http.StatusUnprocessableEntity, parseError)
+		}
+
+		delErr := au.au.DeleteRefresh(refreshUuid)
+		if delErr != nil { //if any goes wrong
+			return c.JSON(http.StatusUnauthorized, unauthorized)
+		}
+
+		ts, createErr := au.tk.CreateToken(userId)
+		if createErr != nil {
+			return c.JSON(http.StatusForbidden, createErr.Error())
+
+		}
+
+		saveErr := au.au.CreateAuth(uint(userId), ts)
+		if saveErr != nil {
+			return c.JSON(http.StatusForbidden, saveErr.Error())
+
+		}
+
+
+		role, err := au.us.GetRoleById(uint(userId))
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, invalidEmail)
+		}
+
+
+		tokens := map[string]string{
+			"access_token":  ts.AccessToken,
+			"refresh_token": ts.RefreshToken,
+			"role" : role,
+			"id" : string(userId),
+		}
+		return c.JSON(http.StatusCreated, tokens)
+	} else {
+		return c.JSON(http.StatusUnauthorized, refreshTokenExpired)
+	}
 }

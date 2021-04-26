@@ -16,13 +16,22 @@ export class ErrorInterceptor implements HttpInterceptor {
             if ([401, 403].indexOf(err.status) !== -1) {
                 // auto logout if 401 response returned from api
                 // this.authenticationService.logout();
-                location.reload(true);
+                let currentUser = this.authenticationService.currentUserValue;
+                
+                if (currentUser && currentUser.refreshToken) {
+                    this.authenticationService.refresh(currentUser.refreshToken).subscribe(result => {
+                        localStorage.setItem('userId',String(result.id))
+                        this.router.navigate(['/'])
+                    },
+                    error=>{
+                        this.router.navigate(['/login']);
+                    });
 
+                } else {
+                    const error = err.error.message || err.statusText;
+                    return throwError(error);
+                }
             }
-
-
-            const error = err.error.message || err.statusText;
-            return throwError(error);
         }))
     }
 }
