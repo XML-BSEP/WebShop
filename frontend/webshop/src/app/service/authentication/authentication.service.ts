@@ -47,4 +47,13 @@ logout() {
       this.currentUserSubject.next(null);
       this.router.navigate(['/']);
 }
+
+refresh(refreshToken : string) {
+  return this.http.post<AuthenticatedUser>(`${environment.baseUrl}/${environment.refresh}`, refreshToken)
+  .pipe(map(response => {
+    localStorage.setItem('currentUser', JSON.stringify(response));
+    this.currentUserSubject.next(response);
+    return response;
+  }))
+}
 }
