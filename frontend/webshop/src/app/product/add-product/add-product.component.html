@@ -79,8 +79,8 @@
 
                 </div>
                 <div class="step-field">
-                  <label class="label1-field">Available:</label>
-                  <mat-form-field class="input1-field">
+                  <label class="label1-field1">Available:</label>
+                  <mat-form-field class="input1-field1">
                     <mat-label>Products available</mat-label>
                     <input matInput placeholder="Enter available" formControlName="available" required>
                     <mat-error
@@ -145,7 +145,7 @@
 
                 <div>
                   <button mat-raised-button color="primary" class="back-button" matStepperPrevious>Back</button>
-                  <button mat-raised-button color="primary" class="next1-button" [disabled]="this.current<4" (click)="addProduct()">Add</button>
+                  <button mat-raised-button color="primary" class="next1-button" [disabled]="this.current==0" (click)="addProduct()">Add</button>
                 </div>
               </div>
             </mat-step>

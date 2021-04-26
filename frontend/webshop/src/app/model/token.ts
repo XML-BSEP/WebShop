@@ -1,14 +1,13 @@
 export class Token {
-    public expiresIn: number;
-    public accessToken: string;
-
-    constructor(expiresIn : number, accessToken : string) {
-        this.expiresIn = expiresIn;
-        this.accessToken = accessToken;
+    public access_token: string;
+    public refresh_token : string;
+    constructor(access_token : string, refresh : string) {
+      this.access_token = access_token;
+      this.refresh_token = this.refresh_token;
     }
 
     getToken() {
-        return this.accessToken;
+        return this.access_token;
     }
 
 

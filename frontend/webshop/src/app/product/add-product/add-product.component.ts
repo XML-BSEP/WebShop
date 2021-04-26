@@ -22,7 +22,7 @@ export class AddProductComponent implements OnInit {
   picturesGroup : FormGroup;
   newProduct : NewProduct;
   images: Image[] = new Array();
-  isLinear : Boolean = false;
+  isLinear : Boolean = true;
   submitedPictures: String[] = [];
 
   foods: Food[] = [

@@ -34,7 +34,7 @@ login(credentials: Authentication){
     return this.http.post<AuthenticatedUser>(`${environment.baseUrl}/${environment.login}`, credentials)
     .pipe(map(response => {
       localStorage.setItem('currentUser', JSON.stringify(response));
-      console.log(response.token);
+      console.log(response);
       this.currentUserSubject.next(response);
       return response;
     }));
@@ -42,7 +42,7 @@ login(credentials: Authentication){
 
 logout() {
       // remove user from local storage to log user out
-      
+
       this.http.post(`${environment.baseUrl}/${environment.login}`, null);
       localStorage.removeItem('currentUser');
       localStorage.removeItem('userId');
