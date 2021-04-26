@@ -2,9 +2,9 @@ package usecase
 
 import (
 	"encoding/base64"
+	"fmt"
 	"github.com/labstack/echo"
 	"os"
-	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -73,6 +73,8 @@ func (p *productUseCase) Create(ctx echo.Context, newProd *dto.NewProduct) (*dom
 
 	list, _ = p.ProductRepository.Fetch()
 
+	path2, _ := os.Getwd()
+	fmt.Println(path2)
 	len := len(list)
 	t := strconv.Itoa(len+1)
 	path1 := "./src/assets"
@@ -115,9 +117,8 @@ func (p *productUseCase) Create(ctx echo.Context, newProd *dto.NewProduct) (*dom
 	//
 	//}
 
-	path, _ := os.Getwd()
-	parent := filepath.Dir(path)
-	os.Chdir(parent)
+
+	os.Chdir(path2)
 	curr,_ :=strconv.Atoi(newProd.Currency)
 	price,_ :=strconv.Atoi(newProd.Price)
 	av,_ :=strconv.Atoi(newProd.Available)
