@@ -42,7 +42,8 @@ func (p *productHandler) AddProduct(ctx echo.Context) error {
 	t.Available = strings.TrimSpace(policy.Sanitize(t.Available))
 	t.Description = strings.TrimSpace(policy.Sanitize(t.Description))
 	t.Name = strings.TrimSpace(policy.Sanitize(t.Name))
-
+	t.Currency = strings.TrimSpace(policy.Sanitize(t.Currency))
+	
 	for i,_ := range t.Images {
 		t.Images[i] = 	strings.TrimSpace(policy.Sanitize(t.Images[i]))
 	}
