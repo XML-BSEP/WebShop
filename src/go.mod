@@ -3,7 +3,7 @@ module web-shop
 go 1.14
 
 require (
-	github.com/casbin/casbin/v2 v2.28.2 // indirect
+	github.com/casbin/casbin/v2 v2.28.2
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-playground/locales v0.13.0
 	github.com/go-playground/universal-translator v0.17.0

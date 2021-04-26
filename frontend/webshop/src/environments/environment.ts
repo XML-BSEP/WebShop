@@ -9,7 +9,9 @@ export const environment = {
   auth:"auth",
   registration : "register",
   confirmAccount : "confirmAccount",
-  refresh : "refresh"
+  refresh : "refresh",
+  products : "products",
+  logout : "logout"
 };
 
 /*

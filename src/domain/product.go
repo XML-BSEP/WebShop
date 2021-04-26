@@ -18,10 +18,11 @@ type Product struct {
 	Name  string `json:"name"`
 	Price uint64 `json:"price"`
 	Currency Currency `json:"currency"`
-	Category string `json:"category"`
 	Available uint `json:"available"`
 	Description string `json:"description"`
 	Images []Image
+	Category Category
+	CategoryId uint
 }
 
 type ProductUsecase interface {
@@ -30,6 +31,15 @@ type ProductUsecase interface {
 	Update(ctx echo.Context, pic *Product) (*Product, error)
 	Create(ctx echo.Context, pic *Product) (*Product, error)
 	Delete(ctx echo.Context, id uint) error
+	GetWithPriceRange(low uint, high uint)([]*Product, error)
+	GetProductsWithCategory(category string)([]*Product, error)
+	GetProductsWithCondition(low uint, high uint, category string, limit int, offset int)([]*Product, error)
+	GetByName(name string, limit int, offset int)([]*Product, error)
+	GetProductsWithConditionOrderedByPrice(low uint, high uint, category string, limit int, offset int, order int)([]*Product, error)
+	GetProductsWithConditionOrderedByName(low uint, high uint, category string, limit int, offset int, order int)([]*Product, error)
+	GetByNameOrderByPrice(name string, limit int, offset int, order int)([]*Product, error)
+	GetByNameOrderByName(name string, limit int, offset int, order int)([]*Product, error)
+	FilterByCategory(category string, priceRangeStart uint, priceRangeEnd uint, limit int, offset int, order string) ([]*Product, error)
 }
 
 type ProductRepository interface {
@@ -38,4 +48,13 @@ type ProductRepository interface {
 	Update(pic *Product) (*Product, error)
 	Create(pic *Product) (*Product, error)
 	Delete(id uint) error
+	GetWithPriceRange(low uint, high uint)([]*Product, error)
+	GetProductsWithCategory(category string)([]*Product, error)
+	GetProductsWithCondition(low uint, high uint, category string, limit int, offset int)([]*Product, error)
+	GetByName(name string, limit int, offset int)([]*Product, error)
+	GetProductsWithConditionOrderedByPrice(low uint, high uint, category string, limit int, offset int, order int)([]*Product, error)
+	GetProductsWithConditionOrderedByName(low uint, high uint, category string, limit int, offset int, order int)([]*Product, error)
+	GetByNameOrderByPrice(name string, limit int, offset int, order int)([]*Product, error)
+	GetByNameOrderByName(name string, limit int, offset int, order int)([]*Product, error)
+	FilterByCategory(category string, priceRangeStart uint, priceRangeEnd uint, limit int, offset int, order string) ([]*Product, error)
 }
