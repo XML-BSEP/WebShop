@@ -77,6 +77,7 @@ func (r *resetPassword) ResetPassword(ctx echo.Context) error {
 	policy := bluemonday.UGCPolicy();
 	resetDto.Email = strings.TrimSpace(policy.Sanitize(resetDto.Email))
 	resetDto.Password = strings.TrimSpace(policy.Sanitize(resetDto.Password))
+	resetDto.ConfirmedPassword = strings.TrimSpace(policy.Sanitize(resetDto.ConfirmedPassword))
 	resetDto.VerificationCode = strings.TrimSpace(policy.Sanitize(resetDto.VerificationCode))
 
 	if err != nil {
