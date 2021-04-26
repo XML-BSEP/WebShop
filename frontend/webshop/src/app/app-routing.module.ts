@@ -7,6 +7,7 @@ import { ProductsPageComponent } from './products-page/products-page/products-pa
 import { RegisterComponent } from './register/register.component';
 import { RegistrationConfirmationComponent } from './registration-confirmation/registration-confirmation.component';
 import {ForgotPasswordComponent } from './forgot-password/forgot-password.component'
+import { ForbiddenComponent } from './other/forbidden/forbidden.component';
 
 const routes: Routes = [
   {
@@ -41,6 +42,10 @@ const routes: Routes = [
 {
   path:'forgotPassword',
   component : ForgotPasswordComponent
+},
+{
+  path: 'forbidden',
+  component: ForbiddenComponent
 }
 ];
 

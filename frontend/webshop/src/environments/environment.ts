@@ -14,7 +14,6 @@ export const environment = {
   logout : "logout",
   resetPasswordMail : "resetPasswordMail",
   resetPassword : "resetPassword",
-  logout : "logout"
 };
 
 /*
