@@ -1,8 +1,11 @@
+import { ProductServiceService } from 'src/app/service/product/product-service.service';
+import { Category } from './../../model/category';
 import { NewProduct } from './../../model/newProduct';
 import { Image } from './../../model/image';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { Base64 } from 'js-base64';
+import { CategoryService } from 'src/app/service/product/category.service';
 
 interface Food {
   value: string;
@@ -17,8 +20,9 @@ export class AddProductComponent implements OnInit {
   nameCategoryGroup: FormGroup;
   descriptionPriceGroup: FormGroup;
   picturesGroup : FormGroup;
+  newProduct : NewProduct;
   images: Image[] = new Array();
-  isLinear : Boolean = false;
+  isLinear : Boolean = true;
   submitedPictures: String[] = [];
 
   foods: Food[] = [
@@ -33,8 +37,8 @@ export class AddProductComponent implements OnInit {
   choose : Boolean = true;
   current=0;
   numberRegEx = /\-?\d*\.?\d{1,2}/;
-
-  constructor(private _formBuilder: FormBuilder) { }
+  allCategories : Category[];
+  constructor(private productService : ProductServiceService, private categoryService : CategoryService ,private _formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
 
@@ -46,10 +50,11 @@ export class AddProductComponent implements OnInit {
     this.descriptionPriceGroup = this._formBuilder.group({
       description: ['', Validators.required],
       'price' : new FormControl(null,[ Validators.required,  Validators.pattern(this.numberRegEx)]),
+      'available' : new FormControl(null,[ Validators.required,  Validators.pattern(this.numberRegEx)]),
       currency:['1', Validators.required]
     });
 
-
+    this.getCategories();
   }
   onFileChanged(e) {
     const reader = new FileReader();
@@ -71,6 +76,11 @@ export class AddProductComponent implements OnInit {
     }
 
   }
+
+  getCategories() {
+    this.categoryService.getAllCategories().subscribe(data => {this.allCategories = data})
+}
+
   removeImg(img){
     this.images = this.images.filter(obj => obj !== img);
     this.current--;
@@ -82,7 +92,25 @@ export class AddProductComponent implements OnInit {
       blobs.push(this.images[i].file);
     }
     console.log(this.descriptionPriceGroup.controls.currency.value)
-    var newProduct = new NewProduct(this.nameCategoryGroup.controls.productName.value, this.nameCategoryGroup.controls.productCategory.value, this.descriptionPriceGroup.controls.price.value, this.descriptionPriceGroup.controls.description.value, blobs, this.descriptionPriceGroup.controls.currency.value);
-    console.log(newProduct);
+
+    this.newProduct = new NewProduct(this.nameCategoryGroup.controls.productName.value,
+                                    this.nameCategoryGroup.controls.productCategory.value,
+                                    this.descriptionPriceGroup.controls.price.value,
+                                    this.descriptionPriceGroup.controls.description.value,
+                                    blobs,
+                                    this.descriptionPriceGroup.controls.currency.value,
+                                    this.descriptionPriceGroup.controls.available.value);
+
+    console.log(this.newProduct);
+
+    this.productService.addProduct(this.newProduct).subscribe(
+      res=>{
+        alert('Success');
+      },
+      error=>{
+        alert("Fail - email is already in use!")
+      }
+        )
+
   }
 }

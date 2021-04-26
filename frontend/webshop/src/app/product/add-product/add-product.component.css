@@ -147,6 +147,17 @@
   margin-top:5%;
   margin-left: 5%;
 }
+.label1-field1{
+  margin-bottom:5%;
+  margin-top:7%;
+  margin-left: -12%;
+}
+.input1-field1{
+  position:relative;
+  width:40%;
+  margin-top:5%;
+  margin-left: 5%;
+}
 .upload-file{
   width:20%;
   height:5%;
