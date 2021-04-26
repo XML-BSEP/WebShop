@@ -12,6 +12,8 @@ export const environment = {
   refresh : "refresh",
   products : "products",
   logout : "logout",
+  categories : "categories",
+  addProduct : "addProduct",
   resetPasswordMail : "resetPasswordMail",
   resetPassword : "resetPassword",
 };

@@ -1,3 +1,4 @@
+import { NewProduct } from './../../model/newProduct';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
@@ -15,5 +16,8 @@ export class ProductServiceService {
     return this.http.get<Product[]>(`${environment.baseUrl}/${environment.products}`)
   }
 
+  addProduct(data : NewProduct){
+    return this.http.post(`${environment.baseUrl}/${environment.addProduct}`,data, {responseType : 'text'});
+  }
 
 }
