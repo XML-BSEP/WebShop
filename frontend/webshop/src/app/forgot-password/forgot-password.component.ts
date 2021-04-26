@@ -74,7 +74,7 @@ export class ForgotPasswordComponent implements OnInit {
         this.router.navigate(['/login']);
       },
       error=>{
-        alert(error);
+        alert("Check your code or passwords");
       }
       )
 
