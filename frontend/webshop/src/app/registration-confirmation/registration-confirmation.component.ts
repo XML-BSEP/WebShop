@@ -21,7 +21,7 @@ export class RegistrationConfirmationComponent implements OnInit {
     this.codeForm = new FormGroup({
       //maybe add pattern for code validation on frontend
       'code' : new FormControl(null, [Validators.required])
-    });
+    });     
 
     this.userMail = history.state.data;
 
