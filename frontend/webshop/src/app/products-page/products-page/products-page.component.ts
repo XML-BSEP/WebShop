@@ -41,9 +41,9 @@ export class ProductsPageComponent implements OnInit {
       this.pageSize = event.pageSize
       this.filterSearch.category = ""
       this.filterSearch.name = ""
-      this.filterSearch.offset = (event.pageIndex) * this.pageSize
+      this.filterSearch.offset = event.pageIndex * this.pageSize
       console.log("Velicina stranice: " + this.pageSize)
-      this.filterSearch.limit = (event.pageIndex + 1) * this.pageSize;
+      this.filterSearch.limit = this.pageSize
       this.filterSearch.priceRangeStart = 0
       this.filterSearch.priceRangeEnd = 1000000
       this.filterSearch.order = "price asc"

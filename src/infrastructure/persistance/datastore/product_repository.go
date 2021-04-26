@@ -9,6 +9,10 @@ type productRepository struct {
 	Conn *gorm.DB
 }
 
+func (p *productRepository) MinMaxPrice() int64 {
+	panic("implement me")
+}
+
 func (p *productRepository) Count() (int64, error) {
 	var count int64
 	err := p.Conn.Model(&domain.Product{}).Count(&count).Error
@@ -23,10 +27,10 @@ func (p *productRepository) FilterByCategory(name string, category string, price
 
 	err = p.Conn.Preload("Images").
 		Joins("JOIN categories on products.category_id = categories.id and lower(categories.name) like lower(?)", category).
+		Where("lower(products.name) LIKE lower(?)", name).
+		Order(order).
 		Limit(limit).
 		Offset(offset).
-		Order(order).
-		Where("lower(products.name) LIKE lower(?)", name).
 		Find(&products).Error
 
 	return products, err
