@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit {
     this.authService.login(this.credentials).subscribe(
       result => {
         localStorage.setItem('userId',String(result.id))
-        localStorage.setItem('roole',String(result.role))
+        localStorage.setItem('role',String(result.role))
         this.router.navigate(['/'])
 
 

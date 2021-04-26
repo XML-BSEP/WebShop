@@ -1,3 +1,4 @@
+import { AuthenticationService } from './../../service/authentication/authentication.service';
 import { Component, OnInit } from '@angular/core';
 import * as mdb from 'mdb-ui-kit';
 
@@ -8,9 +9,12 @@ import * as mdb from 'mdb-ui-kit';
 })
 export class AdminNavBarComponent implements OnInit {
 
-  constructor() { }
+  constructor(private authService : AuthenticationService) { }
 
   ngOnInit(): void {
   }
 
+  logout(){
+    this.authService.logout();
+  }
 }

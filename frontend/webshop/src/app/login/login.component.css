@@ -97,15 +97,20 @@
     margin-top:30%;
     margin-left: 0%;
     width:60%;
-    height:26rem;
+    height:30rem;
     display:flex;
     justify-content:center;
     flex-direction: column;
 }
 #not-signed{
   margin-top:5%;
-  margin-left:25%;
+  text-align: center;
   font-size:1.3rem;
+}
+#forgotten-password{
+  margin-top:2%;
+  text-align: center;
+  font-size:1rem;
 }
 #email-ff{
     width:60%;

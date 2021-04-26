@@ -8,6 +8,7 @@ import (
 
 func NewRouter(e *echo.Echo, h handler.AppHandler, authMiddleware middleware.AuthMiddleware) {
 
+	e.GET("/categories", h.GetAllCategories)
 	e.POST("/login", h.Login, authMiddleware.Authenticated())
 	e.POST("/register", h.UserRegister, authMiddleware.Authenticated())
 	e.POST("/confirmAccount", h.ConfirmAccount, authMiddleware.Authenticated())
@@ -16,9 +17,11 @@ func NewRouter(e *echo.Echo, h handler.AppHandler, authMiddleware middleware.Aut
 	e.POST("/resetPasswordMail", h.SendResetMail, authMiddleware.Authenticated())
 	e.POST("/resetPassword", h.ResetPassword, authMiddleware.Authenticated())
 	e.POST("/filterSearch", h.FilterSearch)
-	g := e.Group("\\/")
+	e.POST("/refresh", h.Refresh, authMiddleware.Authenticated())
+	g := e.Group("/")
 	g.Use(authMiddleware.Auth())
 	g.GET("addresses", h.GetAddresses)
 	g.POST("logout", h.Logout)
+	g.POST("addProduct", h.AddProduct)
 
 }

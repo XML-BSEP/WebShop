@@ -40,6 +40,18 @@ func (c *categoryRepository) Delete(id uint) error {
 	return err
 }
 
+func (c *categoryRepository) GetByName(name string)  (*domain.Category, error) {
+
+	var(
+		category *domain.Category
+		err error
+		)
+
+	err = c.Conn.Where("name = ? ", name).Find(&category).Error
+
+	return category, err
+}
+
 func NewCategoryRepository(conn *gorm.DB) domain.CategoryRepository {
 	return &categoryRepository{conn}
 }

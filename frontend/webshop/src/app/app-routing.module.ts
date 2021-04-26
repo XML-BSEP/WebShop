@@ -7,6 +7,9 @@ import { ProductsPageComponent } from './products-page/products-page/products-pa
 import { RegisterComponent } from './register/register.component';
 import { RegistrationConfirmationComponent } from './registration-confirmation/registration-confirmation.component';
 import {ForgotPasswordComponent } from './forgot-password/forgot-password.component'
+import { ForbiddenComponent } from './other/forbidden/forbidden.component';
+import { AuthGuard } from './helpers';
+import { Role } from './model/role';
 
 const routes: Routes = [
   {
@@ -28,19 +31,26 @@ const routes: Routes = [
 },
 {
   path:'regconfirm',
-  component: RegistrationConfirmationComponent
+  component: RegistrationConfirmationComponent,
+  
 },
 {
   path: 'products',
   component: ProductsPageComponent
-}, 
+},
 {
   path:'addProduct',
-  component: AddProductComponent
+  component: AddProductComponent,
+  canActivate : [AuthGuard],
+  data : {roles: [Role.Admin]}
 },
 {
   path:'forgotPassword',
   component : ForgotPasswordComponent
+},
+{
+  path: 'forbidden',
+  component: ForbiddenComponent
 }
 ];
 

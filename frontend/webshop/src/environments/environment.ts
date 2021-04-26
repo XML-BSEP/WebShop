@@ -9,9 +9,14 @@ export const environment = {
   auth:"auth",
   registration : "register",
   confirmAccount : "confirmAccount",
+  refresh : "refresh",
   products : "products",
   logout : "logout",
-  filterSearch : "filterSearch"
+  filterSearch : "filterSearch",
+  categories : "categories",
+  addProduct : "addProduct",
+  resetPasswordMail : "resetPasswordMail",
+  resetPassword : "resetPassword",
 };
 
 /*

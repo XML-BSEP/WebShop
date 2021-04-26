@@ -34,10 +34,10 @@ func MigrateData() {
 	//seedPersons(conn)
 	seedShopAccounts(conn)
 	seedRegisteredUsers(conn)
-	seedStorages(conn)
 	seedCategories(conn)
 	seedProducts(conn)
-	seedProducts(conn)
+
+	seedStorages(conn)
 	//seedStorages(conn)
 }
 

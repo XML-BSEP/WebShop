@@ -3,15 +3,12 @@ import { Role } from './role';
 export class AuthenticatedUser {
     public id : number;
     public role : Role;
-    public username : string;
-    public token : Token;
-    public firstTimeChanged : boolean;
-    
-    constructor(id : number, role : Role, username : string, token : Token, firstTimeChanged : boolean) {
+    public access_token: string;
+    public refresh_token : string;
+    constructor(id : number, role : Role, access_token : string, refresh_token : string) {
         this.id = id;
         this.role = role;
-        this.username = username;
-        this.token = token;
-        this.firstTimeChanged = firstTimeChanged;
+        this.access_token = access_token;
+        this.refresh_token = refresh_token;
     }
 }

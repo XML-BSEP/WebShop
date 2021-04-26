@@ -21,11 +21,13 @@ type ProductHandler interface {
 	FilterByCategory(ctx echo.Context) error
 	FetchProducts(ctx echo.Context) error
 	FilterSearch(ctx echo.Context) error
+	AddProduct(ctx echo.Context) error
 }
 
 type productHandler struct {
 	ProductUseCase domain.ProductUsecase
 }
+
 
 func (p *productHandler) FilterSearch(ctx echo.Context) error {
 
@@ -56,6 +58,25 @@ func (p *productHandler) FilterSearch(ctx echo.Context) error {
 	}
 	return ctx.JSON(http.StatusOK, productsRet)
 }
+func (p *productHandler) AddProduct(ctx echo.Context) error {
+	decoder := json.NewDecoder(ctx.Request().Body)
+
+	var t dto.NewProduct
+	err := decoder.Decode(&t)
+
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	product, err := p.ProductUseCase.Create(ctx, &t)
+
+	if err != nil {
+		return echo.NewHTTPError(http.StatusNotFound, "Error while creating product")
+	}
+
+	return ctx.JSON(http.StatusOK, product)
+
+}
 
 func (p *productHandler) FetchProducts(ctx echo.Context) error {
 
@@ -64,8 +85,6 @@ func (p *productHandler) FetchProducts(ctx echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, "No results")
 	}
-
-
 
 	var productsRet = make([]dto.ProductViewDTO, len(products))
 

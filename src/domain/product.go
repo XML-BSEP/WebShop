@@ -3,6 +3,7 @@ package domain
 import (
 	"github.com/labstack/echo"
 	"gorm.io/gorm"
+	"web-shop/infrastructure/dto"
 )
 
 type Currency int
@@ -29,7 +30,7 @@ type ProductUsecase interface {
 	Fetch(ctx echo.Context) ([]*Product, error)
 	GetByID(ctx echo.Context, id uint) (*Product, error)
 	Update(ctx echo.Context, pic *Product) (*Product, error)
-	Create(ctx echo.Context, pic *Product) (*Product, error)
+	Create(ctx echo.Context, pic *dto.NewProduct) (*Product, error)
 	Delete(ctx echo.Context, id uint) error
 	GetWithPriceRange(low uint, high uint)([]*Product, error)
 	GetProductsWithCategory(category string)([]*Product, error)
