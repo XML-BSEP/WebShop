@@ -12,6 +12,7 @@ export const environment = {
   refresh : "refresh",
   products : "products",
   logout : "logout",
+  filterSearch : "filterSearch",
   categories : "categories",
   addProduct : "addProduct",
   resetPasswordMail : "resetPasswordMail",

@@ -9,12 +9,29 @@ type productRepository struct {
 	Conn *gorm.DB
 }
 
-func (p *productRepository) FilterByCategory(category string, priceRangeStart uint, priceRangeEnd uint, limit int, offset int, order string) ([]*domain.Product, error) {
-	var(
+func (p *productRepository) MinMaxPrice() int64 {
+	panic("implement me")
+}
+
+func (p *productRepository) Count() (int64, error) {
+	var count int64
+	err := p.Conn.Model(&domain.Product{}).Count(&count).Error
+	return count, err
+}
+
+func (p *productRepository) FilterByCategory(name string, category string, priceRangeStart uint, priceRangeEnd uint, limit int, offset int, order string) ([]*domain.Product, error) {
+	var (
 		products []*domain.Product
 		err error
 	)
-	err = p.Conn.Joins("category").Limit(limit).Offset(offset).Where("category = ? and price <= ? and price >= ? order by ?", category, priceRangeEnd, priceRangeStart, order).Find(&products).Error
+
+	err = p.Conn.Preload("Images").
+		Joins("JOIN categories on products.category_id = categories.id and lower(categories.name) like lower(?)", category).
+		Where("lower(products.name) LIKE lower(?)", name).
+		Order(order).
+		Limit(limit).
+		Offset(offset).
+		Find(&products).Error
 
 	return products, err
 }

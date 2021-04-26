@@ -40,7 +40,8 @@ type ProductUsecase interface {
 	GetProductsWithConditionOrderedByName(low uint, high uint, category string, limit int, offset int, order int)([]*Product, error)
 	GetByNameOrderByPrice(name string, limit int, offset int, order int)([]*Product, error)
 	GetByNameOrderByName(name string, limit int, offset int, order int)([]*Product, error)
-	FilterByCategory(category string, priceRangeStart uint, priceRangeEnd uint, limit int, offset int, order string) ([]*Product, error)
+	FilterByCategory(name string, category string, priceRangeStart uint, priceRangeEnd uint, limit int, offset int, order string) ([]*Product, error)
+	Count() (int64, error)
 }
 
 type ProductRepository interface {
@@ -57,5 +58,7 @@ type ProductRepository interface {
 	GetProductsWithConditionOrderedByName(low uint, high uint, category string, limit int, offset int, order int)([]*Product, error)
 	GetByNameOrderByPrice(name string, limit int, offset int, order int)([]*Product, error)
 	GetByNameOrderByName(name string, limit int, offset int, order int)([]*Product, error)
-	FilterByCategory(category string, priceRangeStart uint, priceRangeEnd uint, limit int, offset int, order string) ([]*Product, error)
+	FilterByCategory(name string, category string, priceRangeStart uint, priceRangeEnd uint, limit int, offset int, order string) ([]*Product, error)
+	Count() (int64, error)
+	MinMaxPrice() (int64)
 }
