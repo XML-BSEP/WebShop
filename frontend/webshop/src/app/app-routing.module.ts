@@ -8,6 +8,8 @@ import { RegisterComponent } from './register/register.component';
 import { RegistrationConfirmationComponent } from './registration-confirmation/registration-confirmation.component';
 import {ForgotPasswordComponent } from './forgot-password/forgot-password.component'
 import { ForbiddenComponent } from './other/forbidden/forbidden.component';
+import { AuthGuard } from './helpers';
+import { Role } from './model/role';
 
 const routes: Routes = [
   {
@@ -29,7 +31,8 @@ const routes: Routes = [
 },
 {
   path:'regconfirm',
-  component: RegistrationConfirmationComponent
+  component: RegistrationConfirmationComponent,
+  
 },
 {
   path: 'products',
@@ -37,7 +40,9 @@ const routes: Routes = [
 },
 {
   path:'addProduct',
-  component: AddProductComponent
+  component: AddProductComponent,
+  canActivate : [AuthGuard],
+  data : {roles: [Role.Admin]}
 },
 {
   path:'forgotPassword',
