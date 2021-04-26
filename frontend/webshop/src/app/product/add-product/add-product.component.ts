@@ -37,6 +37,7 @@ export class AddProductComponent implements OnInit {
   choose : Boolean = true;
   current=0;
   numberRegEx = /\-?\d*\.?\d{1,2}/;
+
   allCategories : Category[];
   constructor(private productService : ProductServiceService, private categoryService : CategoryService ,private _formBuilder: FormBuilder) { }
 
@@ -50,7 +51,7 @@ export class AddProductComponent implements OnInit {
     this.descriptionPriceGroup = this._formBuilder.group({
       description: ['', Validators.required],
       'price' : new FormControl(null,[ Validators.required,  Validators.pattern(this.numberRegEx)]),
-      'available' : new FormControl(null,[ Validators.required,  Validators.pattern(this.numberRegEx)]),
+      'available' : new FormControl(null,[ Validators.required,  Validators.pattern('^[0-9]+$')]),
       currency:['1', Validators.required]
     });
 
@@ -108,7 +109,7 @@ export class AddProductComponent implements OnInit {
         alert('Success');
       },
       error=>{
-        alert("Fail - email is already in use!")
+        alert(error)
       }
         )
 

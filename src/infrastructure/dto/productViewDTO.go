@@ -2,7 +2,7 @@ package dto
 
 type ProductViewDTO struct {
 	Name        string `json:"name"`
-	Price       uint64 `json:"price"`
+	Price       float64 `json:"price"`
 	Description string `json:"description"`
 	Image       string `json:"image"`
 	Category    string `json:"category"`

@@ -17,7 +17,7 @@ const (
 type Product struct {
 	gorm.Model
 	Name  string `json:"name"`
-	Price uint64 `json:"price"`
+	Price float64 `json:"price"`
 	Currency Currency `json:"currency"`
 	Available uint `json:"available"`
 	Description string `json:"description"`

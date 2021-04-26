@@ -3,10 +3,13 @@ package handler
 import (
 	"encoding/json"
 	"github.com/labstack/echo"
+	"github.com/microcosm-cc/bluemonday"
 	"net/http"
+	"strings"
 	"web-shop/domain"
 	"web-shop/infrastructure/dto"
 	"web-shop/infrastructure/mapper"
+	validator2 "web-shop/validator"
 )
 
 type ProductHandler interface {
@@ -32,6 +35,27 @@ func (p *productHandler) AddProduct(ctx echo.Context) error {
 
 	var t dto.NewProduct
 	err := decoder.Decode(&t)
+
+	policy := bluemonday.UGCPolicy();
+	t.Category =  strings.TrimSpace(policy.Sanitize(t.Category))
+	t.Price = strings.TrimSpace(policy.Sanitize(t.Price))
+	t.Available = strings.TrimSpace(policy.Sanitize(t.Available))
+	t.Description = strings.TrimSpace(policy.Sanitize(t.Description))
+	t.Name = strings.TrimSpace(policy.Sanitize(t.Name))
+
+	for i,_ := range t.Images {
+		t.Images[i] = 	strings.TrimSpace(policy.Sanitize(t.Images[i]))
+	}
+
+	customValidator := validator2.NewCustomValidator()
+	translator, _ := customValidator.RegisterEnTranslation()
+	errValidation := customValidator.Validator.Struct(t)
+	errs := customValidator.TranslateError(errValidation, translator)
+	errorsString := customValidator.GetErrorsString(errs)
+
+	if errValidation != nil {
+		return ctx.JSON(http.StatusBadRequest, errorsString)
+	}
 
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())

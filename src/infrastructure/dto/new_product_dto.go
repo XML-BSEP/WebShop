@@ -1,11 +1,11 @@
 package dto
 type NewProduct struct{
-	Name  string `json:"name"`
-	Price string `json:"price"`
-	Category string `json:"category"`
-	Description string `json:"description"`
-	Images []string `json:"images"`
-	Currency string `json:"currency"`
-	Available string `json:"available"`
+	Name  string `json:"name" validate:"required"`
+	Price string `json:"price" validate:"required,price"`
+	Category string `json:"category" validate:"required"`
+	Description string `json:"description" validate:"required"`
+	Images []string `json:"images" validate:"required,images"`
+	Currency string `json:"currency" validate:"required,currency"`
+	Available string `json:"available" validate:"required,available"`
 
 }
