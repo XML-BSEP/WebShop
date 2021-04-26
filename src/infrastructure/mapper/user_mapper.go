@@ -1,6 +1,8 @@
 package mapper
 
 import (
+	"github.com/microcosm-cc/bluemonday"
+	"strings"
 	"web-shop/domain"
 	"web-shop/infrastructure/dto"
 )
@@ -13,8 +15,17 @@ func NewUserDtoToNewUser (userDto dto.NewUser) domain.RegisteredShopUser {
 
 func NewUserDtoToRequestUser (userDto dto.NewUser) domain.UserRegistrationRequest {
 
-	return domain.UserRegistrationRequest{Email: userDto.Email, Name: userDto.Name, Surname: userDto.Surname,
-		Username: userDto.Username, Password: userDto.Password}
+	policy := bluemonday.UGCPolicy();
+
+	email := strings.TrimSpace(policy.Sanitize(userDto.Email))
+	name := strings.TrimSpace(policy.Sanitize(userDto.Name))
+	surname := strings.TrimSpace(policy.Sanitize(userDto.Surname))
+	username := strings.TrimSpace(policy.Sanitize(userDto.Username))
+	password := strings.TrimSpace(policy.Sanitize(userDto.Password))
+
+
+	return domain.UserRegistrationRequest{Email: email, Name: name, Surname: surname,
+		Username: username, Password: password}
 }
 
 

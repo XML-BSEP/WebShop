@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/labstack/echo"
+	"github.com/microcosm-cc/bluemonday"
 	"net/http"
+	"strings"
 	"unicode"
 	"web-shop/domain"
 	"web-shop/infrastructure/dto"
@@ -48,6 +50,9 @@ func (signUp *signUp) UserRegister(ctx echo.Context) (err error){
 	fmt.Print(user)
 	newUser := mapper.NewUserDtoToRequestUser(t)
 
+	if strings.Contains(newUser.Username, " ") {
+		return ctx.JSON(http.StatusBadRequest, "Invalid username")
+	}
 
 	customValidator := validator2.NewCustomValidator()
 	translator, _ := customValidator.RegisterEnTranslation()
@@ -92,6 +97,9 @@ func (signUp *signUp) ConfirmAccount(ctx echo.Context) error {
 	errs := customValidator.TranslateError(validateErr, translator)
 	errorsString := customValidator.GetErrorsString(errs)
 
+	policy := bluemonday.UGCPolicy();
+	credentials.Email = strings.TrimSpace(policy.Sanitize(credentials.Email))
+	credentials.VerificationCode = strings.TrimSpace(policy.Sanitize(credentials.VerificationCode))
 
 
 	if validateErr != nil {
