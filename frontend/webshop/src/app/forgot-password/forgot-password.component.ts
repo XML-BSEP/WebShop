@@ -25,14 +25,14 @@ export class ForgotPasswordComponent implements OnInit {
 
   ngOnInit() {
     this.firstFormGroup = new FormGroup({
-      email: new FormControl('', Validators.required)
+      email: new FormControl('', [Validators.required, Validators.email])
     });
     this.secondFormGroup = new FormGroup({
       code: new FormControl('', Validators.required)
     }); 
     this.thirdFormGroup = new FormGroup({
-      password: new FormControl(null, Validators.required),
-      confirmPassword: new FormControl(null, Validators.required)
+      password: new FormControl(null, [Validators.required, Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{7,}')]),
+      confirmPassword: new FormControl(null, [Validators.required, Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{7,}')])
     });
   }
 
