@@ -5,6 +5,7 @@ go 1.14
 require (
 	github.com/casbin/casbin/v2 v2.28.2
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/gin-gonic/gin v1.7.1 // indirect
 	github.com/go-playground/locales v0.13.0
 	github.com/go-playground/universal-translator v0.17.0
 	github.com/go-playground/validator v9.31.0+incompatible
@@ -14,6 +15,7 @@ require (
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/lib/pq v1.10.0 // indirect
 	github.com/mattn/go-colorable v0.1.8 // indirect
+	github.com/microcosm-cc/bluemonday v1.0.8 // indirect
 	github.com/myesui/uuid v1.0.0 // indirect
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/viper v1.7.1

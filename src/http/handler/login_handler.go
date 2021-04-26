@@ -3,7 +3,9 @@ package handler
 import (
 	"encoding/json"
 	"github.com/labstack/echo"
+	"github.com/microcosm-cc/bluemonday"
 	"net/http"
+	"strings"
 	"web-shop/domain"
 	"web-shop/infrastructure/dto"
 	auth2 "web-shop/security/auth"
@@ -47,6 +49,10 @@ func (au *Authenticate) Login(c echo.Context) error {
 	decoder := json.NewDecoder(c.Request().Body)
 
 	err := decoder.Decode(&account)
+
+	policy := bluemonday.UGCPolicy();
+	account.Email = strings.TrimSpace(policy.Sanitize(account.Email))
+	account.Password = strings.TrimSpace(policy.Sanitize(account.Password))
 
 	if err != nil {
 		return c.JSON(http.StatusUnprocessableEntity, invalidJson)
