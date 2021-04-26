@@ -17,6 +17,7 @@ export class ErrorInterceptor implements HttpInterceptor {
                 // auto logout if 401 response returned from api
                 // this.authenticationService.logout();
                 let currentUser = this.authenticationService.currentUserValue;
+                
                 if (currentUser && currentUser.refreshToken) {
                     this.authenticationService.refresh(currentUser.refreshToken).subscribe(result => {
                         localStorage.setItem('userId',String(result.id))

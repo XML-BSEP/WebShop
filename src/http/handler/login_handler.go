@@ -195,9 +195,19 @@ func (au *Authenticate) Refresh(c echo.Context) error {
 			return c.JSON(http.StatusForbidden, saveErr.Error())
 
 		}
+
+
+		role, err := au.us.GetRoleById(uint(userId))
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, invalidEmail)
+		}
+
+
 		tokens := map[string]string{
 			"access_token":  ts.AccessToken,
 			"refresh_token": ts.RefreshToken,
+			"role" : role,
+			"id" : string(userId),
 		}
 		return c.JSON(http.StatusCreated, tokens)
 	} else {
