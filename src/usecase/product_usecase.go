@@ -4,8 +4,10 @@ import (
 	"encoding/base64"
 	"github.com/labstack/echo"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
+	"time"
 	"web-shop/domain"
 	"web-shop/infrastructure/dto"
 )
@@ -13,6 +15,7 @@ import (
 type productUseCase struct {
 	ProductRepository domain.ProductRepository
 	CategoryRepository domain.CategoryRepository
+	ImageRepository domain.ImageRepository
 }
 
 func (p *productUseCase) FilterByCategory(category string, priceRangeStart uint, priceRangeEnd uint, limit int, offset int, order string) ([]*domain.Product, error) {
@@ -63,35 +66,38 @@ func (p *productUseCase) Update(ctx echo.Context, pic *domain.Product) (*domain.
 }
 
 func (p *productUseCase) Create(ctx echo.Context, newProd *dto.NewProduct) (*domain.Product, error) {
-	var pic *domain.Product
 	var cat *domain.Category
 	cat, _ = p.CategoryRepository.GetByName(newProd.Category)
 
-	if cat != nil {
-		pic.Category = *cat
-	}
-	list, _ := p.ProductRepository.Fetch()
-	len := len(list)
-	t := strconv.Itoa(len)
-	path := "../assets/"+t
-	os.Mkdir(path, 0755)
-	os.Chdir("../assets")
+	var list []*domain.Product
 
-	for i,_ := range newProd.Images{
+	list, _ = p.ProductRepository.Fetch()
+
+	len := len(list)
+	t := strconv.Itoa(len+1)
+	path1 := "./src/assets"
+	os.Chdir(path1)
+
+	os.Mkdir(t, 0755)
+
+	os.Chdir(t)
+	var images []domain.Image
+	for i,_ := range newProd.Images {
 		s := strings.Split(newProd.Images[i], ",")
 		a := strings.Split(s[0], "/")
-		format:= strings.Split(a[1], ";")
+		format := strings.Split(a[1], ";")
 
-		dec, err := base64.StdEncoding.DecodeString(newProd.Images[i])
-		if err != nil {
-			panic(err)
-		}
-
-		f, err := os.Create(strconv.Itoa(i)+"."+format[0])
+		dec, err := base64.StdEncoding.DecodeString(s[1])
 
 		if err != nil {
 			panic(err)
 		}
+		f, err := os.Create(strconv.Itoa(i) + "." + format[0])
+
+		if err != nil {
+			panic(err)
+		}
+
 		defer f.Close()
 
 		if _, err := f.Write(dec); err != nil {
@@ -101,10 +107,28 @@ func (p *productUseCase) Create(ctx echo.Context, newProd *dto.NewProduct) (*dom
 			panic(err)
 		}
 
+		images = append(images, domain.Image{Path: strconv.Itoa(len+1)+"/"+strconv.Itoa(i) + "." + format[0], Timestamp: time.Now(), ProductId: uint(len + 1)})
 	}
 
+	//for i, _ := range images{
+	//	p.ImageRepository.Create(images[i])
+	//
+	//}
 
-	return p.ProductRepository.Create(pic)
+	path, _ := os.Getwd()
+	parent := filepath.Dir(path)
+	os.Chdir(parent)
+	curr,_ :=strconv.Atoi(newProd.Currency)
+	price,_ :=strconv.Atoi(newProd.Price)
+	av,_ :=strconv.Atoi(newProd.Available)
+
+	prod:=domain.Product{Currency: domain.Currency(curr), Available: uint(av), Price: uint64(uint(price)), Name: newProd.Name, Category: *cat, Description: newProd.Description, Images: images}
+
+	//Name  string `json:"name"`
+	//Price uint64 `json:"price"`
+	//Currency Currency `json:"currency"`
+	//Images []Image
+	return p.ProductRepository.Create(&prod)
 }
 
 func (p *productUseCase) Delete(ctx echo.Context, id uint) error {
@@ -112,6 +136,6 @@ func (p *productUseCase) Delete(ctx echo.Context, id uint) error {
 }
 
 
-func NewProductUseCase(p domain.ProductRepository, c domain.CategoryRepository) domain.ProductUsecase {
-	return &productUseCase{p,c}
+func NewProductUseCase(p domain.ProductRepository, c domain.CategoryRepository, img domain.ImageRepository) domain.ProductUsecase {
+	return &productUseCase{p,c, img}
 }

@@ -55,8 +55,6 @@ func (p *productHandler) FetchProducts(ctx echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, "No results")
 	}
 
-
-
 	var productsRet = make([]dto.ProductViewDTO, len(products))
 
 	for i, p := range products {

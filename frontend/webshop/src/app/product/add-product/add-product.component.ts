@@ -20,6 +20,7 @@ export class AddProductComponent implements OnInit {
   nameCategoryGroup: FormGroup;
   descriptionPriceGroup: FormGroup;
   picturesGroup : FormGroup;
+  newProduct : NewProduct;
   images: Image[] = new Array();
   isLinear : Boolean = false;
   submitedPictures: String[] = [];
@@ -49,6 +50,7 @@ export class AddProductComponent implements OnInit {
     this.descriptionPriceGroup = this._formBuilder.group({
       description: ['', Validators.required],
       'price' : new FormControl(null,[ Validators.required,  Validators.pattern(this.numberRegEx)]),
+      'available' : new FormControl(null,[ Validators.required,  Validators.pattern(this.numberRegEx)]),
       currency:['1', Validators.required]
     });
 
@@ -90,10 +92,18 @@ export class AddProductComponent implements OnInit {
       blobs.push(this.images[i].file);
     }
     console.log(this.descriptionPriceGroup.controls.currency.value)
-    var newProduct = new NewProduct(this.nameCategoryGroup.controls.productName.value, this.nameCategoryGroup.controls.productCategory.value, this.descriptionPriceGroup.controls.price.value, this.descriptionPriceGroup.controls.description.value, blobs, this.descriptionPriceGroup.controls.currency.value);
-    console.log(newProduct);
 
-    this.productService.addProduct(newProduct).subscribe(
+    this.newProduct = new NewProduct(this.nameCategoryGroup.controls.productName.value,
+                                    this.nameCategoryGroup.controls.productCategory.value,
+                                    this.descriptionPriceGroup.controls.price.value,
+                                    this.descriptionPriceGroup.controls.description.value,
+                                    blobs,
+                                    this.descriptionPriceGroup.controls.currency.value,
+                                    this.descriptionPriceGroup.controls.available.value);
+
+    console.log(this.newProduct);
+
+    this.productService.addProduct(this.newProduct).subscribe(
       res=>{
         alert('Success');
       },

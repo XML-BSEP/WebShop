@@ -98,7 +98,7 @@ func (i *interactor) NewOrderRepository() domain.OrderRepository {
 }
 
 func (i *interactor) NewProductUsecase() domain.ProductUsecase {
-	return usecase.NewProductUseCase(i.NewProductRepository(), i.NewCategoryRepository())
+	return usecase.NewProductUseCase(i.NewProductRepository(), i.NewCategoryRepository(), i.NewImageRepository())
 }
 func (i *interactor) NewProductRepository() domain.ProductRepository {
 	return datastore.NewProductRepository(i.Conn)
@@ -108,6 +108,9 @@ func (i *interactor) NewProductHandler() handler.ProductHandler{
 	return handler.NewProductHandler(i.NewProductUsecase())
 }
 
+func (i *interactor) NewImageRepository() domain.ImageRepository{
+	return datastore.NewImageRepository(i.Conn)
+}
 
 
 func (i *interactor) NewRegisteredShopUserUsecase() domain.RegisteredShopUserUsecase {

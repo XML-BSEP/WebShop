@@ -67,6 +67,7 @@
                   </mat-form-field>
 
 
+
                   <mat-radio-group
                   aria-labelledby="example-radio-group-label"
                   class="currency-radio"
@@ -76,6 +77,19 @@
 
                 </mat-radio-group>
 
+                </div>
+                <div class="step-field">
+                  <label class="label1-field">Available:</label>
+                  <mat-form-field class="input1-field">
+                    <mat-label>Products available</mat-label>
+                    <input matInput placeholder="Enter available" formControlName="available" required>
+                    <mat-error
+                *ngIf="!descriptionPriceGroup.get('available').valid && descriptionPriceGroup.get('available').touched && descriptionPriceGroup.get('available').errors['required']">
+                Please enter products available</mat-error>
+                <mat-error
+                *ngIf="!descriptionPriceGroup.get('available').valid && descriptionPriceGroup.get('available').touched && descriptionPriceGroup.get('available').errors['pattern']">
+                Available must be a number</mat-error>
+                  </mat-form-field>
                 </div>
                 <div class="step-field">
                   <label class="label1-field">Product description:</label>
