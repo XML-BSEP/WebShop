@@ -9,10 +9,13 @@ export const environment = {
   auth:"auth",
   registration : "register",
   confirmAccount : "confirmAccount",
+  refresh : "refresh",
   products : "products",
   logout : "logout",
   categories : "categories",
-  addProduct : "addProduct"
+  addProduct : "addProduct",
+  resetPasswordMail : "resetPasswordMail",
+  resetPassword : "resetPassword",
 };
 
 /*

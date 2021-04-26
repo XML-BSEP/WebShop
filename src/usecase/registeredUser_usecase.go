@@ -14,6 +14,7 @@ const (
 	hashError = "error while hashing pass"
 	updateError = "error while updating user"
 	redisError = "error while deleting redis key"
+	passwordsError = "enter same passwords"
 
 )
 
@@ -28,6 +29,10 @@ func (r *registeredUserUsecase) SaveCodeToRedis(code string, email string) error
 }
 
 func (r *registeredUserUsecase) ResetPassword(dto dto.ResetPassDTO) string {
+
+	if passwordCompare := dto.Password == dto.ConfirmedPassword; !passwordCompare {
+		return passwordsError
+	}
 
 	user, err := r.RegisteredUserRepository.ExistByUsernameOrEmail("", dto.Email)
 
