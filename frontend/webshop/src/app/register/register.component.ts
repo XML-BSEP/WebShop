@@ -42,7 +42,7 @@ export class RegisterComponent implements OnInit {
         this.router.navigate(['/regconfirm'], {state: {data: email}});
       },
       error=>{
-        alert("Fail - email is already in use!")
+        alert(error)
       }
         )
     }

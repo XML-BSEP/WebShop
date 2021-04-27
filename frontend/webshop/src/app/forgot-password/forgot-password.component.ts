@@ -29,7 +29,7 @@ export class ForgotPasswordComponent implements OnInit {
     });
     this.secondFormGroup = new FormGroup({
       code: new FormControl('', Validators.required)
-    }); 
+    });
     this.thirdFormGroup = new FormGroup({
       password: new FormControl(null, [Validators.required, Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{7,}')]),
       confirmPassword: new FormControl(null, [Validators.required, Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{7,}')])
@@ -40,13 +40,13 @@ export class ForgotPasswordComponent implements OnInit {
     this.email = this.firstFormGroup.controls.email.value;
     console.log(this.email)
     this.resetMail = new ResetMail(this.email)
-    
+
     this.resetPasswordSerivce.resetPasswordMail(this.resetMail).subscribe(
       res=>{
         alert('Check your mail');
       },
       error=>{
-        alert("Fail - email is not in use!");
+        alert(error);
       }
       )
 
@@ -54,11 +54,11 @@ export class ForgotPasswordComponent implements OnInit {
 
   verifyCode() {
     this.code = this.secondFormGroup.controls.code.value;
-    console.log(this.code) 
-  
+    console.log(this.code)
+
   }
 
-  
+
   resetPassword() {
     var password = this.thirdFormGroup.controls.password.value;
     console.log(password)

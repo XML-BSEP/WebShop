@@ -63,19 +63,19 @@ func (au *Authenticate) Login(c echo.Context) error {
 	account.Password = strings.TrimSpace(policy.Sanitize(account.Password))
 
 	if err != nil {
-		return c.JSON(http.StatusUnprocessableEntity, invalidJson)
+		return echo.NewHTTPError(http.StatusUnprocessableEntity, invalidJson)
 	}
 
 	validateUser := ValidateLoginInput(account)
 
 	if len(validateUser) > 0 {
-		return c.JSON(http.StatusUnprocessableEntity, validateUser)
+		return echo.NewHTTPError(http.StatusUnprocessableEntity, validateUser)
 	}
 
 	u, userErr := au.us.GetUserDetailsFromEmail(account.Email)
 
 	if userErr != nil {
-		return c.JSON(http.StatusInternalServerError, invalidEmail)
+		return echo.NewHTTPError(http.StatusInternalServerError, invalidEmail)
 
 	}
 
@@ -87,20 +87,20 @@ func (au *Authenticate) Login(c echo.Context) error {
 
 	err = password_verification2.VerifyPassword(account.Password, accDetails.Password)
 	if err != nil {
-		return c.JSON(http.StatusForbidden, invalidPassword)
+		return echo.NewHTTPError(http.StatusForbidden, invalidPassword)
 
 	}
 
 	ts, tErr := au.tk.CreateToken(uint64(u.Model.ID))
 	if tErr != nil {
 		tokenErr["token_error"] = tErr.Error()
-		return c.JSON(http.StatusUnprocessableEntity, tErr.Error())
+		return echo.NewHTTPError(http.StatusUnprocessableEntity, tErr.Error())
 
 	}
 
 	saveErr := au.au.CreateAuth(u.ID, ts)
 	if saveErr != nil {
-		return c.JSON(http.StatusInternalServerError, saveErr.Error())
+		return echo.NewHTTPError(http.StatusInternalServerError, saveErr.Error())
 
 	}
 
@@ -110,7 +110,7 @@ func (au *Authenticate) Login(c echo.Context) error {
 	userData["id"] = u.Model.ID
 	role, err := au.us.GetRoleById(u.Model.ID)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, invalidEmail)
+		echo.NewHTTPError(http.StatusInternalServerError, invalidEmail)
 	}
 	userData["role"] = role
 
@@ -122,14 +122,14 @@ func (au *Authenticate) Logout(c echo.Context) error {
 
 	metadata, err := au.tk.ExtractTokenMetadata(c.Request())
 	if err != nil {
-		return c.JSON(http.StatusUnauthorized, "Unauthorized")
+		return echo.NewHTTPError(http.StatusUnauthorized, "Unauthorized")
 
 	}
 
 	deleteErr := au.au.DeleteTokens(metadata)
 
 	if deleteErr != nil {
-		c.JSON(http.StatusUnauthorized, deleteErr.Error())
+		echo.NewHTTPError(http.StatusUnauthorized, deleteErr.Error())
 		return deleteErr
 
 	}
@@ -155,7 +155,7 @@ func (au *Authenticate) Refresh(c echo.Context) error {
 	err := decoder.Decode(&mapToken)
 
 	if err != nil {
-		return c.JSON(http.StatusUnprocessableEntity, invalidJson)
+		return echo.NewHTTPError(http.StatusUnprocessableEntity, invalidJson)
 	}
 	refreshToken := mapToken["refresh_token"]
 
@@ -167,7 +167,7 @@ func (au *Authenticate) Refresh(c echo.Context) error {
 	})
 
 	if err != nil {
-		return c.JSON(http.StatusUnauthorized, err.Error())
+		return echo.NewHTTPError(http.StatusUnauthorized, err.Error())
 	}
 
 	if _, ok := token.Claims.(jwt.Claims); !ok && !token.Valid {
@@ -178,34 +178,34 @@ func (au *Authenticate) Refresh(c echo.Context) error {
 	if ok && token.Valid {
 		refreshUuid, ok := claims["refresh_uuid"].(string) //convert the interface to string
 		if !ok {
-			return c.JSON(http.StatusUnprocessableEntity, cannotFindUiid)
+			return echo.NewHTTPError(http.StatusUnprocessableEntity, cannotFindUiid)
 		}
 		userId, err := strconv.ParseUint(fmt.Sprintf("%.f", claims["user_id"]), 10, 64)
 		if err != nil {
-			return c.JSON(http.StatusUnprocessableEntity, parseError)
+			return echo.NewHTTPError(http.StatusUnprocessableEntity, parseError)
 		}
 
 		delErr := au.au.DeleteRefresh(refreshUuid)
 		if delErr != nil { //if any goes wrong
-			return c.JSON(http.StatusUnauthorized, unauthorized)
+			return echo.NewHTTPError(http.StatusUnauthorized, unauthorized)
 		}
 
 		ts, createErr := au.tk.CreateToken(userId)
 		if createErr != nil {
-			return c.JSON(http.StatusForbidden, createErr.Error())
+			return echo.NewHTTPError(http.StatusForbidden, createErr.Error())
 
 		}
 
 		saveErr := au.au.CreateAuth(uint(userId), ts)
 		if saveErr != nil {
-			return c.JSON(http.StatusForbidden, saveErr.Error())
+			return echo.NewHTTPError(http.StatusForbidden, saveErr.Error())
 
 		}
 
 
 		role, err := au.us.GetRoleById(uint(userId))
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, invalidEmail)
+			echo.NewHTTPError(http.StatusInternalServerError, invalidEmail)
 		}
 
 
@@ -217,6 +217,6 @@ func (au *Authenticate) Refresh(c echo.Context) error {
 		}
 		return c.JSON(http.StatusCreated, tokens)
 	} else {
-		return c.JSON(http.StatusUnauthorized, refreshTokenExpired)
+		return echo.NewHTTPError(http.StatusUnauthorized, refreshTokenExpired)
 	}
 }
