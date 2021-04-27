@@ -14,7 +14,7 @@ import { Role } from './model/role';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'login',
+    redirectTo: 'home',
     pathMatch: 'full'
 },
 {

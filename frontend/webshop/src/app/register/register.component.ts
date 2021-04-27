@@ -50,4 +50,16 @@ export class RegisterComponent implements OnInit {
     }  
 
   }
+
+  checkPassword() {
+    var password =  this.registrationForm.controls.password.value;
+    var regex = new RegExp('^[A-Z][A-Za-z0-9]+[$@$!%*?&]{1}$')
+    console.log(regex.test(password))
+    if(regex.test(password)){
+      this.toastr.warning("You are using common password type!")
+      
+    }
+    
+
+  }
 }

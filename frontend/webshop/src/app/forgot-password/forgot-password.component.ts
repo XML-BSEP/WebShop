@@ -64,16 +64,31 @@ export class ForgotPasswordComponent implements OnInit {
     var confirmPassword = this.thirdFormGroup.controls.confirmPassword.value;
     this.resetPass = new ResetPass(this.email, password, confirmPassword, this.code)
 
-    this.resetPasswordSerivce.resetPassword(this.resetPass).subscribe(
-      res=>{
-        this.toastr.success("Successfully changed password");
-        this.router.navigate(['/login']);
-      },
-      error=>{
-        this.toastr.error(error.toString());
-      }
-      )
+    if(password===confirmPassword){
+      this.resetPasswordSerivce.resetPassword(this.resetPass).subscribe(
+           res=>{
+            this.toastr.success("Successfully changed password");
+            this.router.navigate(['/login']);
+          },
+          error=>{
+            this.toastr.error(error.toString());
+          }
+        )
+    }else {
+      this.toastr.error("Enter same passwords!")
+    }
+ 
 
+  }
+
+  checkPassword() {
+    var password =  this.thirdFormGroup.controls.password.value;
+    var regex = new RegExp('^[A-Z][A-Za-z0-9]+[$@$!%*?&]{1}$')
+    console.log(regex.test(password))
+    if(regex.test(password)){
+      this.toastr.warning("You are using common password type!")
+      
+    }
   }
 
 }

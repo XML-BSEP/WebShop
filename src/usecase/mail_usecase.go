@@ -3,7 +3,9 @@ package usecase
 import (
 	"bytes"
 	"fmt"
+	"github.com/spf13/viper"
 	"html/template"
+	"log"
 	"net/smtp"
 )
 
@@ -13,20 +15,31 @@ type MailForActivation struct {
 	Expires	string `json::"expires"`
 }
 
-const (
-	emailHost = "smtp.gmail.com"
-	emailFrom = "duke.strategic@gmail.com"
-	emailPassword = "Duke123456"
-	emailPort = "587"
-	adr = emailHost + ":" + emailPort
-)
 
+
+func init_viper() {
+	viper.SetConfigFile(`src/configurations/mailconfig.json`)
+	err := viper.ReadInConfig()
+	if err != nil {
+		panic(err)
+	}
+
+	if viper.GetBool(`debug`) {
+		log.Println("Service RUN on DEBUG mode")
+	}
+}
 
 
 
 
 
 func SendMail(subjectMail string, subjectName string, verCode string) error {
+
+	init_viper()
+	emailFrom := viper.GetString(`emailFrom`)
+	emailPassword := viper.GetString(`emailPassword`)
+	emailHost := viper.GetString(`emailHost`)
+	adr := viper.GetString(`emailHost`) + ":" + viper.GetString(`emailPort`)
 
 	emailAuth := smtp.PlainAuth("", emailFrom, emailPassword, emailHost)
 
@@ -56,6 +69,12 @@ func SendMail(subjectMail string, subjectName string, verCode string) error {
 }
 
 func SendRestartPasswordMail(subjectMail string, verCode string) error {
+
+	init_viper()
+	emailFrom := viper.GetString(`emailFrom`)
+	emailPassword := viper.GetString(`emailPassword`)
+	emailHost := viper.GetString(`emailHost`)
+	adr := viper.GetString(`emailHost`) + ":" + viper.GetString(`emailPort`)
 
 	emailAuth := smtp.PlainAuth("", emailFrom, emailPassword, emailHost)
 
