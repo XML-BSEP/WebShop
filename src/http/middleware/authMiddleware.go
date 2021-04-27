@@ -29,7 +29,7 @@ func (au *AuthMiddleware) Authenticated() echo.MiddlewareFunc {
 
 			err := auth.TokenValid(c.Request())
 			if err == nil {
-				return c.JSON(http.StatusBadRequest, "Already logged in")
+				return echo.NewHTTPError(http.StatusBadRequest, "Already logged in")
 
 			}
 			return next(c)
@@ -54,12 +54,12 @@ func (au *AuthMiddleware) Auth() echo.MiddlewareFunc {
 			} else {
 
 				if !au.redisUseCase.ExistsByKey(metadata.TokenUuid) {
-					return c.JSON(http.StatusUnauthorized, "unauthorized")
+					return echo.NewHTTPError(http.StatusUnauthorized, "unauthorized")
 				}
 
 				role, err = au.ur.GetRoleById(uint(metadata.UserId))
 				if err != nil {
-					return c.JSON(http.StatusUnauthorized, "unauthorized")
+					return echo.NewHTTPError(http.StatusUnauthorized, "unauthorized")
 				}
 			}
 
@@ -67,12 +67,12 @@ func (au *AuthMiddleware) Auth() echo.MiddlewareFunc {
 
 			if err != nil {
 				log.Println(err)
-				c.JSON(http.StatusInternalServerError, "error occurred when authorizing user")
+				echo.NewHTTPError(http.StatusInternalServerError, "error occurred when authorizing user")
 				return err
 			}
 
 			if !ok {
-				c.JSON(http.StatusForbidden, "forbidden")
+				echo.NewHTTPError(http.StatusForbidden, "forbidden")
 				return err
 			}
 			return next(c)
