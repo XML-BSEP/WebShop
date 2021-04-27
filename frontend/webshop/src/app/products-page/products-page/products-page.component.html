@@ -246,28 +246,28 @@
 
             <div class="row">
                 <div class="col-md-9">
-                        <form class="col-search">
-                            <mat-form-field class="example-full-width">
-                                <mat-label></mat-label>
-                                <input matInput placeholder="Start typing">
-                            </mat-form-field>
-                            <button mat-button matTooltip="Search" class="search-button ">
-                                <i class="bi-search" role="img" aria-label="Search"></i>
-                            </button>
+                    <form class="col-search">
+                        <mat-form-field class="example-full-width">
+                            <mat-label></mat-label>
+                            <input matInput placeholder="Start typing">
+                        </mat-form-field>
+                        <button mat-button matTooltip="Search" class="search-button ">
+                            <i class="bi-search" role="img" aria-label="Search"></i>
+                        </button>
 
-                        </form>
+                    </form>
                 </div>
 
                 <div class="col-md-3">
                     <mat-form-field appearance="fill">
                         <mat-label>Sort</mat-label>
                         <mat-select>
-                          <mat-option value="price-low">Price (low to high)</mat-option>
-                          <mat-option value="price-high">Price (high to low)</mat-option>
-                          <mat-option value="name-asc">Name (ascending)</mat-option>
-                          <mat-option value="name-desc">Name (descending)</mat-option>
+                            <mat-option value="price-low">Price (low to high)</mat-option>
+                            <mat-option value="price-high">Price (high to low)</mat-option>
+                            <mat-option value="name-asc">Name (ascending)</mat-option>
+                            <mat-option value="name-desc">Name (descending)</mat-option>
                         </mat-select>
-                      </mat-form-field>
+                    </mat-form-field>
                 </div>
 
             </div>
@@ -280,8 +280,7 @@
                                 <p style="font-size: 1.2rem;">{{product.price}}</p>
                             </mat-card-subtitle>
                         </mat-card-header>
-                        <img mat-card-image src="{{product.image}}" style="height: 25vh; max-width: 40vh;"
-                            alt="Photo">
+                        <img mat-card-image src="{{product.image}}" style="height: 25vh; max-width: 40vh;" alt="Photo">
                         <mat-card-content style="height: 20vh; max-height:25vh;">
                             <p style="word-wrap: break-word;">
                                 {{product.description}}
@@ -295,19 +294,25 @@
                     </mat-card>
                 </div>
 
+            </div>
+
+            <div class="row">
+                <mat-paginator [length]="itemsCount"
+               [pageSize]="pageSize"
+               [pageSizeOptions]="pageSizeOptions" 
+               (page) = "load($event)">
+                </mat-paginator>
+            </div>
 
 
-
-
-
-
-
-        </div>
 
         </div>
 
     </div>
 
-        <footer>
-        </footer>
+
+    <footer>
+
+    </footer>
 </body>
+

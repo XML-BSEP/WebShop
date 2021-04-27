@@ -64,6 +64,7 @@ func (s *signUp) ConfirmAccount(ctx echo.Context, user *domain.UserRegistrationR
 		Surname: user.Surname,
 		Email: user.Email,
 		ShopAccount: domain.ShopAccount{Username: user.Username, Password: user.Password},
+		RoleId: 2,
 	}
 
 	s.RedisUsecase.DeleteValueByKey(newUser.Email)

@@ -23,6 +23,7 @@ type ProductHandler interface {
 	GetByNameOrderByName(ctx echo.Context) error
 	FilterByCategory(ctx echo.Context) error
 	FetchProducts(ctx echo.Context) error
+	FilterSearch(ctx echo.Context) error
 	AddProduct(ctx echo.Context) error
 }
 
@@ -30,6 +31,36 @@ type productHandler struct {
 	ProductUseCase domain.ProductUsecase
 }
 
+
+func (p *productHandler) FilterSearch(ctx echo.Context) error {
+
+	decoder := json.NewDecoder(ctx.Request().Body)
+	var product dto.FilterDTO
+
+	if err := decoder.Decode(&product); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "Invalid parameters")
+	}
+
+	products, err := p.ProductUseCase.FilterByCategory(product.Name, product.Category, product.PriceRangeStart, product.PriceRangeEnd, product.Limit, product.Offset, product.Order)
+
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "Errpr filtering")
+	}
+
+	count, _ := p.ProductUseCase.Count()
+
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "Error counting")
+	}
+
+	var productsRet = make([]dto.ProductViewDTO, len(products))
+
+	for i, p := range products {
+		productsRet[i] = mapper.NewProductToProductViewDTO(*p)
+		productsRet[i].Count = count
+	}
+	return ctx.JSON(http.StatusOK, productsRet)
+}
 func (p *productHandler) AddProduct(ctx echo.Context) error {
 	decoder := json.NewDecoder(ctx.Request().Body)
 

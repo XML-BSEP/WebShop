@@ -6,8 +6,9 @@ export class Product {
     category : String;
     available : number;
     description : String;
+    count : number;
 
-    constructor(name : String, price : number, image : String, currency : String, category : String, available : number, description : String) {
+    constructor(name : String, price : number, image : String, currency : String, category : String, available : number, description : String, count : number) {
         this.name = name;
         this.price = price;
         this.image = image;
@@ -15,5 +16,6 @@ export class Product {
         this.category = category;
         this.available = available;
         this.description = description;
+        this.count = count;
     }
 }

@@ -20,6 +20,7 @@ import { NotUserNavBarComponent } from './nav-bars/not-user-nav-bar/not-user-nav
 import { CustomerNavBarComponent } from './nav-bars/customer-nav-bar/customer-nav-bar.component';
 import { AddProductComponent } from './product/add-product/add-product.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { ForbiddenComponent } from './other/forbidden/forbidden.component';
 
 
 
@@ -35,7 +36,8 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
     NotUserNavBarComponent,
     CustomerNavBarComponent,
     AddProductComponent,
-    ForgotPasswordComponent
+    ForgotPasswordComponent,
+    ForbiddenComponent
   ],
   imports: [
     BrowserModule,
