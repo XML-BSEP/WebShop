@@ -23,7 +23,9 @@ const routes: Routes = [
 },
 {
   path: 'login',
-  component: LoginComponent
+  component: LoginComponent,
+  canActivate : [AuthGuard],
+  data : {roles: [Role.Anonymous]}
 },
 {
   path:'registration',

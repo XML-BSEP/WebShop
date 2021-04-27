@@ -44,7 +44,7 @@ func (signUp *signUp) UserRegister(ctx echo.Context) (err error){
 	}
 
 	user, errE :=  signUp.SignUpUsecase.CheckIfExistUser(ctx, t)
-	if errE == nil {
+	if errE != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, "User already exist!")
 	}
 
