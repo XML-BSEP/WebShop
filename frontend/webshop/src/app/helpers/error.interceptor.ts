@@ -5,6 +5,7 @@ import { catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../service/authentication/authentication.service';
 
+
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
     constructor(private router : Router,

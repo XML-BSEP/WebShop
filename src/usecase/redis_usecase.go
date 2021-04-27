@@ -2,9 +2,11 @@ package usecase
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"github.com/go-redis/redis/v8"
 	"time"
+	"web-shop/domain"
 )
 
 
@@ -58,11 +60,14 @@ func (r2 *redisUsecase) ExistsByKey(key string) bool {
 }
 
 func (r2 *redisUsecase) CheckUsername(username string) bool {
-	//var userObj domain.UserRegistrationRequest
+	var userObj domain.UserRegistrationRequest
+	var cursor uint64
+	keys, _, err := r2.RedisClient.Scan(context.Background(), cursor, "*", 10).Result()
+	if err != nil {
+		return false
+	}
 
-	keys := r2.RedisClient.Do(context.Background(), "KEYS", "*")
-	/*
-	for _, key := range keys.Val() {
+	for _, key := range keys {
 		value, err := r2.GetValueByKey(key)
 		if err == nil {
 			err = json.Unmarshal([]byte(value), &userObj)
@@ -73,7 +78,7 @@ func (r2 *redisUsecase) CheckUsername(username string) bool {
 				}
 			}
 		}
-	}*/
+	}
 
 	fmt.Println(keys)
 	return false
