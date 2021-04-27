@@ -18,6 +18,7 @@ import (
 type SignUpHandler interface {
 	UserRegister(ctx echo.Context) error
 	ConfirmAccount(ctx echo.Context) error
+	ResendCode(ctx echo.Context) error
 }
 
 
@@ -83,6 +84,37 @@ func (signUp *signUp) UserRegister(ctx echo.Context) (err error){
 	return ctx.JSON(http.StatusOK, "Successfull registration, please check your mail!")
 }
 
+func (signUp *signUp) ResendCode(ctx echo.Context) error {
+	decoder := json.NewDecoder(ctx.Request().Body)
+
+	type Email struct {
+		Email	string	`json:"email"`
+	}
+
+	var req Email
+	err := decoder.Decode(&req)
+
+
+	policy := bluemonday.UGCPolicy()
+	email := strings.TrimSpace(policy.Sanitize(req.Email))
+
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "Error while unmarshalling request")
+	}
+	err, username, code := signUp.SignUpUsecase.ResendCode(email)
+
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "Invalid email")
+	}
+
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "invalid email")
+	}
+
+
+	usecase.SendMail(email, username, code)
+	return ctx.JSON(http.StatusOK, "Resend request successful, please check your email")
+}
 
 func (signUp *signUp) ConfirmAccount(ctx echo.Context) error {
 
@@ -97,7 +129,7 @@ func (signUp *signUp) ConfirmAccount(ctx echo.Context) error {
 	errs := customValidator.TranslateError(validateErr, translator)
 	errorsString := customValidator.GetErrorsString(errs)
 
-	policy := bluemonday.UGCPolicy();
+	policy := bluemonday.UGCPolicy()
 	credentials.Email = strings.TrimSpace(policy.Sanitize(credentials.Email))
 	credentials.VerificationCode = strings.TrimSpace(policy.Sanitize(credentials.VerificationCode))
 

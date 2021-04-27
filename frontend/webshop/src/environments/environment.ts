@@ -17,6 +17,8 @@ export const environment = {
   addProduct : "addProduct",
   resetPasswordMail : "resetPasswordMail",
   resetPassword : "resetPassword",
+  resendPassCode : "resendPassCode",
+  resendRegCode : "resendRegistrationCode"
 };
 
 /*

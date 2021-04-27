@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"fmt"
 	"github.com/go-redis/redis/v8"
 	"time"
 )
@@ -13,6 +14,7 @@ type RedisUsecase interface {
 	DeleteValueByKey(key string) error
 	ExistsByKey(key string) bool
 	SetToken(key string, value string, time time.Duration) error
+	CheckUsername(username string) bool
 }
 
 type redisUsecase struct {
@@ -53,6 +55,28 @@ func (r2 *redisUsecase) ExistsByKey(key string) bool {
 		return false
 	}
 	return true
+}
+
+func (r2 *redisUsecase) CheckUsername(username string) bool {
+	//var userObj domain.UserRegistrationRequest
+
+	keys := r2.RedisClient.Do(context.Background(), "KEYS", "*")
+	/*
+	for _, key := range keys.Val() {
+		value, err := r2.GetValueByKey(key)
+		if err == nil {
+			err = json.Unmarshal([]byte(value), &userObj)
+
+			if err == nil {
+				if userObj.Username == username {
+					return true
+				}
+			}
+		}
+	}*/
+
+	fmt.Println(keys)
+	return false
 }
 
 
