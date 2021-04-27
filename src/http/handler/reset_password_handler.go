@@ -23,11 +23,48 @@ type resetPassword struct {
 type ResetPasswordHandler interface {
 	SendResetMail(ctx echo.Context) error
 	ResetPassword(ctx echo.Context) error
+	ResendResetCode(ctx echo.Context) error
 }
 
 
 func NewResetPasswordHandler(r domain.RegisteredShopUserUsecase, generatorUsecase usecase.RandomStringGeneratorUsecase) ResetPasswordHandler {
 	return &resetPassword{r,generatorUsecase }
+}
+
+func (r *resetPassword) ResendResetCode(ctx echo.Context) error {
+	decoder := json.NewDecoder(ctx.Request().Body)
+
+	type Email struct {
+		Email	string	`json:"email"`
+	}
+
+	var req Email
+	err := decoder.Decode(&req)
+
+	policy := bluemonday.UGCPolicy();
+	req.Email = strings.TrimSpace(policy.Sanitize(req.Email))
+
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	user, errE :=  r.RegisteredShopUserUsecase.ExistByUsernameOrEmail(ctx, "", req.Email)
+	if errE != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "User not found!")
+	}
+
+	var code string
+	code = r.RandomStringGeneratorUsecase.RandomStringGenerator(8)
+
+	err = r.RegisteredShopUserUsecase.ResendResetCode(user.Email, code)
+
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "invalid email")
+	}
+	usecase.SendRestartPasswordMail(user.Email , code)
+	return ctx.JSON(http.StatusOK, "Reset password code resent, please check your email")
+
+
 }
 
 func (r *resetPassword) SendResetMail(ctx echo.Context) (err error) {

@@ -2,10 +2,12 @@ package usecase
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/labstack/echo"
 	"golang.org/x/crypto/bcrypt"
 	"web-shop/domain"
 	"web-shop/infrastructure/dto"
+	password_verification "web-shop/security/password-verification"
 )
 
 type SignUpUseCase interface {
@@ -15,12 +17,45 @@ type SignUpUseCase interface {
 	ConfirmAccount(ctx echo.Context, user *domain.UserRegistrationRequest) (*domain.RegisteredShopUser, error)
 	Hash(password string) ([]byte, error)
 	ValidatePassword(password, confirmPassword string) bool
+	ResendCode(email string) (error, string, string)
 }
+
 
 type signUp struct {
 	RedisUsecase                 RedisUsecase
 	RegisteredUserUsecase        domain.RegisteredShopUserUsecase
 	RandomStringGeneratorUSecase RandomStringGeneratorUsecase
+}
+
+func (s *signUp) ResendCode(email string) (error, string, string) {
+	if !s.RedisUsecase.ExistsByKey(email) {
+		return fmt.Errorf("invalid email"), "", ""
+	}
+	userJson, err := s.RedisUsecase.GetValueByKey(email)
+
+	if err != nil {
+		return err, "", ""
+	}
+
+	var userObj domain.UserRegistrationRequest
+
+	err = json.Unmarshal([]byte(userJson), &userObj)
+
+	code := s.RandomStringGeneratorUSecase.RandomStringGenerator(8)
+
+	expiration  := 1000000000 * 3600 * 2 //2h
+	hash, _ := password_verification.Hash(code)
+
+	userObj.VerificationCode = string(hash)
+
+	newAcc, err := json.Marshal(userObj)
+	if err != nil {
+		return err, "", ""
+	}
+
+	s.RedisUsecase.AddKeyValueSet(email, string(newAcc), expiration)
+
+	return nil, userObj.Username, code
 }
 
 func (s *signUp) IsCodeValid(ctx echo.Context, email, code string) (*domain.UserRegistrationRequest, error) {
@@ -50,9 +85,15 @@ func (s *signUp) Hash(password string) ([]byte, error) {
 func (s *signUp) CheckIfExistUser(ctx echo.Context, newUser dto.NewUser) (*domain.RegisteredShopUser, error) {
 
 	acc, err  := s.RegisteredUserUsecase.ExistByUsernameOrEmail(ctx, newUser.Username, newUser.Email)
+
 	if err != nil {
 		return nil, err
 	}
+
+	if !s.RedisUsecase.ExistsByKey(newUser.Email) {
+		return nil, fmt.Errorf("already exists")
+	}
+
 	return acc, err
 
 }

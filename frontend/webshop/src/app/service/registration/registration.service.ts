@@ -18,4 +18,8 @@ export class RegistrationService {
   confAcc(data : ConfirmRegistration){
     return this.https.post(`${environment.baseUrl}/${environment.confirmAccount}`,data, {responseType : 'json'});
   }
+
+  resend(data : Object) {
+    return this.https.post(`${environment.baseUrl}/${environment.resendRegCode}`, data, {responseType : 'json' })
+  }
 }

@@ -45,6 +45,17 @@ export class RegistrationConfirmationComponent implements OnInit {
 
   }
   resend(){
+    let sendData = {
+      "email" : this.userMail
+    }
+    this.registrationService.resend(sendData).subscribe( 
+      res => {
+        this.toastr.success("Resend successful, check your email!")
+      }, 
+      error => {
+        this.toastr.error("Something went wrong, your code probably expired, try to register again.")
+      }
+    )
 
   }
 }

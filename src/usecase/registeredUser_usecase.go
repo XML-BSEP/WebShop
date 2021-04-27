@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"fmt"
 	"github.com/labstack/echo"
 	"web-shop/domain"
 	"web-shop/infrastructure/dto"
@@ -28,6 +29,18 @@ func (r *registeredUserUsecase) SaveCodeToRedis(code string, email string) error
 	return r.RedisUsecase.AddKeyValueSet(email, code, expiration)
 }
 
+func (r *registeredUserUsecase) ResendResetCode(email string, code string) error {
+	if !r.RedisUsecase.ExistsByKey(email) {
+		return fmt.Errorf("invalid email")
+	}
+
+	r.SaveCodeToRedis(code, email)
+
+	return nil
+
+
+
+}
 func (r *registeredUserUsecase) ResetPassword(dto dto.ResetPassDTO) string {
 
 	if passwordCompare := dto.Password == dto.ConfirmedPassword; !passwordCompare {
