@@ -6,6 +6,7 @@ import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms'
 import { Component, OnInit } from '@angular/core';
 import { Base64 } from 'js-base64';
 import { CategoryService } from 'src/app/service/product/category.service';
+import { ToastrService } from 'ngx-toastr';
 
 interface Food {
   value: string;
@@ -38,7 +39,7 @@ export class AddProductComponent implements OnInit {
   current=0;
   numberRegEx = /\-?\d*\.?\d{1,2}/;
   allCategories : Category[];
-  constructor(private productService : ProductServiceService, private categoryService : CategoryService ,private _formBuilder: FormBuilder) { }
+  constructor(private toastr : ToastrService, private productService : ProductServiceService, private categoryService : CategoryService ,private _formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
 
@@ -105,10 +106,10 @@ export class AddProductComponent implements OnInit {
 
     this.productService.addProduct(this.newProduct).subscribe(
       res=>{
-        alert('Success');
+        this.toastr.success('Success');
       },
-      error=>{
-        alert("Fail - email is already in use!")
+      err=>{
+        this.toastr.error(err)
       }
         )
 

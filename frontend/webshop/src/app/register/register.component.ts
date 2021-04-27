@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { RegisteredUser } from '../model/registeredUser';
 import { RegistrationService } from '../service/registration/registration.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-register',
@@ -11,7 +12,7 @@ import { RegistrationService } from '../service/registration/registration.servic
 })
 export class RegisterComponent implements OnInit {
 
-  constructor(private router: Router,private registrationService : RegistrationService) { }
+  constructor(private router: Router,private registrationService : RegistrationService, private toastr : ToastrService) { }
   public registrationForm: FormGroup;
   private newUser : RegisteredUser;
   ngOnInit(): void {
@@ -36,16 +37,17 @@ export class RegisterComponent implements OnInit {
     if(password===confirmPassword){
       this.newUser = new RegisteredUser(name, lastname, email, password, confirmPassword, username);
 
-    this.registrationService.register(this.newUser).subscribe(
-      res=>{
-        alert('Success');
-        this.router.navigate(['/regconfirm'], {state: {data: email}});
-      },
-      error=>{
-        alert("Fail - email is already in use!")
-      }
-        )
-    }
+      this.registrationService.register(this.newUser).subscribe(
+        success => {
+          this.toastr.success("Please check your mail to confirm registration")
+          this.router.navigate(['/regconfirm'], {state: {data: email}});
+        },
+        error => {
+          this.toastr.error(error)
+        }
+
+      )
+    }  
 
   }
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { Authentication } from '../model/authentication';
 import { Role } from '../model/role';
 import { AuthenticationService } from '../service/authentication/authentication.service';
@@ -15,7 +16,7 @@ export class LoginComponent implements OnInit {
   username;
   password;
   credentials;
-  constructor(private router : Router, private authService : AuthenticationService) { }
+  constructor(private router : Router, private authService : AuthenticationService, private toastr : ToastrService) { }
 
   ngOnInit(): void {
     this.loginForm = new FormGroup({
@@ -43,7 +44,7 @@ export class LoginComponent implements OnInit {
 
       },
       error=>{
-        alert(error)
+        this.toastr.error(error)
         this.router.navigate(['/login']);
 
       });
