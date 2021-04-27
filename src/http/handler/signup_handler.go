@@ -44,14 +44,14 @@ func (signUp *signUp) UserRegister(ctx echo.Context) (err error){
 
 	user, errE :=  signUp.SignUpUsecase.CheckIfExistUser(ctx, t)
 	if errE == nil {
-		return ctx.JSON(http.StatusBadRequest, "User already exist!")
+		return echo.NewHTTPError(http.StatusBadRequest, "User already exist!")
 	}
 
 	fmt.Print(user)
 	newUser := mapper.NewUserDtoToRequestUser(t)
 
 	if strings.Contains(newUser.Username, " ") {
-		return ctx.JSON(http.StatusBadRequest, "Invalid username")
+		return echo.NewHTTPError(http.StatusBadRequest, "Invalid username")
 	}
 
 	customValidator := validator2.NewCustomValidator()
@@ -61,21 +61,21 @@ func (signUp *signUp) UserRegister(ctx echo.Context) (err error){
 	errorsString := customValidator.GetErrorsString(errs)
 
 	if errValidation != nil {
-		return ctx.JSON(http.StatusBadRequest, errorsString[0])
+		return echo.NewHTTPError(http.StatusBadRequest, errorsString[0])
 	}
 
 	if pasval1, pasval2, pasval3, pasval4 := verifyPassword(newUser.Password); pasval1 == false || pasval2 == false || pasval3 == false || pasval4 == false {
-		return ctx.JSON(http.StatusBadRequest, "Password must have minimum 1 uppercase letter, 1 lowercase letter, 1 digit and 1 special character and needs to be minimum 8 characters long")
+		return echo.NewHTTPError(http.StatusBadRequest, "Password must have minimum 1 uppercase letter, 1 lowercase letter, 1 digit and 1 special character and needs to be minimum 8 characters long")
 	}
 
 	passwordCompare := signUp.SignUpUsecase.ValidatePassword(t.Password, t.ConfirmedPassword)
 
 	if !passwordCompare {
-		return ctx.JSON(http.StatusBadRequest, "Enter same passwords")
+		return echo.NewHTTPError(http.StatusBadRequest, "Enter same passwords")
 	}
 	code, errR := signUp.SignUpUsecase.RegisterNewUser(ctx, newUser)
 	if errR != nil {
-		return ctx.JSON(http.StatusBadRequest, "Redis failed!")
+		return echo.NewHTTPError(http.StatusBadRequest, "Redis failed!")
 	}
 
 	go usecase.SendMail(t.Email, t.Username, code)
@@ -103,7 +103,7 @@ func (signUp *signUp) ConfirmAccount(ctx echo.Context) error {
 
 
 	if validateErr != nil {
-		return ctx.JSON(http.StatusBadRequest, errorsString[0])
+		return echo.NewHTTPError(http.StatusBadRequest, errorsString[0])
 	}
 
 	code := credentials.VerificationCode
@@ -112,13 +112,13 @@ func (signUp *signUp) ConfirmAccount(ctx echo.Context) error {
 	user, err := signUp.SignUpUsecase.IsCodeValid(ctx, email, code)
 
 	if err != nil {
-		return ctx.JSON(http.StatusBadRequest, "Entered code is not valid")
+		return echo.NewHTTPError(http.StatusBadRequest, "Entered code is not valid")
 	}
 
 	_, err2 := signUp.SignUpUsecase.ConfirmAccount(ctx, user)
 
 	if err2 != nil {
-		return ctx.JSON(http.StatusBadRequest, "Znaci...")
+		return echo.NewHTTPError(http.StatusBadRequest, "Znaci...")
 	}
 
 	return ctx.JSON(http.StatusOK, "Ok")

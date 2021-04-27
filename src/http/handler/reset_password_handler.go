@@ -49,7 +49,7 @@ func (r *resetPassword) SendResetMail(ctx echo.Context) (err error) {
 
 	user, errE :=  r.RegisteredShopUserUsecase.ExistByUsernameOrEmail(ctx, "", req.Email)
 	if errE != nil {
-		return ctx.JSON(http.StatusBadRequest, "User not found!")
+		return echo.NewHTTPError(http.StatusBadRequest, "User not found!")
 	}
 
 	var code string
@@ -58,13 +58,13 @@ func (r *resetPassword) SendResetMail(ctx echo.Context) (err error) {
 	go usecase.SendRestartPasswordMail(user.Email , code)
 	hashedCode, err := password_verification.Hash(code)
 	if err != nil {
-		return ctx.JSON(http.StatusInternalServerError, "Error")
+		return echo.NewHTTPError(http.StatusInternalServerError, "Error")
 	}
 
 
 	r.RegisteredShopUserUsecase.SaveCodeToRedis(string(hashedCode), req.Email)
 
-	return ctx.JSON(http.StatusOK, "Successfully mail sent!")
+	return ctx.JSON(http.StatusOK, "Please check your email")
 }
 
 func (r *resetPassword) ResetPassword(ctx echo.Context) error {
@@ -85,13 +85,13 @@ func (r *resetPassword) ResetPassword(ctx echo.Context) error {
 	}
 
 	if pasval1, pasval2, pasval3, pasval4 := verifyPassword(resetDto.Password); pasval1 == false || pasval2 == false || pasval3 == false || pasval4 == false {
-		return ctx.JSON(http.StatusBadRequest, "Password must have minimum 1 uppercase letter, 1 lowercase letter, 1 digit and 1 special character and needs to be minimum 8 characters long")
+		return echo.NewHTTPError(http.StatusBadRequest, "Password must have minimum 1 uppercase letter, 1 lowercase letter, 1 digit and 1 special character and needs to be minimum 8 characters long")
 	}
 
 	errorMessage := r.RegisteredShopUserUsecase.ResetPassword(resetDto)
 
 	if errorMessage != "" {
-		return ctx.JSON(http.StatusInternalServerError, errorMessage)
+		return echo.NewHTTPError(http.StatusBadRequest, errorMessage)
 	}
 
 	return ctx.JSON(http.StatusOK, "password successfully changed")

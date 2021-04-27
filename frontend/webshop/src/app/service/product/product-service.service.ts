@@ -18,7 +18,7 @@ export class ProductServiceService {
   }
 
   addProduct(data : NewProduct){
-    return this.http.post(`${environment.baseUrl}/${environment.addProduct}`,data, {responseType : 'text'});
+    return this.http.post(`${environment.baseUrl}/${environment.addProduct}`,data, {responseType : 'json'});
   }
 
 }
