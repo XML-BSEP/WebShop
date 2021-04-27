@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { ProductServiceService } from 'src/app/service/product/product-service.service';
 import { Category } from './../../model/category';
 import { NewProduct } from './../../model/newProduct';
@@ -39,7 +40,7 @@ export class AddProductComponent implements OnInit {
   numberRegEx = /\-?\d*\.?\d{1,2}/;
 
   allCategories : Category[];
-  constructor(private productService : ProductServiceService, private categoryService : CategoryService ,private _formBuilder: FormBuilder) { }
+  constructor(private router : Router, private productService : ProductServiceService, private categoryService : CategoryService ,private _formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
 
@@ -107,6 +108,8 @@ export class AddProductComponent implements OnInit {
     this.productService.addProduct(this.newProduct).subscribe(
       res=>{
         alert('Success');
+        this.router.navigate(['/home'])
+
       },
       error=>{
         alert(error)
