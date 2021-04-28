@@ -44,7 +44,7 @@ func (signUp *signUp) UserRegister(ctx echo.Context) (err error){
 	}
 
 	user, errE :=  signUp.SignUpUsecase.CheckIfExistUser(ctx, t)
-	if errE == nil {
+	if errE != nil {
 
 		return echo.NewHTTPError(http.StatusBadRequest, "User already exist!")
 	}
@@ -70,7 +70,7 @@ func (signUp *signUp) UserRegister(ctx echo.Context) (err error){
 		return echo.NewHTTPError(http.StatusBadRequest, "Password must have minimum 1 uppercase letter, 1 lowercase letter, 1 digit and 1 special character and needs to be minimum 8 characters long")
 	}
 
-	passwordCompare := signUp.SignUpUsecase.ValidatePassword(t.Password, t.ConfirmedPassword)
+	passwordCompare := signUp.SignUpUsecase.ValidatePassword(newUser.Password, t.ConfirmedPassword)
 
 	if !passwordCompare {
 		return echo.NewHTTPError(http.StatusBadRequest, "Enter same passwords")
@@ -80,7 +80,7 @@ func (signUp *signUp) UserRegister(ctx echo.Context) (err error){
 		return echo.NewHTTPError(http.StatusBadRequest, "Redis failed!")
 	}
 
-	go usecase.SendMail(t.Email, t.Username, code)
+	go usecase.SendMail(newUser.Email, newUser.Username, code)
 
 	return ctx.JSON(http.StatusOK, "Successfull registration, please check your mail!")
 }

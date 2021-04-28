@@ -90,9 +90,9 @@ func (s *signUp) CheckIfExistUser(ctx echo.Context, newUser dto.NewUser) (*domai
 		return nil, fmt.Errorf("already exists")
 	}
 
-	if s.RedisUsecase.ExistsByKey(newUser.Email) {
-		return nil, fmt.Errorf("already exists")
-	}
+	//if s.RedisUsecase.ExistsByKey(newUser.Email) {
+	//	return nil, fmt.Errorf("already exists")
+	//}
 
 	if err != nil {
 		return nil, nil
