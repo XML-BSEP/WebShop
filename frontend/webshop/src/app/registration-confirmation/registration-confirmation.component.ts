@@ -22,10 +22,13 @@ export class RegistrationConfirmationComponent implements OnInit {
     this.codeForm = new FormGroup({
       //maybe add pattern for code validation on frontend
       'code' : new FormControl(null, [Validators.required])
-    });     
+    });
+    if(history.state.data === undefined){
+      this.router.navigate(['/home'])
+    }else{
+      this.userMail = history.state.data;
 
-    this.userMail = history.state.data;
-
+    }
   }
   confirm(){
     console.log(this.userMail)
@@ -39,8 +42,8 @@ export class RegistrationConfirmationComponent implements OnInit {
       error => {
         this.toastr.error("Confirmation code is not correct")
       }
-      
-      
+
+
         )
 
   }
@@ -48,10 +51,10 @@ export class RegistrationConfirmationComponent implements OnInit {
     let sendData = {
       "email" : this.userMail
     }
-    this.registrationService.resend(sendData).subscribe( 
+    this.registrationService.resend(sendData).subscribe(
       res => {
         this.toastr.success("Resend successful, check your email!")
-      }, 
+      },
       error => {
         this.toastr.error("Something went wrong, your code probably expired, try to register again.")
       }
