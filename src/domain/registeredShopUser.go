@@ -27,6 +27,7 @@ type RegisteredShopUserUsecase interface {
 	ExistByUsernameOrEmail(ctx echo.Context, username string, email string) (*RegisteredShopUser, error)
 	ResetPassword(dto dto.ResetPassDTO) string
 	SaveCodeToRedis(code string, email string) error
+	ResendResetCode(email string, code string) error
 }
 
 type RegisteredShopUserRepository interface {

@@ -4,6 +4,9 @@ import { ResetPasswordService} from '../service/reset-password/reset-password.se
 import { ResetMail } from '../model/resetMail';
 import { ResetPass } from '../model/resetPass';
 import { Router } from '@angular/router';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { Message } from '@angular/compiler/src/i18n/i18n_ast';
+import { error } from 'selenium-webdriver';
 
 @Component({
   selector: 'app-forgot-password',
@@ -21,7 +24,7 @@ export class ForgotPasswordComponent implements OnInit {
   resetPass : ResetPass;
   email : string;
 
-  constructor(private _formBuilder: FormBuilder, private resetPasswordSerivce : ResetPasswordService, private router : Router) { }
+  constructor(private _formBuilder: FormBuilder, private resetPasswordSerivce : ResetPasswordService, private router : Router, private toastr : ToastrService) { }
 
   ngOnInit() {
     this.firstFormGroup = new FormGroup({
@@ -38,46 +41,54 @@ export class ForgotPasswordComponent implements OnInit {
 
   sendMail(){
     this.email = this.firstFormGroup.controls.email.value;
-    console.log(this.email)
     this.resetMail = new ResetMail(this.email)
 
     this.resetPasswordSerivce.resetPasswordMail(this.resetMail).subscribe(
-      res=>{
-        alert('Check your mail');
+      response => {
+        this.toastr.success(response.toString())
       },
-      error=>{
-        alert(error);
+      error => {
+        this.toastr.error(error.toString())
       }
-      )
+    )
 
   }
 
   verifyCode() {
     this.code = this.secondFormGroup.controls.code.value;
-    console.log(this.code)
-
   }
 
 
   resetPassword() {
     var password = this.thirdFormGroup.controls.password.value;
-    console.log(password)
-
     var confirmPassword = this.thirdFormGroup.controls.confirmPassword.value;
-    console.log(confirmPassword)
-
     this.resetPass = new ResetPass(this.email, password, confirmPassword, this.code)
 
-    this.resetPasswordSerivce.resetPassword(this.resetPass).subscribe(
-      res=>{
-        alert("Successfully changed password");
-        this.router.navigate(['/login']);
-      },
-      error=>{
-        alert("Check your code or passwords");
-      }
-      )
+    if(password===confirmPassword){
+      this.resetPasswordSerivce.resetPassword(this.resetPass).subscribe(
+           res=>{
+            this.toastr.success("Successfully changed password");
+            this.router.navigate(['/login']);
+          },
+          error=>{
+            this.toastr.error(error.toString());
+          }
+        )
+    }else {
+      this.toastr.error("Enter same passwords!")
+    }
 
+
+  }
+
+  checkPassword() {
+    var password =  this.thirdFormGroup.controls.password.value;
+    var regex = new RegExp('^[A-Z][A-Za-z0-9]+[$@$!%*?&]{1}$')
+    console.log(regex.test(password))
+    if(regex.test(password)){
+      this.toastr.warning("You are using common password type!")
+
+    }
   }
 
 }

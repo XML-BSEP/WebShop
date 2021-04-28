@@ -14,7 +14,7 @@ import { Role } from './model/role';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'login',
+    redirectTo: 'home',
     pathMatch: 'full'
 },
 {
@@ -32,7 +32,7 @@ const routes: Routes = [
 {
   path:'regconfirm',
   component: RegistrationConfirmationComponent,
-  
+
 },
 {
   path: 'products',

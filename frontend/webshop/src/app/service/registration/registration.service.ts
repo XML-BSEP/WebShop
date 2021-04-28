@@ -12,10 +12,14 @@ export class RegistrationService {
   constructor(private https : HttpClient) { }
 
   register(data : RegisteredUser){
-    return this.https.post(`${environment.baseUrl}/${environment.registration}`,data, {responseType : 'text'});
+    return this.https.post(`${environment.baseUrl}/${environment.registration}`,data, {responseType : 'json'});
   }
 
   confAcc(data : ConfirmRegistration){
-    return this.https.post(`${environment.baseUrl}/${environment.confirmAccount}`,data, {responseType : 'text'});
+    return this.https.post(`${environment.baseUrl}/${environment.confirmAccount}`,data, {responseType : 'json'});
+  }
+
+  resend(data : Object) {
+    return this.https.post(`${environment.baseUrl}/${environment.resendRegCode}`, data, {responseType : 'json' })
   }
 }

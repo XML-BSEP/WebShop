@@ -65,7 +65,7 @@
             <mat-form-field appearance="fill" id="text-ff">
               <mat-label>Password*</mat-label>
               <input matInput type="password" placeholder="Password"
-                    formControlName="password">
+                    formControlName="password" (change)="checkPassword()">
                     <mat-hint>Password must have minimum 1 uppercase letter, 1 lowercase letter, 1 digit and 1 special character</mat-hint>
 
               <mat-error
@@ -95,7 +95,7 @@
 
 
           </form>
-          <button mat-raised-button id="register" (click)="register()">Register</button>
+          <button mat-raised-button id="register" [disabled]="!registrationForm.valid" (click)="register()">Register</button>
           <p id="login">Already have an account? <a href="/login"> Sign in!</a></p>
 
     </mat-card>

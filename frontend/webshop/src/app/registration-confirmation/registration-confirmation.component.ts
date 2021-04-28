@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { RegistrationService } from '../service/registration/registration.service';
 import {ConfirmRegistration} from '../model/confirmRegistration'
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-registration-confirmation',
@@ -11,7 +12,7 @@ import { Router } from '@angular/router';
 })
 export class RegistrationConfirmationComponent implements OnInit {
 
-  constructor(private router : Router, private registrationService : RegistrationService) { }
+  constructor(private router : Router, private registrationService : RegistrationService, private toastr : ToastrService) { }
   public codeForm : FormGroup;
   private userMail : string;
   private confirmRegistration : ConfirmRegistration
@@ -32,8 +33,11 @@ export class RegistrationConfirmationComponent implements OnInit {
 
     this.registrationService.confAcc(this.confirmRegistration).subscribe(
       res=>{
-        alert("Successful confirmation")
+        this.toastr.success("Successful confirmation")
         this.router.navigate(['/login']);
+      },
+      error => {
+        this.toastr.error("Confirmation code is not correct")
       }
       
       
@@ -41,6 +45,17 @@ export class RegistrationConfirmationComponent implements OnInit {
 
   }
   resend(){
+    let sendData = {
+      "email" : this.userMail
+    }
+    this.registrationService.resend(sendData).subscribe( 
+      res => {
+        this.toastr.success("Resend successful, check your email!")
+      }, 
+      error => {
+        this.toastr.error("Something went wrong, your code probably expired, try to register again.")
+      }
+    )
 
   }
 }

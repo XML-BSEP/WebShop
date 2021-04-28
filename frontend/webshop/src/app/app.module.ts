@@ -21,6 +21,8 @@ import { CustomerNavBarComponent } from './nav-bars/customer-nav-bar/customer-na
 import { AddProductComponent } from './product/add-product/add-product.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { ForbiddenComponent } from './other/forbidden/forbidden.component';
+import { ToastrModule } from 'ngx-toastr';
+import { ResetPasswordService } from './service/reset-password/reset-password.service';
 
 
 
@@ -48,9 +50,11 @@ import { ForbiddenComponent } from './other/forbidden/forbidden.component';
     ReactiveFormsModule,
     HttpClientModule,
     MatInputModule,
-    MatSelectModule
+    MatSelectModule,
+    ToastrModule.forRoot()
   ],
-  providers: [{provide : HTTP_INTERCEPTORS, useClass : JwtInterceptor, multi : true},
+  providers: [
+    {provide : HTTP_INTERCEPTORS, useClass : JwtInterceptor, multi : true},
     {provide : HTTP_INTERCEPTORS, useClass : ErrorInterceptor, multi : true}],
   bootstrap: [AppComponent]
 })
