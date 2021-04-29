@@ -1,3 +1,4 @@
+import { TOUCH_BUFFER_MS } from '@angular/cdk/a11y';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -20,14 +21,16 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
 
-    if(this.authService.currentUserValue != undefined){
+    if(localStorage.getItem('userID')!==null){
       this.router.navigate(['/home']);
-    } 
-
+    }
 
     this.loginForm = new FormGroup({
+      // 'username' : new FormControl(null, [Validators.required, Validators.email]),
       'username' : new FormControl(null, [Validators.required]),
-      'password' : new FormControl(null, Validators.required)
+
+      'password' : new FormControl(null, [Validators.required])
+      // 'password' : new FormControl(null, [Validators.required,Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z0-9\d$@$!%*?&].{7,}$')])
     });
   }
 

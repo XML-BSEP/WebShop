@@ -21,8 +21,8 @@ export class RegisterComponent implements OnInit {
     'lastname' : new FormControl(null, Validators.required),
     'username' : new FormControl(null, Validators.required),
     'email' : new FormControl(null, [Validators.required, Validators.email]),
-    'password' : new FormControl(null, [Validators.required, Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{7,}')]),
-    'confirmPassword' : new FormControl(null, [Validators.required,    Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{7,}')]),
+    'password' : new FormControl(null, [Validators.required, Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z0-9\d$@$!%*?&].{7,}$')]),
+    'confirmPassword' : new FormControl(null, [Validators.required,    Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z0-9\d$@$!%*?&].{7,}$')]),
   });
   }
 
@@ -47,7 +47,7 @@ export class RegisterComponent implements OnInit {
         }
 
       )
-    }  
+    }
 
   }
 
@@ -57,9 +57,9 @@ export class RegisterComponent implements OnInit {
     console.log(regex.test(password))
     if(regex.test(password)){
       this.toastr.warning("You are using common password type!")
-      
+
     }
-    
+
 
   }
 }

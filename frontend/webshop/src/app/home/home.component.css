@@ -46,6 +46,7 @@
   height:40%;
   border-radius: 20px;
   border: 4px solid white;
+  margin-top: 10% ;
 }
 #browse-button:hover{
   background-color:white;

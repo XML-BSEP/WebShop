@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { ProductServiceService } from 'src/app/service/product/product-service.service';
 import { Category } from './../../model/category';
 import { NewProduct } from './../../model/newProduct';
@@ -38,8 +39,9 @@ export class AddProductComponent implements OnInit {
   choose : Boolean = true;
   current=0;
   numberRegEx = /\-?\d*\.?\d{1,2}/;
+
   allCategories : Category[];
-  constructor(private toastr : ToastrService, private productService : ProductServiceService, private categoryService : CategoryService ,private _formBuilder: FormBuilder) { }
+  constructor(private router: Router, private toastr : ToastrService, private productService : ProductServiceService, private categoryService : CategoryService ,private _formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
 
@@ -51,7 +53,7 @@ export class AddProductComponent implements OnInit {
     this.descriptionPriceGroup = this._formBuilder.group({
       description: ['', Validators.required],
       'price' : new FormControl(null,[ Validators.required,  Validators.pattern(this.numberRegEx)]),
-      'available' : new FormControl(null,[ Validators.required,  Validators.pattern(this.numberRegEx)]),
+      'available' : new FormControl(null,[ Validators.required,  Validators.pattern('^[0-9]+$')]),
       currency:['1', Validators.required]
     });
 
@@ -107,6 +109,7 @@ export class AddProductComponent implements OnInit {
     this.productService.addProduct(this.newProduct).subscribe(
       res=>{
         this.toastr.success('Success');
+        this.router.navigate(['/products'])
       },
       err=>{
         this.toastr.error(err)

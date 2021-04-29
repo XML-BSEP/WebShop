@@ -128,6 +128,7 @@ func (r *resetPassword) ResetPassword(ctx echo.Context) error {
 	errorMessage := r.RegisteredShopUserUsecase.ResetPassword(resetDto)
 
 	if errorMessage != "" {
+
 		return echo.NewHTTPError(http.StatusBadRequest, errorMessage)
 	}
 

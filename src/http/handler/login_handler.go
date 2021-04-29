@@ -26,9 +26,8 @@ const (
 	usernameIsRequired = "Username is required!"
 	passwordIsRequired = "Password is required!"
 	invalidJson        = "Invalid JSON!"
-	invalidPassword    = "Invalid password"
 	successfulLogout   = "Successfully logged out!"
-	invalidEmail = "Invalid email!"
+	invalidCreds = "Invalid credentials!"
 	cannotFindUiid = "Cannot get uuid"
 	parseError = "Error while parsing occured"
 	unauthorized = "Unauthorized"
@@ -75,19 +74,19 @@ func (au *Authenticate) Login(c echo.Context) error {
 	u, userErr := au.us.GetUserDetailsFromEmail(account.Email)
 
 	if userErr != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, invalidEmail)
+		return echo.NewHTTPError(http.StatusInternalServerError, invalidCreds)
 
 	}
 
 	accDetails, accErr := au.us.GetAccountDetailsFromUser(u)
 
 	if accErr != nil {
-		return accErr
+		return echo.NewHTTPError(http.StatusInternalServerError, invalidCreds)
 	}
 
 	err = password_verification2.VerifyPassword(account.Password, accDetails.Password)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusForbidden, invalidPassword)
+		return echo.NewHTTPError(http.StatusForbidden, invalidCreds)
 
 	}
 
@@ -110,7 +109,7 @@ func (au *Authenticate) Login(c echo.Context) error {
 	userData["id"] = u.Model.ID
 	role, err := au.us.GetRoleById(u.Model.ID)
 	if err != nil {
-		echo.NewHTTPError(http.StatusInternalServerError, invalidEmail)
+		return echo.NewHTTPError(http.StatusInternalServerError, invalidCreds)
 	}
 	userData["role"] = role
 
@@ -205,7 +204,8 @@ func (au *Authenticate) Refresh(c echo.Context) error {
 
 		role, err := au.us.GetRoleById(uint(userId))
 		if err != nil {
-			return echo.NewHTTPError(http.StatusInternalServerError, invalidEmail)
+
+			return echo.NewHTTPError(http.StatusInternalServerError, invalidCreds)
 		}
 
 

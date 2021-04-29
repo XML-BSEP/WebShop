@@ -23,9 +23,7 @@ const routes: Routes = [
 },
 {
   path: 'login',
-  component: LoginComponent,
-  canActivate : [AuthGuard],
-  data : {roles: [Role.Anonymous]}
+  component: LoginComponent
 },
 {
   path:'registration',
@@ -34,7 +32,7 @@ const routes: Routes = [
 {
   path:'regconfirm',
   component: RegistrationConfirmationComponent,
-  
+
 },
 {
   path: 'products',

@@ -76,9 +76,12 @@ func (p *productUseCase) Update(ctx echo.Context, pic *domain.Product) (*domain.
 }
 
 func (p *productUseCase) Create(ctx echo.Context, newProd *dto.NewProduct) (*domain.Product, error) {
-	var cat *domain.Category
-	cat, _ = p.CategoryRepository.GetByName(newProd.Category)
 
+
+	cat, err := p.CategoryRepository.GetByName(newProd.Category)
+	if err != nil{
+		return nil, err
+	}
 	var list []*domain.Product
 
 	list, _ = p.ProductRepository.Fetch()
@@ -93,52 +96,51 @@ func (p *productUseCase) Create(ctx echo.Context, newProd *dto.NewProduct) (*dom
 	os.Mkdir(t, 0755)
 
 	os.Chdir(t)
+
 	var images []domain.Image
-	for i,_ := range newProd.Images {
-		s := strings.Split(newProd.Images[i], ",")
-		a := strings.Split(s[0], "/")
-		format := strings.Split(a[1], ";")
 
-		dec, err := base64.StdEncoding.DecodeString(s[1])
+	size := cap(newProd.Images)
 
-		if err != nil {
-			panic(err)
+	if size>0{
+		for i,_ := range newProd.Images {
+
+			s := strings.Split(newProd.Images[i], ",")
+			a := strings.Split(s[0], "/")
+			format := strings.Split(a[1], ";")
+
+			dec, err := base64.StdEncoding.DecodeString(s[1])
+
+			if err != nil {
+				panic(err)
+			}
+			f, err := os.Create(strconv.Itoa(i) + "." + format[0])
+
+			if err != nil {
+				panic(err)
+			}
+
+			defer f.Close()
+
+			if _, err := f.Write(dec); err != nil {
+				panic(err)
+			}
+			if err := f.Sync(); err != nil {
+				panic(err)
+			}
+
+			images = append(images, domain.Image{Path: strconv.Itoa(len+1)+"/"+strconv.Itoa(i) + "." + format[0], Timestamp: time.Now(), ProductId: uint(len + 1)})
 		}
-		f, err := os.Create(strconv.Itoa(i) + "." + format[0])
-
-		if err != nil {
-			panic(err)
-		}
-
-		defer f.Close()
-
-		if _, err := f.Write(dec); err != nil {
-			panic(err)
-		}
-		if err := f.Sync(); err != nil {
-			panic(err)
-		}
-
-		images = append(images, domain.Image{Path: strconv.Itoa(len+1)+"/"+strconv.Itoa(i) + "." + format[0], Timestamp: time.Now(), ProductId: uint(len + 1)})
 	}
-
-	//for i, _ := range images{
-	//	p.ImageRepository.Create(images[i])
-	//
-	//}
 
 
 	os.Chdir(path2)
+
 	curr,_ :=strconv.Atoi(newProd.Currency)
-	price,_ :=strconv.Atoi(newProd.Price)
+	price, _ := strconv.ParseFloat(newProd.Price, 64)
 	av,_ :=strconv.Atoi(newProd.Available)
 
-	prod:=domain.Product{Currency: domain.Currency(curr), Available: uint(av), Price: uint64(uint(price)), Name: newProd.Name, Category: *cat, Description: newProd.Description, Images: images}
+	prod:=domain.Product{Currency: domain.Currency(curr), Available: uint(av), Price: price, Name: newProd.Name, Category: *cat, Description: newProd.Description, Images: images}
 
-	//Name  string `json:"name"`
-	//Price uint64 `json:"price"`
-	//Currency Currency `json:"currency"`
-	//Images []Image
 	return p.ProductRepository.Create(&prod)
 }
 

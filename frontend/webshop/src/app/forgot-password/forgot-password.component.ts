@@ -32,7 +32,7 @@ export class ForgotPasswordComponent implements OnInit {
     });
     this.secondFormGroup = new FormGroup({
       code: new FormControl('', Validators.required)
-    }); 
+    });
     this.thirdFormGroup = new FormGroup({
       password: new FormControl(null, [Validators.required, Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{7,}')]),
       confirmPassword: new FormControl(null, [Validators.required, Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{7,}')])
@@ -42,7 +42,7 @@ export class ForgotPasswordComponent implements OnInit {
   sendMail(){
     this.email = this.firstFormGroup.controls.email.value;
     this.resetMail = new ResetMail(this.email)
-    
+
     this.resetPasswordSerivce.resetPasswordMail(this.resetMail).subscribe(
       response => {
         this.toastr.success(response.toString())
@@ -58,7 +58,7 @@ export class ForgotPasswordComponent implements OnInit {
     this.code = this.secondFormGroup.controls.code.value;
   }
 
-  
+
   resetPassword() {
     var password = this.thirdFormGroup.controls.password.value;
     var confirmPassword = this.thirdFormGroup.controls.confirmPassword.value;
@@ -77,7 +77,7 @@ export class ForgotPasswordComponent implements OnInit {
     }else {
       this.toastr.error("Enter same passwords!")
     }
- 
+
 
   }
 
@@ -87,7 +87,7 @@ export class ForgotPasswordComponent implements OnInit {
     console.log(regex.test(password))
     if(regex.test(password)){
       this.toastr.warning("You are using common password type!")
-      
+
     }
   }
 

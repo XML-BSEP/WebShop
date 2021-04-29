@@ -24,9 +24,9 @@
                 <mat-error
                   *ngIf="!loginForm.get('username').valid && loginForm.get('username').touched && loginForm.get('username').errors['required']">
                   Please enter email</mat-error>
-                  <!-- <mat-error
+                  <mat-error
                   *ngIf="!loginForm.get('username').valid && loginForm.get('username').touched && loginForm.get('username').errors['email']">
-                  Please enter email</mat-error> -->
+                  Please enter email</mat-error>
               </mat-form-field>
             </div>
             <div>
@@ -37,11 +37,14 @@
                 <mat-error
                   *ngIf="!loginForm.get('password').valid && loginForm.get('password').touched && loginForm.get('password').errors['required']">
                   Please enter password</mat-error>
+                  <!-- <mat-error
+                  *ngIf="!loginForm.get('password').valid && loginForm.get('password').touched && loginForm.get('password').errors['pattern']">
+                  Please enter password in valid format</mat-error> -->
               </mat-form-field>
             </div>
 
             </form>
-            <button mat-raised-button id="login" (click)="login()"><mat-icon>login</mat-icon>Login</button>
+            <button mat-raised-button id="login" (click)="login()" [disabled]="!loginForm.valid" ><mat-icon>login</mat-icon>Login</button>
             <!-- POSTAVLJEN NEKI BLANKO PLACEHOLDER ZA URL -->
             <p id="not-signed">Dont have an account? <a href="/registration"> Sign up!</a></p>
             <p id="forgotten-password"><a href="/forgotPassword"> Forgotten password?</a></p>

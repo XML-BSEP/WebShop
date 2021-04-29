@@ -7,6 +7,7 @@ import (
 	enTranslations "github.com/go-playground/validator/translations/en"
 	"gopkg.in/go-playground/validator.v9"
 	"regexp"
+	"strconv"
 )
 
 type customValidator struct {
@@ -24,13 +25,23 @@ const (
 	FIRST_NAME_ERROR_MSG = "{0} must be in valid format"
 	SURNAME_ERR_MSG = "{0} must be in valid format"
 	PASSWORD_ERR_MSG = "Password must have minimum 1 uppercase letter, 1 lowercase letter, 1 digit and 1 special character and needs to be minimum 8 characters long"
-)
+	PRICE_ERR_MSG = "Price must be a number"
+	AVAILABLE_ERR_MSG = "Available must be a number"
+	CURRENCY_ERR_MSG = "Currency must be a number"
+	IMAGE_ERR_MSG = "Images must be a list of base64 strings"
+
+	)
 
 func NewCustomValidator() *customValidator {
 	cv := &customValidator{validator.New()}
 	err := registerNameValdation(cv)
 	err = registerSurnameValidation(cv)
 	err = registerPasswordValidation(cv)
+	err = registerPriceValidation(cv)
+	err = registerAvailableValidation(cv)
+	err = registerCurrencyValidation(cv)
+	err = registerImagesValidation(cv)
+
 	if err != nil {
 		return &customValidator{}
 	}
@@ -44,8 +55,13 @@ func (cv *customValidator) RegisterEnTranslation() (ut.Translator, error) {
 	registerEnNameTranslation(trans, cv)
 	registerEnSurnameTranslation(trans, cv)
 	registerEnPasswordTranslation(trans, cv)
+	registerEnPriceTranslation(trans, cv)
+	registerEnAvailableTranslation(trans, cv)
+	registerEnCurrencyTranslation(trans, cv)
+	registerEnImagesTranslation(trans, cv)
 	return trans, enTranslations.RegisterDefaultTranslations(cv.Validator, trans)
 }
+
 
 func (cv *customValidator) TranslateError(err error, translator ut.Translator) (translatedErrors []error){
 	if err == nil {
@@ -116,3 +132,83 @@ func registerEnPasswordTranslation(tr ut.Translator, cv *customValidator) {
 }
 
 
+func registerPriceValidation(cv *customValidator) error {
+	return cv.Validator.RegisterValidation("price", func(f1 validator.FieldLevel) bool {
+		if _, err := strconv.ParseFloat((f1.Field().String()), 64); err == nil{
+			return true
+		}
+
+		return false
+	})
+}
+
+
+func registerEnPriceTranslation(tr ut.Translator, cv *customValidator) {
+	_ = cv.Validator.RegisterTranslation("price", tr, func(ut ut.Translator) error {
+		return ut.Add("price", PRICE_ERR_MSG, true)
+	}, func(ut ut.Translator, fe validator.FieldError) string {
+		t, _ := ut.T("price", fe.Field())
+		return t
+	})
+}
+func registerAvailableValidation(cv *customValidator) error {
+	return cv.Validator.RegisterValidation("available", func(f1 validator.FieldLevel) bool {
+		if _, err := strconv.Atoi(f1.Field().String()); err == nil{
+			return true
+		}
+
+		return false
+	})
+}
+
+
+func registerEnAvailableTranslation(tr ut.Translator, cv *customValidator) {
+	_ = cv.Validator.RegisterTranslation("available", tr, func(ut ut.Translator) error {
+		return ut.Add("available", AVAILABLE_ERR_MSG, true)
+	}, func(ut ut.Translator, fe validator.FieldError) string {
+		t, _ := ut.T("available", fe.Field())
+		return t
+	})
+}
+
+
+func registerCurrencyValidation(cv *customValidator) error {
+	return cv.Validator.RegisterValidation("currency", func(f1 validator.FieldLevel) bool {
+		if c, err := strconv.Atoi(f1.Field().String()); err == nil {
+			if c>=1 && c<=3{
+				return true
+			}
+			return false
+		}
+
+		return false
+	})
+}
+
+func registerEnCurrencyTranslation(tr ut.Translator, cv *customValidator) {
+	_ = cv.Validator.RegisterTranslation("currency", tr, func(ut ut.Translator) error {
+		return ut.Add("currency", CURRENCY_ERR_MSG, true)
+	}, func(ut ut.Translator, fe validator.FieldError) string {
+		t, _ := ut.T("currency", fe.Field())
+		return t
+	})
+}
+
+func registerImagesValidation(cv *customValidator) error {
+	return cv.Validator.RegisterValidation("images", func(f1 validator.FieldLevel) bool {
+		if f1.Field().Len()>0 {
+			return true
+		}
+
+		return false
+	})
+}
+
+func registerEnImagesTranslation(tr ut.Translator, cv *customValidator) {
+	_ = cv.Validator.RegisterTranslation("images", tr, func(ut ut.Translator) error {
+		return ut.Add("images", IMAGE_ERR_MSG, true)
+	}, func(ut ut.Translator, fe validator.FieldError) string {
+		t, _ := ut.T("images", fe.Field())
+		return t
+	})
+}

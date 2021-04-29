@@ -12,9 +12,6 @@ func NewProductDtoToProduct (dto dto.ProductDTO) domain.Product {
 
 	policy := bluemonday.UGCPolicy();
 	dto.Name =  strings.TrimSpace(policy.Sanitize(dto.Name))
-	//price := strconv.FormatUint(dto.Price, 10)
-	//price = strings.TrimSpace(policy.Sanitize(price))
-	//dto.Price, _ = strconv.ParseUint(price, 10, 64)
 
 	return domain.Product{Model: gorm.Model{ID: dto.ID}, Name:dto.Name, Price : dto.Price}
 }
