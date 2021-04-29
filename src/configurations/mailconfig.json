@@ -1,0 +1,6 @@
+{
+  "emailHost" : "smtp.gmail.com",
+  "emailFrom" : "duke.strategic@gmail.com",
+  "emailPassword" : "Duke123456",
+  "emailPort" : "587"
+}

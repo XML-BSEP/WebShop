@@ -1,0 +1,14 @@
+{
+  "production" : false,
+  "server" : {
+    "address" : "localhost",
+    "port" : 443
+  },
+  "certificate" : "certificate/DukeStrategicTechnologies-SN-9946396461889217640.crt",
+  "certificate_key" : "certificate/DukeStrategicTechnologies9946396461889217640-key.key",
+  "production_server": {},
+  "httpserver" : {
+    "address" : "localhost",
+    "port" : 80
+  }
+}

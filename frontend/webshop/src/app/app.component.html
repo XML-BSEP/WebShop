@@ -1,0 +1,15 @@
+<html>
+  <head>
+    
+  </head>
+  <body>
+      <header> 
+        <ng-container *ngIf="isAdmin(); else second">  <app-admin-nav-bar></app-admin-nav-bar></ng-container>
+        <ng-template #second>
+            <ng-container *ngIf="isCustomer();else third"><app-customer-nav-bar></app-customer-nav-bar></ng-container>
+        </ng-template>
+        <div *ngIf="isNotLogged()" #third><app-not-user-nav-bar></app-not-user-nav-bar></div>
+      </header>  
+    <router-outlet></router-outlet>
+  </body>
+</html>

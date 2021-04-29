@@ -1,0 +1,162 @@
+<div class="container">
+  <!-- <button mat-icon-button matTooltip="Login" id="back" (click)="back()" ><mat-icon>keyboard_backspace</mat-icon></button> -->
+
+  <div class="content">
+    <div id="left-part">
+      <mat-card class="main-card">
+        <div id="title-area">
+          <h1 id="title-text">Add your product!</h1>
+        </div>
+        <div class="stepper-area">
+          <mat-horizontal-stepper [linear]="!isLinear" #stepper>
+            <mat-step [stepControl]="nameCategoryGroup">
+              <div class="step">
+                <form [formGroup]="nameCategoryGroup">
+                  <ng-template matStepLabel>Product name and category</ng-template>
+                  <div class="step-field">
+                    <label class="label-field">Product name:</label>
+                    <mat-form-field class="input-field">
+                      <mat-label>Product name</mat-label>
+                      <input matInput placeholder="Enter product name" formControlName="productName" required>
+                      <mat-error
+                  *ngIf="!nameCategoryGroup.get('productName').valid && nameCategoryGroup.get('productName').touched && nameCategoryGroup.get('productName').errors['required']">
+                  Please enter product name</mat-error>
+                    </mat-form-field>
+                    </div>
+                    <div class="step-field">
+
+                      <label class="label-field">Product category:</label>
+                      <mat-form-field  class="input-field">
+                        <mat-label>Product category</mat-label>
+                        <mat-select formControlName="productCategory">
+                          <mat-option *ngFor="let c of allCategories" [value]="c.category">
+                            {{c.category}}
+                          </mat-option>
+                        </mat-select>
+                        <mat-error
+                    *ngIf="!nameCategoryGroup.get('productCategory').valid && nameCategoryGroup.get('productCategory').touched && nameCategoryGroup.get('productCategory').errors['required']">
+                    Please select product category</mat-error>
+                      </mat-form-field>
+
+                    </div>
+
+                  <div>
+                    <button  mat-raised-button color="primary" class="next-button" [disabled]="!nameCategoryGroup.valid" matStepperNext >Next</button>
+                  </div>
+                </form>
+              </div>
+
+            </mat-step>
+            <mat-step [stepControl]="descriptionPriceGroup" label="Price and description">
+              <div class="step">
+
+              <form [formGroup]="descriptionPriceGroup">
+
+                <div class="step-field">
+                  <div class="formfields"></div>
+                  <label class="label-field0">Product price:</label>
+                  <mat-form-field class="input-field0">
+                    <mat-label>Product price</mat-label>
+                    <input matInput placeholder="Enter product price" formControlName="price" required>
+                    <mat-error
+                *ngIf="!descriptionPriceGroup.get('price').valid && descriptionPriceGroup.get('price').touched && descriptionPriceGroup.get('price').errors['required']">
+                Please enter product price</mat-error>
+                <mat-error
+                *ngIf="!descriptionPriceGroup.get('price').valid && descriptionPriceGroup.get('price').touched && descriptionPriceGroup.get('price').errors['pattern']">
+                Price must be a number</mat-error>
+                  </mat-form-field>
+
+
+
+                  <mat-radio-group
+                  aria-labelledby="example-radio-group-label"
+                  class="currency-radio"
+                  formControlName="currency">
+                      <mat-radio-button value="1" style="margin-left: 10px;">$</mat-radio-button>
+                      <mat-radio-button value="2" style="margin-left: 10px;">€</mat-radio-button>
+                      <mat-radio-button value="3" style="margin-left: 10px;">din</mat-radio-button>
+
+                </mat-radio-group>
+
+                </div>
+                <div class="step-field">
+                  <label class="label1-field1">Available:</label>
+                  <mat-form-field class="input1-field1">
+                    <mat-label>Products available</mat-label>
+                    <input matInput placeholder="Enter available" formControlName="available" required>
+                    <mat-error
+                *ngIf="!descriptionPriceGroup.get('available').valid && descriptionPriceGroup.get('available').touched && descriptionPriceGroup.get('available').errors['required']">
+                Please enter products available</mat-error>
+                <mat-error
+                *ngIf="!descriptionPriceGroup.get('available').valid && descriptionPriceGroup.get('available').touched && descriptionPriceGroup.get('available').errors['pattern']">
+                Available must be a number</mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="step-field">
+                  <label class="label1-field">Product description:</label>
+                  <mat-form-field class="input1-field">
+                    <mat-label>Product description</mat-label>
+                    <textarea matInput formControlName="description" placeholder="Enter product description..."></textarea>
+                    <mat-error
+                *ngIf="!descriptionPriceGroup.get('description').valid && descriptionPriceGroup.get('description').touched && descriptionPriceGroup.get('description').errors['required']">
+                Please enter product description</mat-error>
+                  </mat-form-field>
+                  </div>
+                <div>
+                  <button mat-raised-button color="primary" class="back-button" matStepperPrevious>Back</button>
+                  <button mat-raised-button color="primary" class="next1-button" [disabled]="!descriptionPriceGroup.valid" matStepperNext>Next</button>
+                </div>
+              </form>
+              </div>
+            </mat-step>
+
+            <mat-step label="Select pictures">
+              <div class="step">
+
+
+                <div class="step-field" style="margin-top: -2%;">
+                  <label class="label-field">Select pictures one at a time [{{current}}/4]:</label>
+                  <!-- <mat-form-field class="input-field"> -->
+                    <!-- <input
+                    style="display: none"
+                    type="file" (change)="onFileChanged($event)"
+                    #fileInput>
+                    <button mat-raised-button color="primary" class="upload-file"
+                    (click)="fileInput.click()">Select File</button> -->
+                    <input
+                    style="display: none"
+                    type="file" (change)="onFileChanged($event)"
+                    #fileInput accept="image/x-png,image/gif,image/jpeg" multiple>
+                  <button (click)="fileInput.click()" mat-raised-button color="primary" class="upload-file" [disabled]="current==4">Select File</button>
+                </div>
+                <!-- <div id="images-table">
+
+                </div> -->
+                <div class="step-field1">
+                  <mat-list id="images-list">
+                    <mat-list-item *ngFor="let img of images" id="list-item">
+                        <label id="picture-name">{{img.fileName}}</label>
+                          <img [src]="img.file" id="image-preview"/>
+                        <button mat-raised-button id="remove-button" (click)="removeImg(img)" >Remove</button>
+                    </mat-list-item>
+                  </mat-list>
+                  <!-- <label class="upload-field">{{fileName}}</label> -->
+
+                </div>
+
+                <div>
+                  <button mat-raised-button color="primary" class="back-button" matStepperPrevious>Back</button>
+                  <button mat-raised-button color="primary" class="next1-button" [disabled]="this.current==0" (click)="addProduct()">Add</button>
+                </div>
+              </div>
+            </mat-step>
+
+          </mat-horizontal-stepper>
+        </div>
+
+
+      </mat-card>
+    </div>
+
+  </div>
+</div>
