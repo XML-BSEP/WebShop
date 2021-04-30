@@ -84,7 +84,17 @@ func (s *signUp) Hash(password string) ([]byte, error) {
 
 func (s *signUp) CheckIfExistUser(ctx echo.Context, newUser dto.NewUser) (*domain.RegisteredShopUser, error) {
 
-	acc, err  := s.RegisteredUserUsecase.ExistByUsernameOrEmail(ctx, newUser.Username, newUser.Email)
+	//acc, err  := s.RegisteredUserUsecase.ExistByUsernameOrEmail(ctx, newUser.Username, newUser.Email)
+
+	acc,err := s.RegisteredUserUsecase.ExistByUsername(newUser.Username)
+	if err==nil{
+		return nil, fmt.Errorf("username taken")
+	}
+
+	acc, err = s.RegisteredUserUsecase.ExistByEmail(newUser.Email)
+	if err ==nil {
+		return nil, fmt.Errorf("email taken")
+	}
 
 	if s.RedisUsecase.CheckUsername(newUser.Username) {
 		return nil, fmt.Errorf("already exists")
@@ -94,11 +104,8 @@ func (s *signUp) CheckIfExistUser(ctx echo.Context, newUser dto.NewUser) (*domai
 		return nil, fmt.Errorf("already exists")
 	}
 
-	if err != nil {
-		return nil, nil
-	}
 
-	return acc, err
+	return acc, nil
 
 }
 

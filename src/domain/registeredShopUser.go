@@ -28,6 +28,8 @@ type RegisteredShopUserUsecase interface {
 	ResetPassword(dto dto.ResetPassDTO) string
 	SaveCodeToRedis(code string, email string) error
 	ResendResetCode(email string, code string) error
+	ExistByUsername(username string) (*RegisteredShopUser, error)
+	ExistByEmail(email string) (*RegisteredShopUser, error)
 }
 
 type RegisteredShopUserRepository interface {
@@ -41,4 +43,7 @@ type RegisteredShopUserRepository interface {
 	GetAccountDetailsFromUser(u *RegisteredShopUser)  (*ShopAccount, error)
 	SaveNewPassword(account *ShopAccount) error
 	GetRoleById(id uint) (string, error)
+	ExistByUsername(username string) (*RegisteredShopUser, error)
+	ExistByEmail(email string) (*RegisteredShopUser, error)
+
 }
