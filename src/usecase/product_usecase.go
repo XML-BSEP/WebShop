@@ -18,6 +18,10 @@ type productUseCase struct {
 	ImageRepository domain.ImageRepository
 }
 
+func (p *productUseCase) GetBySerial(serial uint64) (*domain.Product, error) {
+	return p.ProductRepository.GetBySerial(serial)
+}
+
 func (p *productUseCase) Count() (int64, error) {
 	return p.ProductRepository.Count()
 }
@@ -70,9 +74,99 @@ func (p *productUseCase) Fetch(ctx echo.Context) ([]*domain.Product, error) {
 func (p *productUseCase) GetByID(ctx echo.Context, id uint) (*domain.Product, error) {
 	return p.ProductRepository.GetByID(id)
 }
+func CheckExistance(newImgs []string, oldImage domain.Image) bool{
 
-func (p *productUseCase) Update(ctx echo.Context, pic *domain.Product) (*domain.Product, error) {
-	return p.ProductRepository.Update(pic)
+	for _, newImg := range newImgs{
+		if strings.Contains(newImg, oldImage.Path){
+			return true
+		}
+	}
+	return false
+}
+func (p *productUseCase) Update(ctx echo.Context, prod *dto.EditProduct) (*domain.Product, error) {
+	cat, err := p.CategoryRepository.GetByName(prod.Category)
+	if err != nil{
+		return nil, err
+	}
+	serialNumber, _ := strconv.ParseUint(prod.SerialNumber,10, 64)
+
+	oldProduct, _  := p.ProductRepository.GetBySerial(serialNumber)
+	folderName := strconv.FormatUint(uint64(oldProduct.Model.ID), 10)
+	path1 := "./src/assets/" + folderName
+
+	oldDir, _ := os.Getwd()
+
+	os.Chdir(path1)
+
+	//os.Mkdir(folderName, 0755)
+	//
+	//os.Chdir(folderName)
+
+	var images []domain.Image
+	var oldImages []*domain.Image
+	oldImagesLikePath := folderName + "%"
+	oldImages,_ = p.ImageRepository.GetyByPath(oldImagesLikePath)
+	fmt.Println(oldImages)
+	size := cap(prod.Images)
+	if size>0{
+		for _,image := range oldImages{
+			if !CheckExistance(prod.Images, *image){
+				fmt.Println(image.Path)
+				os.Remove(strings.Split(image.Path, "/")[1])
+				p.ImageRepository.Delete(image.Model.ID)
+			}
+		}
+	}
+
+	localhost := "localhost"
+	if size>0{
+		for i,_ := range prod.Images {
+			if !strings.Contains(prod.Images[i], localhost){
+				s := strings.Split(prod.Images[i], ",")
+				a := strings.Split(s[0], "/")
+				format := strings.Split(a[1], ";")
+
+				dec, err := base64.StdEncoding.DecodeString(s[1])
+
+				if err != nil {
+					panic(err)
+				}
+				f, err := os.Create(strconv.Itoa(i) + "." + format[0])
+
+				if err != nil {
+					panic(err)
+				}
+
+				defer f.Close()
+
+				if _, err := f.Write(dec); err != nil {
+					panic(err)
+				}
+				if err := f.Sync(); err != nil {
+					panic(err)
+				}
+
+				images = append(images, domain.Image{Path: folderName+"/"+strconv.Itoa(i) + "." + format[0], Timestamp: time.Now(), ProductId: oldProduct.Model.ID})
+			}
+
+		}
+	}
+	os.Chdir(oldDir)
+
+	curr,_ := strconv.Atoi(prod.Currency)
+	price, _ := strconv.ParseFloat(prod.Price, 64)
+	av,_ :=strconv.Atoi(prod.Available)
+
+	oldProduct.Currency = domain.Currency(curr)
+	oldProduct.Price = price
+	oldProduct.Available = uint(av)
+	oldProduct.Images = images
+	oldProduct.Category = *cat
+	oldProduct.Description = prod.Description
+	oldProduct.Name = prod.Name
+
+
+	return p.ProductRepository.Update(oldProduct)
 }
 
 func (p *productUseCase) Create(ctx echo.Context, newProd *dto.NewProduct) (*domain.Product, error) {
@@ -138,8 +232,7 @@ func (p *productUseCase) Create(ctx echo.Context, newProd *dto.NewProduct) (*dom
 	curr,_ :=strconv.Atoi(newProd.Currency)
 	price, _ := strconv.ParseFloat(newProd.Price, 64)
 	av,_ :=strconv.Atoi(newProd.Available)
-
-	prod:=domain.Product{Currency: domain.Currency(curr), Available: uint(av), Price: price, Name: newProd.Name, Category: *cat, Description: newProd.Description, Images: images}
+	prod:=domain.Product{Currency: domain.Currency(curr), Available: uint(av), Price: price, Name: newProd.Name, Category: *cat, Description: newProd.Description, Images: images, SerialNumber: makeTimestamp()}
 
 	return p.ProductRepository.Create(&prod)
 }
@@ -148,7 +241,9 @@ func (p *productUseCase) Delete(ctx echo.Context, id uint) error {
 	return p.ProductRepository.Delete(id)
 }
 
-
+func makeTimestamp() uint64 {
+	return uint64(time.Now().UnixNano() / int64(time.Millisecond))
+}
 func NewProductUseCase(p domain.ProductRepository, c domain.CategoryRepository, img domain.ImageRepository) domain.ProductUsecase {
 	return &productUseCase{p,c, img}
 }

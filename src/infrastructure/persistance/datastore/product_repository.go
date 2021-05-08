@@ -19,6 +19,15 @@ func (p *productRepository) Count() (int64, error) {
 	return count, err
 }
 
+func (p *productRepository) GetBySerial(serial uint64) (*domain.Product, error) {
+
+	var product *domain.Product
+
+	err := p.Conn.Where("serial_number = ?", serial).Take(&product).Error
+
+	return product, err
+}
+
 func (p *productRepository) FilterByCategory(name string, category string, priceRangeStart uint, priceRangeEnd uint, limit int, offset int, order string) ([]*domain.Product, error) {
 	var (
 		products []*domain.Product

@@ -21,4 +21,7 @@ export class ProductServiceService {
     return this.http.post(`${environment.baseUrl}/${environment.addProduct}`,data, {responseType : 'json'});
   }
 
+  editProduct(data : NewProduct){
+    return this.http.post(`${environment.baseUrl}/${environment.editProduct}`,data, {responseType : 'json'});
+  }
 }

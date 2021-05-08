@@ -16,20 +16,21 @@ const (
 
 type Product struct {
 	gorm.Model
-	Name  string `json:"name"`
-	Price float64 `json:"price"`
-	Currency Currency `json:"currency"`
-	Available uint `json:"available"`
-	Description string `json:"description"`
-	Images []Image
-	Category Category
-	CategoryId uint
+	Name         string `json:"name"`
+	Price        float64 `json:"price"`
+	Currency     Currency `json:"currency"`
+	Available    uint `json:"available"`
+	Description  string `json:"description"`
+	Images       []Image
+	Category     Category
+	CategoryId   uint
+	SerialNumber uint64 `json:"serial"`
 }
 
 type ProductUsecase interface {
 	Fetch(ctx echo.Context) ([]*Product, error)
 	GetByID(ctx echo.Context, id uint) (*Product, error)
-	Update(ctx echo.Context, pic *Product) (*Product, error)
+	Update(ctx echo.Context, pic *dto.EditProduct) (*Product, error)
 	Create(ctx echo.Context, pic *dto.NewProduct) (*Product, error)
 	Delete(ctx echo.Context, id uint) error
 	GetWithPriceRange(low uint, high uint)([]*Product, error)
@@ -42,6 +43,7 @@ type ProductUsecase interface {
 	GetByNameOrderByName(name string, limit int, offset int, order int)([]*Product, error)
 	FilterByCategory(name string, category string, priceRangeStart uint, priceRangeEnd uint, limit int, offset int, order string) ([]*Product, error)
 	Count() (int64, error)
+	GetBySerial(serial uint64) (*Product, error)
 }
 
 type ProductRepository interface {
@@ -61,4 +63,6 @@ type ProductRepository interface {
 	FilterByCategory(name string, category string, priceRangeStart uint, priceRangeEnd uint, limit int, offset int, order string) ([]*Product, error)
 	Count() (int64, error)
 	MinMaxPrice() (int64)
+	GetBySerial(serial uint64) (*Product, error)
+
 }

@@ -3,6 +3,8 @@ package mapper
 import (
 	"github.com/microcosm-cc/bluemonday"
 	"gorm.io/gorm"
+	"io/ioutil"
+	"strconv"
 	"strings"
 	"web-shop/domain"
 	"web-shop/infrastructure/dto"
@@ -24,14 +26,22 @@ func NewProductToProductDto (p domain.Product) dto.ProductDTO {
 func NewProductToProductViewDTO (p domain.Product) dto.ProductViewDTO {
 
 	imt_path := "https://localhost:443/static/"
+	files, _ := ioutil.ReadDir("./src/assets/"+strconv.FormatUint(uint64(p.Model.ID), 10))
+	var images []string
+	for _, file := range files{
+		im := imt_path+strconv.FormatUint(uint64(p.Model.ID), 10) +"/"+file.Name()
+		images=append(images,im)
+	}
+
 	return dto.ProductViewDTO{
 		Category: p.Category.Name,
 		Name: p.Name,
 		Available: p.Available,
 		Currency: mapCurrency(p.Currency),
 		Description: p.Description,
-		Image: imt_path + p.Images[0].Path,
+		Image: images,
 		Price: p.Price,
+		SerialNumber:  p.SerialNumber,
 	}
 }
 

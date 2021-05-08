@@ -22,7 +22,7 @@ import { AddProductComponent } from './product/add-product/add-product.component
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { ForbiddenComponent } from './other/forbidden/forbidden.component';
 import { ToastrModule } from 'ngx-toastr';
-import { ResetPasswordService } from './service/reset-password/reset-password.service';
+import { EditProductComponent } from './product/edit-product/edit-product.component';
 
 
 
@@ -39,7 +39,8 @@ import { ResetPasswordService } from './service/reset-password/reset-password.se
     CustomerNavBarComponent,
     AddProductComponent,
     ForgotPasswordComponent,
-    ForbiddenComponent
+    ForbiddenComponent,
+    EditProductComponent
   ],
   imports: [
     BrowserModule,

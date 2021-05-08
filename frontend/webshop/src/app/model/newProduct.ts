@@ -7,7 +7,8 @@ export class NewProduct{
   images : String[];
   currency : Number;
   available : Number;
-  constructor(name : String, category: string, price : Number, description : String, images : String[], cur : Number, a : Number){
+  serial : String;
+  constructor(name : String, category: string, price : Number, description : String, images : String[], cur : Number, a : Number, s : String){
     this.name = name;
     this.price = price;
     this.category = category;
@@ -15,5 +16,6 @@ export class NewProduct{
     this.images = images;
     this.currency = cur;
     this.available = a;
+    this.serial = s;
   }
 }

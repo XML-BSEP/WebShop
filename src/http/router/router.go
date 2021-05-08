@@ -26,5 +26,5 @@ func NewRouter(e *echo.Echo, h handler.AppHandler, authMiddleware middleware.Aut
 	g.GET("addresses", h.GetAddresses)
 	g.POST("logout", h.Logout)
 	g.POST("addProduct", h.AddProduct)
-
+	g.POST("editProduct", h.EditProduct)
 }
