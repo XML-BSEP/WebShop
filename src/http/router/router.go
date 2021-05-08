@@ -27,4 +27,6 @@ func NewRouter(e *echo.Echo, h handler.AppHandler, authMiddleware middleware.Aut
 	g.POST("logout", h.Logout)
 	g.POST("addProduct", h.AddProduct)
 	g.POST("editProduct", h.EditProduct)
+	g.POST("deleteProduct", h.RemoveProduct)
+
 }

@@ -237,8 +237,34 @@ func (p *productUseCase) Create(ctx echo.Context, newProd *dto.NewProduct) (*dom
 	return p.ProductRepository.Create(&prod)
 }
 
-func (p *productUseCase) Delete(ctx echo.Context, id uint) error {
-	return p.ProductRepository.Delete(id)
+func (p *productUseCase) Delete(ctx echo.Context, deletedProduct dto.DeleteProduct) error {
+	serial, err := strconv.ParseUint(deletedProduct.SerialNumber, 10, 64)
+	if err != nil{
+		return err
+	}
+	deleted, err := p.ProductRepository.GetBySerial(serial)
+	if err!=nil{
+		return err
+	}
+	folderName := strconv.FormatUint(uint64(deleted.Model.ID), 10)
+	path1 := "./src/assets/" + folderName
+	os.RemoveAll(path1)
+	oldDir, _ := os.Getwd()
+
+	os.Chdir(path1)
+
+	oldImagesLikePath := folderName + "%"
+	images,_ := p.ImageRepository.GetyByPath(oldImagesLikePath)
+
+	for _,image := range images{
+		//os.Remove(strings.Split(image.Path, "/")[1])
+		p.ImageRepository.Delete(image.Model.ID)
+
+	}
+
+	os.Chdir(oldDir)
+
+	return p.ProductRepository.Delete(deleted.Model.ID)
 }
 
 func makeTimestamp() uint64 {

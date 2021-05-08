@@ -19,7 +19,8 @@ export const environment = {
   resetPasswordMail : "resetPasswordMail",
   resetPassword : "resetPassword",
   resendPassCode : "resendPassCode",
-  resendRegCode : "resendRegistrationCode"
+  resendRegCode : "resendRegistrationCode",
+  deleteProduct : "deleteProduct"
 };
 
 /*

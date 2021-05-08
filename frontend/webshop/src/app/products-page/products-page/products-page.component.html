@@ -292,6 +292,9 @@
                             <button mat-button matTooltip="Edit" *ngIf="isAdmin()" (click)="edit(product)">
                               <i class="bi bi-pencil-square" role="img" style="font-size: 2rem;"></i>
                           </button>
+                          <button mat-button matTooltip="Edit" *ngIf="isAdmin()" (click)="remove(product)">
+                            <i class="bi bi-trash" role="img" style="font-size: 2rem;"></i>
+                        </button>
                         </mat-card-actions>
                     </mat-card>
                 </div>

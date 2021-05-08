@@ -26,11 +26,43 @@ type ProductHandler interface {
 	FilterSearch(ctx echo.Context) error
 	AddProduct(ctx echo.Context) error
 	EditProduct(ctx echo.Context) error
+	RemoveProduct(ctx echo.Context) error
 }
 
 type productHandler struct {
 	ProductUseCase domain.ProductUsecase
 }
+func (p *productHandler) RemoveProduct(ctx echo.Context) error{
+	decoder := json.NewDecoder(ctx.Request().Body)
+	var deletedProduct dto.DeleteProduct
+
+	if err := decoder.Decode(&deletedProduct); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "Invalid parameters")
+	}
+
+	policy := bluemonday.UGCPolicy();
+	deletedProduct.SerialNumber =  strings.TrimSpace(policy.Sanitize(deletedProduct.SerialNumber))
+
+
+	customValidator := validator2.NewCustomValidator()
+	translator, _ := customValidator.RegisterEnTranslation()
+	errValidation := customValidator.Validator.Struct(deletedProduct)
+	errs := customValidator.TranslateError(errValidation, translator)
+	errorsString := customValidator.GetErrorsString(errs)
+
+	if errValidation != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, errorsString)
+	}
+
+	err := p.ProductUseCase.Delete(ctx, deletedProduct)
+
+	if err != nil {
+		return echo.NewHTTPError(http.StatusNotFound, "Error while deleting product")
+	}
+
+	return ctx.JSON(http.StatusOK, "OK")
+}
+
 
 func (p *productHandler) EditProduct(ctx echo.Context) error {
 	decoder := json.NewDecoder(ctx.Request().Body)
@@ -66,7 +98,7 @@ func (p *productHandler) EditProduct(ctx echo.Context) error {
 	product, err := p.ProductUseCase.Update(ctx, &editedProduct)
 
 	if err != nil {
-		return echo.NewHTTPError(http.StatusNotFound, "Error while creating product")
+		return echo.NewHTTPError(http.StatusNotFound, "Error while editing product")
 	}
 
 	return ctx.JSON(http.StatusOK, product)
