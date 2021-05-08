@@ -1,3 +1,7 @@
+import { Category } from './../../model/category';
+import { Router } from '@angular/router';
+import { Role } from './../../model/role';
+import { AuthenticationService } from './../../service/authentication/authentication.service';
 import { ThrowStmt } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
@@ -17,13 +21,16 @@ export class ProductsPageComponent implements OnInit {
   pageSize : number;
   pageSizeOptions = [5, 10, 25]
   filterSearch : FilterSearch
-  constructor(private prodService : ProductServiceService) { }
+  constructor(private router : Router, private prodService : ProductServiceService, private authService :AuthenticationService) { }
 
   ngOnInit(): void {
     this.pageSize = 5;
     this.filterSearch = new FilterSearch("", "", 0, 10000000, this.pageSize, 0, "price asc")
-   
+
     this.getProducts(this.filterSearch)
+  }
+  public isAdmin() {
+    return this.authService.getUserValue() && this.authService.getUserValue().role === Role.Admin;
   }
 
   getProducts(filterSearch : FilterSearch) {
@@ -49,5 +56,10 @@ export class ProductsPageComponent implements OnInit {
       this.filterSearch.order = "price asc"
       this.getProducts(this.filterSearch)
       console.log(event.pageSize)
+  }
+  edit(product){
+    console.log(product.currency)
+    this.router.navigate(['/editProduct'], {state: {data: product}});
+
   }
 }

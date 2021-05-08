@@ -9,6 +9,10 @@ type imageUseCase struct {
 	ImageRepository domain.ImageRepository
 }
 
+func (i *imageUseCase) GetyByPath(path string) ([]*domain.Image, error) {
+	return i.ImageRepository.GetyByPath(path)
+}
+
 func NewImageUseCase(i domain.ImageRepository) domain.ImageUseCase {
 	return &imageUseCase{ImageRepository : i}
 }
