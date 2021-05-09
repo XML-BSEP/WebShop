@@ -15,10 +15,12 @@ export const environment = {
   filterSearch : "filterSearch",
   categories : "categories",
   addProduct : "addProduct",
+  editProduct : "editProduct",
   resetPasswordMail : "resetPasswordMail",
   resetPassword : "resetPassword",
   resendPassCode : "resendPassCode",
-  resendRegCode : "resendRegistrationCode"
+  resendRegCode : "resendRegistrationCode",
+  deleteProduct : "deleteProduct"
 };
 
 /*

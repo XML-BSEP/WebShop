@@ -9,6 +9,14 @@ type imageRepository struct {
 	Conn *gorm.DB
 }
 
+func (i *imageRepository) GetyByPath(path string) ([]*domain.Image, error) {
+	var image []*domain.Image
+
+	err := i.Conn.Where("path LIKE ?", path).Find(&image).Error
+
+	return image, err
+}
+
 func (p *imageRepository) Fetch() ([]*domain.Image, error) {
 	var (
 		images []*domain.Image

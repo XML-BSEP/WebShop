@@ -20,6 +20,7 @@ type ImageUseCase interface {
 	Update(ctx echo.Context, o *Image) (*Image, error)
 	Create(ctx echo.Context, o *Image) (*Image, error)
 	Delete(ctx echo.Context, id uint) error
+	GetyByPath(path string) ([]*Image, error)
 }
 
 type ImageRepository interface {
@@ -28,4 +29,5 @@ type ImageRepository interface {
 	Update(o *Image) (*Image, error)
 	Create(o *Image) (*Image, error)
 	Delete(id uint) error
+	GetyByPath(path string) ([]*Image, error)
 }

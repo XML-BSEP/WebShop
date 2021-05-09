@@ -24,6 +24,14 @@ type registeredUserUsecase struct {
 	RegisteredUserRepository domain.RegisteredShopUserRepository
 }
 
+func (r *registeredUserUsecase) ExistByUsername(username string) (*domain.RegisteredShopUser, error) {
+	return r.RegisteredUserRepository.ExistByUsername(username)
+}
+
+func (r *registeredUserUsecase) ExistByEmail(email string) (*domain.RegisteredShopUser, error) {
+	return r.RegisteredUserRepository.ExistByEmail(email)
+}
+
 func (r *registeredUserUsecase) SaveCodeToRedis(code string, email string) error {
 	expiration  := 1000000000 * 3600 * 2 //2h
 	return r.RedisUsecase.AddKeyValueSet(email, code, expiration)

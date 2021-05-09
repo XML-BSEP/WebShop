@@ -1,7 +1,6 @@
 package seeder
 
 import (
-	"fmt"
 	"time"
 	"web-shop/domain"
 	"web-shop/infrastructure/database"
@@ -31,14 +30,12 @@ func MigrateData() {
 	seedAddresses(conn)
 
 
-	//seedPersons(conn)
 	seedShopAccounts(conn)
 	seedRegisteredUsers(conn)
 	seedCategories(conn)
 	seedProducts(conn)
 
 	seedStorages(conn)
-	//seedStorages(conn)
 }
 
 func seedAddresses(conn *gorm.DB) {
@@ -94,20 +91,20 @@ func seedProducts(conn *gorm.DB) {
 	cat2, _ := catRepo.GetByID(2)
 
 	images1 := make([]domain.Image, 2)
-	images1[0] = domain.Image{Path: "randompic1.jpg", Timestamp: time.Now().Add(40)}
-	images1[1] = domain.Image{Path: "randompic2.jpg", Timestamp: time.Now().Add(40)}
+	images1[0] = domain.Image{Path: "1/randompic1.jpg", Timestamp: time.Now().Add(40)}
+	images1[1] = domain.Image{Path: "1/randompic2.jpg", Timestamp: time.Now().Add(40)}
 
 	images2 := make([]domain.Image, 2)
-	images2[0] = domain.Image{Path: "randompic3.jpg", Timestamp: time.Now().Add(10)}
-	images2[1] = domain.Image{Path: "randompic4.jpg", Timestamp: time.Now().Add(15)}
+	images2[0] = domain.Image{Path: "2/randompic3.jpg", Timestamp: time.Now().Add(10)}
+	images2[1] = domain.Image{Path: "2/randompic4.jpg", Timestamp: time.Now().Add(15)}
 
 	images3 := make([]domain.Image, 2)
-	images3[0] = domain.Image{Path: "randompic5.jpg", Timestamp: time.Now()}
-	images3[1] = domain.Image{Path: "randompic6.jpg", Timestamp: time.Now()}
+	images3[0] = domain.Image{Path: "3/randompic5.jpg", Timestamp: time.Now()}
+	images3[1] = domain.Image{Path: "3/randompic6.jpg", Timestamp: time.Now()}
 
-	product1 := domain.Product{Name: "Product1", Price: 6969, Images: images1, Currency: 1, Category: *cat1}
-	product2 := domain.Product{Name: "Product2", Price: 69420, Images: images2, Currency: 1, Category: *cat2}
-	product3 := domain.Product{Name: "Product3", Price: 1512, Images: images3, Currency: 1, Category: *cat1}
+	product1 := domain.Product{Name: "Product1", Price: 6969, Images: images1, Currency: 1, Category: *cat1, SerialNumber: 123, Description: "Ide gas1"}
+	product2 := domain.Product{Name: "Product2", Price: 69420, Images: images2, Currency: 1, Category: *cat2, SerialNumber: 1234, Description: "Ide gas2"}
+	product3 := domain.Product{Name: "Product3", Price: 1512, Images: images3, Currency: 1, Category: *cat1, SerialNumber: 12345, Description: "Ide gas3"}
 
 	prodRepo.Create(&product1)
 	prodRepo.Create(&product2)
@@ -121,8 +118,7 @@ func seedCategories(conn *gorm.DB) {
 	category1 := domain.Category{Name: "Tech"}
 	category2 := domain.Category{Name: "Makeup"}
 
-	cat, _ := catRepo.Create(&category1)
-	fmt.Print(cat)
+	catRepo.Create(&category1)
 	catRepo.Create(&category2)
 }
 

@@ -9,10 +9,6 @@ import { Base64 } from 'js-base64';
 import { CategoryService } from 'src/app/service/product/category.service';
 import { ToastrService } from 'ngx-toastr';
 
-interface Food {
-  value: string;
-  viewValue: string;
-}
 @Component({
   selector: 'app-add-product',
   templateUrl: './add-product.component.html',
@@ -27,11 +23,7 @@ export class AddProductComponent implements OnInit {
   isLinear : Boolean = true;
   submitedPictures: String[] = [];
 
-  foods: Food[] = [
-    {value: 'steak-0', viewValue: 'Steak'},
-    {value: 'pizza-1', viewValue: 'Pizza'},
-    {value: 'tacos-2', viewValue: 'Tacos'}
-  ];
+
   currency : Number;
   fileName : String="";
   imgFile : string;
@@ -102,7 +94,8 @@ export class AddProductComponent implements OnInit {
                                     this.descriptionPriceGroup.controls.description.value,
                                     blobs,
                                     this.descriptionPriceGroup.controls.currency.value,
-                                    this.descriptionPriceGroup.controls.available.value);
+                                    this.descriptionPriceGroup.controls.available.value,
+                                    null);
 
     console.log(this.newProduct);
 

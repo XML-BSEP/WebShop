@@ -10,7 +10,6 @@ type registeredUserRepository struct {
 	ShopAccountRepository domain.ShopAccountRepository
 }
 
-
 func (r registeredUserRepository) SaveNewPassword(account *domain.ShopAccount) error {
 	_, err := r.ShopAccountRepository.Update(account)
 	return err
@@ -40,6 +39,26 @@ func (r registeredUserRepository) ExistByUsernameOrEmail(username string, email 
 	var newUser *domain.RegisteredShopUser
 
 	err := r.Conn.Joins("ShopAccount").Take(&newUser, "username = ? or email = ?", username, email).Error
+
+	return newUser, err
+
+}
+
+func (r registeredUserRepository) ExistByUsername(username string) (*domain.RegisteredShopUser, error) {
+
+	var newUser *domain.RegisteredShopUser
+
+	err := r.Conn.Joins("ShopAccount").Where("username = ?", username).Take(&newUser).Error
+
+	return newUser, err
+
+}
+
+func (r registeredUserRepository) ExistByEmail(email string) (*domain.RegisteredShopUser, error) {
+
+	var newUser *domain.RegisteredShopUser
+
+	err := r.Conn.Where("email = ?", email).Take(&newUser).Error
 
 	return newUser, err
 

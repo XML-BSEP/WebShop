@@ -1,3 +1,4 @@
+import { DeletedProduct } from './../../model/deletedProduct';
 import { NewProduct } from './../../model/newProduct';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
@@ -21,4 +22,10 @@ export class ProductServiceService {
     return this.http.post(`${environment.baseUrl}/${environment.addProduct}`,data, {responseType : 'json'});
   }
 
+  editProduct(data : NewProduct){
+    return this.http.post(`${environment.baseUrl}/${environment.editProduct}`,data, {responseType : 'json'});
+  }
+  deleteProduct(data : DeletedProduct){
+    return this.http.post(`${environment.baseUrl}/${environment.deleteProduct}`,data, {responseType : 'json'});
+  }
 }

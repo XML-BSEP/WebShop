@@ -29,7 +29,7 @@ const (
 	AVAILABLE_ERR_MSG = "Available must be a number"
 	CURRENCY_ERR_MSG = "Currency must be a number"
 	IMAGE_ERR_MSG = "Images must be a list of base64 strings"
-
+	SERIAL_ERR_MSG = "Serial must be a number"
 	)
 
 func NewCustomValidator() *customValidator {
@@ -41,7 +41,7 @@ func NewCustomValidator() *customValidator {
 	err = registerAvailableValidation(cv)
 	err = registerCurrencyValidation(cv)
 	err = registerImagesValidation(cv)
-
+	err = registerSerialNumberValidation(cv)
 	if err != nil {
 		return &customValidator{}
 	}
@@ -59,6 +59,7 @@ func (cv *customValidator) RegisterEnTranslation() (ut.Translator, error) {
 	registerEnAvailableTranslation(trans, cv)
 	registerEnCurrencyTranslation(trans, cv)
 	registerEnImagesTranslation(trans, cv)
+	registerEnSerialNumberTranslation(trans, cv)
 	return trans, enTranslations.RegisterDefaultTranslations(cv.Validator, trans)
 }
 
@@ -209,6 +210,26 @@ func registerEnImagesTranslation(tr ut.Translator, cv *customValidator) {
 		return ut.Add("images", IMAGE_ERR_MSG, true)
 	}, func(ut ut.Translator, fe validator.FieldError) string {
 		t, _ := ut.T("images", fe.Field())
+		return t
+	})
+}
+
+
+func registerSerialNumberValidation(cv *customValidator) error {
+	return cv.Validator.RegisterValidation("serial", func(f1 validator.FieldLevel) bool {
+		if _, err := strconv.ParseUint(f1.Field().String(), 10 ,64); err == nil {
+			return true
+		}
+
+		return false
+	})
+}
+
+func registerEnSerialNumberTranslation(tr ut.Translator, cv *customValidator) {
+	_ = cv.Validator.RegisterTranslation("serial", tr, func(ut ut.Translator) error {
+		return ut.Add("serial", SERIAL_ERR_MSG, true)
+	}, func(ut ut.Translator, fe validator.FieldError) string {
+		t, _ := ut.T("serial", fe.Field())
 		return t
 	})
 }

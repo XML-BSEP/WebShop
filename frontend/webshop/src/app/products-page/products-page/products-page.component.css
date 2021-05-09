@@ -1,12 +1,12 @@
 @import "~bootstrap/dist/css/bootstrap.css";
 .example-card {
-    max-width: 40vh;
-    min-width: 40vh;
-    max-height: 80vh;
+    max-width: 30vh;
+    min-width: 30vh;
+    max-height: 50vh;
     padding-top: 20px;
-    
+
   }
-  
+
 .row {
   padding-top: 20px;
 }
@@ -15,7 +15,7 @@
   width: 60vw;
   height: 100px;
   margin-top: 20px;
- 
+
 }
 .footer {
   height: 20px;
@@ -47,8 +47,8 @@
 }
 
 .search-button {
-  width: 5em !important; 
-  height: 2.8em !important; 
+  width: 5em !important;
+  height: 2.8em !important;
   min-width: unset!important;
 }
 
@@ -66,7 +66,7 @@
   max-width: 500px;
   width: 100%;
 }
-  
+
 .example-full-width {
   width: 100%;
 }
