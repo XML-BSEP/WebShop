@@ -102,9 +102,9 @@ func seedProducts(conn *gorm.DB) {
 	images3[0] = domain.Image{Path: "3/randompic5.jpg", Timestamp: time.Now()}
 	images3[1] = domain.Image{Path: "3/randompic6.jpg", Timestamp: time.Now()}
 
-	product1 := domain.Product{Name: "Product1", Price: 6969, Images: images1, Currency: 1, Category: *cat1, SerialNumber: 123}
-	product2 := domain.Product{Name: "Product2", Price: 69420, Images: images2, Currency: 1, Category: *cat2, SerialNumber: 1234}
-	product3 := domain.Product{Name: "Product3", Price: 1512, Images: images3, Currency: 1, Category: *cat1, SerialNumber: 12345}
+	product1 := domain.Product{Name: "Product1", Price: 6969, Images: images1, Currency: 1, Category: *cat1, SerialNumber: 123, Description: "Ide gas1"}
+	product2 := domain.Product{Name: "Product2", Price: 69420, Images: images2, Currency: 1, Category: *cat2, SerialNumber: 1234, Description: "Ide gas2"}
+	product3 := domain.Product{Name: "Product3", Price: 1512, Images: images3, Currency: 1, Category: *cat1, SerialNumber: 12345, Description: "Ide gas3"}
 
 	prodRepo.Create(&product1)
 	prodRepo.Create(&product2)

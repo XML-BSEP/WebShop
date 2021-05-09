@@ -32,7 +32,7 @@ type ProductUsecase interface {
 	GetByID(ctx echo.Context, id uint) (*Product, error)
 	Update(ctx echo.Context, pic *dto.EditProduct) (*Product, error)
 	Create(ctx echo.Context, pic *dto.NewProduct) (*Product, error)
-	Delete(ctx echo.Context, id uint) error
+	Delete(ctx echo.Context, deletedProduct dto.DeleteProduct) error
 	GetWithPriceRange(low uint, high uint)([]*Product, error)
 	GetProductsWithCategory(category string)([]*Product, error)
 	GetProductsWithCondition(low uint, high uint, category string, limit int, offset int)([]*Product, error)

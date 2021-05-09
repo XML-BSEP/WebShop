@@ -7,5 +7,5 @@ type EditProduct struct{
 	Images       []string `json:"images" validate:"required"`
 	Currency     string   `json:"currency" validate:"required,currency"`
 	Available    string   `json:"available" validate:"required,available"`
-	SerialNumber string   `json:"serial"`
+	SerialNumber string   `json:"serial" validate:"required"`
 }
