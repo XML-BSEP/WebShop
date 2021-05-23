@@ -17,17 +17,13 @@ type Seed struct {
 func MigrateData() {
 	conn := database.NewDBConnection()
 
-	conn.AutoMigrate(&domain.Address{})
-	//conn.AutoMigrate(&domain.{})
 	conn.AutoMigrate(&domain.ShopAccount{})
 	conn.AutoMigrate(&domain.RegisteredShopUser{})
 	conn.AutoMigrate(&domain.Product{})
 	conn.AutoMigrate(&domain.Storage{})
 	conn.AutoMigrate(&domain.Category{})
 	conn.AutoMigrate(&domain.Image{})
-	//conn.AutoMigrate(&domain.Storage{})
 	seedRoles(conn)
-	seedAddresses(conn)
 
 
 	seedShopAccounts(conn)
@@ -38,21 +34,6 @@ func MigrateData() {
 	seedStorages(conn)
 }
 
-func seedAddresses(conn *gorm.DB) {
-
-	addrRepo := datastore.NewAddressRepository(conn)
-
-	a := domain.Address{City: "Novi Sad", State: "Serbia", Street: "Mise Dimitrijevica 2c", Zip: 21000}
-	a1 := domain.Address{City: "Novi Sad", State: "Serbia", Street: "Mise Dimitrijevica 3c", Zip: 21000}
-	a2 := domain.Address{City: "Novi Sad", State: "Serbia", Street: "Mise Dimitrijevica 4c", Zip: 21000}
-	a3 := domain.Address{City: "Novi Sad", State: "Serbia", Street: "Mise Dimitrijevica 5c", Zip: 21000}
-
-	addrRepo.Create(&a)
-	addrRepo.Create(&a1)
-	addrRepo.Create(&a2)
-	addrRepo.Create(&a3)
-
-}
 
 func seedShopAccounts(conn *gorm.DB) {
 	accRepo := datastore.NewShopAccountRepository(conn)

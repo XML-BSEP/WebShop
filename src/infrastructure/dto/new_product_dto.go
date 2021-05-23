@@ -7,5 +7,4 @@ type NewProduct struct{
 	Images []string `json:"images" validate:"required,images"`
 	Currency string `json:"currency" validate:"required,currency"`
 	Available string `json:"available" validate:"required,available"`
-
 }

@@ -32,6 +32,7 @@ type ProductHandler interface {
 type productHandler struct {
 	ProductUseCase domain.ProductUsecase
 }
+
 func (p *productHandler) RemoveProduct(ctx echo.Context) error{
 	decoder := json.NewDecoder(ctx.Request().Body)
 	var deletedProduct dto.DeleteProduct
@@ -140,7 +141,7 @@ func (p *productHandler) AddProduct(ctx echo.Context) error {
 	var t dto.NewProduct
 	err := decoder.Decode(&t)
 
-	policy := bluemonday.UGCPolicy();
+	policy := bluemonday.UGCPolicy()
 	t.Category =  strings.TrimSpace(policy.Sanitize(t.Category))
 	t.Price = strings.TrimSpace(policy.Sanitize(t.Price))
 	t.Available = strings.TrimSpace(policy.Sanitize(t.Available))

@@ -12,6 +12,8 @@ type Order struct {
 	DateOfPlacement time.Time
 	ShoppingCart    ShoppingCart
 	TotalPrice      uint
+	Address			string
+	Shipped			bool
 }
 
 type OrderUsecase interface {
