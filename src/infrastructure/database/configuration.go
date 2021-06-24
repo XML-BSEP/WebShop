@@ -13,7 +13,7 @@ func NewDBConnection() *gorm.DB {
 }
 
 func init_viper() {
-	viper.SetConfigFile(`src/configurations/dbconfig.json`)
+	viper.SetConfigFile(`configurations/dbconfig.json`)
 	err := viper.ReadInConfig()
 	if err != nil {
 		panic(err)

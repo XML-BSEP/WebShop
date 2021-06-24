@@ -16,6 +16,15 @@ type Seed struct {
 
 func MigrateData() {
 	conn := database.NewDBConnection()
+	conn.Migrator().DropTable(&domain.Address{})
+	conn.Migrator().DropTable(&domain.ShopAccount{})
+	conn.Migrator().DropTable(&domain.RegisteredShopUser{})
+	conn.Migrator().DropTable(&domain.Product{})
+	conn.Migrator().DropTable(&domain.Storage{})
+	conn.Migrator().DropTable(&domain.Category{})
+	conn.Migrator().DropTable(&domain.Image{})
+	conn.Migrator().DropTable(&domain.Role{})
+
 
 	conn.AutoMigrate(&domain.Address{})
 	//conn.AutoMigrate(&domain.{})
@@ -25,6 +34,7 @@ func MigrateData() {
 	conn.AutoMigrate(&domain.Storage{})
 	conn.AutoMigrate(&domain.Category{})
 	conn.AutoMigrate(&domain.Image{})
+	conn.AutoMigrate(&domain.Role{})
 	//conn.AutoMigrate(&domain.Storage{})
 	seedRoles(conn)
 	seedAddresses(conn)
