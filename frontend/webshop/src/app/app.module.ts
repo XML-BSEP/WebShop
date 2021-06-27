@@ -25,6 +25,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { EditProductComponent } from './product/edit-product/edit-product.component';
 import { ShoppingCartComponent } from './shopping-cart/shopping-cart.component';
 import { ShopHomeComponent } from './shop-home/shop-home.component';
+import { MatCarouselModule } from '@ngmodule/material-carousel';
 
 
 
@@ -56,7 +57,8 @@ import { ShopHomeComponent } from './shop-home/shop-home.component';
     HttpClientModule,
     MatInputModule,
     MatSelectModule,
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
+    MatCarouselModule.forRoot()
   ],
   providers: [
     {provide : HTTP_INTERCEPTORS, useClass : JwtInterceptor, multi : true},
