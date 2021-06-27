@@ -38,6 +38,9 @@ type Interactor interface {
 	NewCategoryHandler() handler.CategoryHandler
 	NewCategoryUsecase() domain.CategoryUsecase
 	NewCategoryRepository() domain.CategoryRepository
+
+	NewShopAccountHandler() handler.ShopAccountHandler
+	NewShopAccountUsecase() domain.ShopAccountUsecase
 }
 
 type interactor struct {
@@ -54,6 +57,7 @@ type appHandler struct {
 	handler.OrderHandler
 	handler.ResetPasswordHandler
 	handler.CategoryHandler
+	handler.ShopAccountHandler
 }
 
 
@@ -71,8 +75,15 @@ func (i *interactor) NewAppHandler() handler.AppHandler {
 	appHandler.OrderHandler = i.NewOrderHandler()
 	appHandler.ResetPasswordHandler = i.NewResetPasswordHandler()
 	appHandler.CategoryHandler = i.NewCategoryHandler()
+	appHandler.ShopAccountHandler = i.NewShopAccountHandler()
 	return appHandler
 }
+
+func (i *interactor) NewShopAccountHandler() handler.ShopAccountHandler{
+	return handler.NewShopAccountHandler(i.NewShopAccountUsecase())
+}
+
+
 func (i *interactor) NewCategoryHandler() handler.CategoryHandler{
 	return handler.NewCategoryHandler(i.NewCategoryUsecase())
 }
@@ -98,7 +109,7 @@ func (i *interactor) NewOrderRepository() domain.OrderRepository {
 }
 
 func (i *interactor) NewProductUsecase() domain.ProductUsecase {
-	return usecase.NewProductUseCase(i.NewProductRepository(), i.NewCategoryRepository(), i.NewImageRepository(),i.NewRegisteredUserRepository(i.NewShopAccountRepository()))
+	return usecase.NewProductUseCase(i.NewProductRepository(), i.NewCategoryRepository(), i.NewImageRepository(),i.NewShopAccountRepository())
 }
 func (i *interactor) NewProductRepository() domain.ProductRepository {
 	return datastore.NewProductRepository(i.Conn)
@@ -182,6 +193,11 @@ func (i *interactor) NewAuthService() auth2.AuthInterface {
 
 func (i *interactor) NewResetPasswordHandler() handler.ResetPasswordHandler {
 	return  handler.NewResetPasswordHandler(i.NewRegisteredShopUserUsecase(), i.NewRandomStringGeneratorUsecase())
+}
+
+func (i *interactor) NewShopAccountUsecase() domain.ShopAccountUsecase {
+	return usecase.NewShopAccoutUsecase(i.NewShopAccountRepository())
+
 }
 
 

@@ -66,12 +66,14 @@ func seedAddresses(conn *gorm.DB) {
 func seedShopAccounts(conn *gorm.DB) {
 	accRepo := datastore.NewShopAccountRepository(conn)
 
-	acc := domain.ShopAccount{Username: "password", Password: "$2y$12$1duXzw4C3iYpZpU14rh0A.cjbF2kWdqKlUfsMWJOpRGmcFFHfok36"}
-	accRepo.Create(&acc)
-	acc1 := domain.ShopAccount{Username: "password1", Password: "$2y$12$1duXzw4C3iYpZpU14rh0A.cjbF2kWdqKlUfsMWJOpRGmcFFHfok36"}
-	acc2 := domain.ShopAccount{Username: "password2", Password: "$2y$12$1duXzw4C3iYpZpU14rh0A.cjbF2kWdqKlUfsMWJOpRGmcFFHfok36"}
+	acc := domain.ShopAccount{Username: "Agent1", Password: "$2y$12$1duXzw4C3iYpZpU14rh0A.cjbF2kWdqKlUfsMWJOpRGmcFFHfok36"}
+	acc1 := domain.ShopAccount{Username: "Agent2", Password: "$2y$12$1duXzw4C3iYpZpU14rh0A.cjbF2kWdqKlUfsMWJOpRGmcFFHfok36"}
 
+	accRepo.Create(&acc)
 	accRepo.Create(&acc1)
+
+	acc2 := domain.ShopAccount{Username: "User", Password: "$2y$12$1duXzw4C3iYpZpU14rh0A.cjbF2kWdqKlUfsMWJOpRGmcFFHfok36"}
+
 	accRepo.Create(&acc2)
 
 
@@ -89,10 +91,13 @@ func seedRegisteredUsers(conn *gorm.DB) {
 	role2, _ := datastore.NewRoleRepository(conn).GetByID(2)
 
 	regUser1 := domain.RegisteredShopUser{Email: "vlajkovj31@gmail.com", ShopAccount: *acc1, Role: *role1}
-	regRepo.Create(&regUser1)
 
-	regUser2 := domain.RegisteredShopUser{Email: "a2@a.com", ShopAccount: *acc2, Role: *role2}
-	regUser3 := domain.RegisteredShopUser{Email: "alexignjat1998@gmail.com", ShopAccount: *acc3, Role: *role1}
+	regUser2 := domain.RegisteredShopUser{Email: "alexignjat1998@gmail.com", ShopAccount: *acc2, Role: *role1}
+
+	regUser3 := domain.RegisteredShopUser{Email: "a2@a.com", ShopAccount: *acc3, Role: *role2}
+
+
+	regRepo.Create(&regUser1)
 
 	regRepo.Create(&regUser2)
 	regRepo.Create(&regUser3)
@@ -103,13 +108,12 @@ func seedProducts(conn *gorm.DB) {
 	prodRepo := datastore.NewProductRepository(conn)
 	catRepo := datastore.NewCategoryRepository(conn)
 	shopAccRepo := datastore.NewShopAccountRepository(conn)
-	userRepo := datastore.NewRegisteredUserRepository(conn, shopAccRepo)
 
 	cat1, _ := catRepo.GetByID(1)
 	cat2, _ := catRepo.GetByID(2)
 
-	u1, _ :=userRepo.GetByID(1)
-	u2, _ :=userRepo.GetByID(2)
+	u1, _ :=shopAccRepo.GetByID(1)
+	u2, _ :=shopAccRepo.GetByID(2)
 
 	images1 := make([]domain.Image, 2)
 	images1[0] = domain.Image{Path: "1/randompic1.jpg", Timestamp: time.Now().Add(40)}
@@ -123,9 +127,9 @@ func seedProducts(conn *gorm.DB) {
 	images3[0] = domain.Image{Path: "3/randompic5.jpg", Timestamp: time.Now()}
 	images3[1] = domain.Image{Path: "3/randompic6.jpg", Timestamp: time.Now()}
 
-	product1 := domain.Product{Name: "Product1", Price: 699, Images: images1, Category: *cat1, SerialNumber: 123, Description: "Ide gas1", Available: 6, RegisteredShopUser: *u1}
-	product2 := domain.Product{Name: "Product2", Price: 420, Images: images2, Category: *cat2, SerialNumber: 1234, Description: "Ide gas2", Available: 7, RegisteredShopUser: *u2}
-	product3 := domain.Product{Name: "Product3", Price: 1512, Images: images3, Category: *cat1, SerialNumber: 12345, Description: "Ide gas3", Available: 69, RegisteredShopUser: *u1}
+	product1 := domain.Product{Name: "Product1", Price: 699, Images: images1, Category: *cat1, SerialNumber: 123, Description: "Ide gas1", Available: 6, ShopAccount: *u1}
+	product2 := domain.Product{Name: "Product2", Price: 420, Images: images2, Category: *cat2, SerialNumber: 1234, Description: "Ide gas2", Available: 7, ShopAccount: *u2}
+	product3 := domain.Product{Name: "Product3", Price: 1512, Images: images3, Category: *cat1, SerialNumber: 12345, Description: "Ide gas3", Available: 69, ShopAccount: *u1}
 
 	prodRepo.Create(&product1)
 	prodRepo.Create(&product2)

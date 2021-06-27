@@ -9,6 +9,10 @@ type ShopAccountUsecase struct {
 	ShopAccountRepository domain.ShopAccountRepository
 }
 
+func (s *ShopAccountUsecase) FetchShops(ctx echo.Context) ([]*domain.ShopAccount, error) {
+	return s.ShopAccountRepository.FetchShops(ctx)
+}
+
 func NewShopAccoutUsecase(r domain.ShopAccountRepository) domain.ShopAccountUsecase {
 	return &ShopAccountUsecase{r}
 }

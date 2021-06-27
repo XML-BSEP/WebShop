@@ -1,12 +1,23 @@
 package datastore
 
 import (
+	"github.com/labstack/echo"
 	"gorm.io/gorm"
 	"web-shop/domain"
 )
 
 type shopAccountRepository struct {
 	Conn *gorm.DB
+}
+
+func (s shopAccountRepository) FetchShops(ctx echo.Context) ([]*domain.ShopAccount, error) {
+	var (
+		shops []*domain.ShopAccount
+		err error
+	)
+
+	err = s.Conn.Joins("JOIN registered_shop_users on registered_shop_users.shop_account_id=shop_accounts.id").Where("role_id=1").Find(&shops).Error
+	return shops, err
 }
 
 func (s shopAccountRepository) GetUserDetailsByUsername(account *domain.ShopAccount) (*domain.ShopAccount, error) {

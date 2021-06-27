@@ -9,6 +9,9 @@ import (
 func NewRouter(e *echo.Echo, h handler.AppHandler, authMiddleware middleware.AuthMiddleware) {
 
 	e.GET("/categories", h.GetAllCategories)
+	e.GET("/shopProducts", h.FetchShopProducts)
+	e.GET("/allShops", h.GetAllShopAdminAccounts)
+
 	e.POST("/login", h.Login, authMiddleware.Authenticated())
 	e.POST("/register", h.UserRegister, authMiddleware.Authenticated())
 	e.POST("/confirmAccount", h.ConfirmAccount, authMiddleware.Authenticated())

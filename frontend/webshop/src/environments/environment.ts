@@ -20,7 +20,8 @@ export const environment = {
   resetPassword : "resetPassword",
   resendPassCode : "resendPassCode",
   resendRegCode : "resendRegistrationCode",
-  deleteProduct : "deleteProduct"
+  deleteProduct : "deleteProduct",
+  allShops :"allShops"
 };
 
 /*

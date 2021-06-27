@@ -20,11 +20,12 @@ type Product struct {
 	Category     Category
 	CategoryId   uint
 	SerialNumber uint64 `json:"serial"`
-	RegisteredShopUser RegisteredShopUser
-	RegisteredShopUserId uint
+	ShopAccount   ShopAccount
+	ShopAccountID uint
 }
 
 type ProductUsecase interface {
+	GetAllAvailableProductsInUsersShop(ctx echo.Context, userId uint) ([]*Product, error)
 	Fetch(ctx echo.Context) ([]*Product, error)
 	GetByID(ctx echo.Context, id uint) (*Product, error)
 	Update(ctx echo.Context, pic *dto.EditProduct) (*Product, error)
@@ -41,9 +42,11 @@ type ProductUsecase interface {
 	FilterByCategory(userId uint, name string, category string, priceRangeStart uint, priceRangeEnd uint, limit int, offset int, order string) ([]*Product, error)
 	Count() (int64, error)
 	GetBySerial(serial uint64) (*Product, error)
+	GetAllProductsInUsersShop(ctx echo.Context, userId uint) ([]*Product, error)
 }
 
 type ProductRepository interface {
+	GetAllAvailableProductsInUsersShop(ctx echo.Context, userId uint) ([]*Product, error)
 	Fetch() ([]*Product, error)
 	GetByID(id uint) (*Product, error)
 	Update(pic *Product) (*Product, error)
@@ -62,5 +65,5 @@ type ProductRepository interface {
 	MinMaxPrice() (int64)
 	GetBySerial(serial uint64) (*Product, error)
 	GetBySerialAndUserId(serial uint64, id uint) (*Product, error)
-
+	GetAllProductsInUsersShop(ctx echo.Context, userId uint) ([]*Product, error)
 }

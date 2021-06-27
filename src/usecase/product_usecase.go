@@ -13,10 +13,18 @@ import (
 )
 
 type productUseCase struct {
-	RegisteredUserRepository domain.RegisteredShopUserRepository
+	ShopAccountRepository domain.ShopAccountRepository
 	ProductRepository domain.ProductRepository
 	CategoryRepository domain.CategoryRepository
 	ImageRepository domain.ImageRepository
+}
+
+func (p *productUseCase) GetAllProductsInUsersShop(ctx echo.Context, userId uint) ([]*domain.Product, error) {
+	return p.ProductRepository.GetAllProductsInUsersShop(ctx, userId)
+}
+
+func (p *productUseCase) GetAllAvailableProductsInUsersShop(ctx echo.Context, userId uint) ([]*domain.Product, error) {
+	return p.ProductRepository.GetAllAvailableProductsInUsersShop(ctx,userId)
 }
 
 func (p *productUseCase) GetBySerial(serial uint64) (*domain.Product, error) {
@@ -170,7 +178,7 @@ func (p *productUseCase) Update(ctx echo.Context, prod *dto.EditProduct) (*domai
 
 func (p *productUseCase) Create(ctx echo.Context, newProd *dto.NewProduct) (*domain.Product, error) {
 
-	user, err := p.RegisteredUserRepository.GetByID(newProd.UserId)
+	user, err := p.ShopAccountRepository.GetByID(newProd.UserId)
 	if err != nil{
 		return nil, err
 	}
@@ -233,7 +241,7 @@ func (p *productUseCase) Create(ctx echo.Context, newProd *dto.NewProduct) (*dom
 
 	price, _ := strconv.ParseFloat(newProd.Price, 64)
 	av,_ :=strconv.Atoi(newProd.Available)
-	prod:=domain.Product{Available: uint(av), Price: price, Name: newProd.Name, Category: *cat, Description: newProd.Description, Images: images, SerialNumber: makeTimestamp(),RegisteredShopUser:  *user}
+	prod:=domain.Product{Available: uint(av), Price: price, Name: newProd.Name, Category: *cat, Description: newProd.Description, Images: images, SerialNumber: makeTimestamp(),ShopAccount:  *user}
 
 	return p.ProductRepository.Create(&prod)
 }
@@ -273,6 +281,6 @@ func (p *productUseCase) Delete(ctx echo.Context, deletedProduct dto.DeleteProdu
 func makeTimestamp() uint64 {
 	return uint64(time.Now().UnixNano() / int64(time.Millisecond))
 }
-func NewProductUseCase(p domain.ProductRepository, c domain.CategoryRepository, img domain.ImageRepository, k domain.RegisteredShopUserRepository) domain.ProductUsecase {
-	return &productUseCase{k,p,c, img}
+func NewProductUseCase(p domain.ProductRepository, c domain.CategoryRepository, img domain.ImageRepository, s domain.ShopAccountRepository) domain.ProductUsecase {
+	return &productUseCase{s,p,c, img}
 }

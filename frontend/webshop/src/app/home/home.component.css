@@ -1,5 +1,7 @@
+@import "~bootstrap/dist/css/bootstrap.css";
+@import '~bootstrap/dist/css/bootstrap.min.css';
 
-.container{
+.component{
   background: #2980B9;  /* fallback for old browsers */
   background: -webkit-linear-gradient(to left, #FFFFFF, #6DD5FA, #2980B9);  /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(to left, #FFFFFF, #6DD5FA, #2980B9); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
@@ -9,7 +11,7 @@
 }
 .content{
   width:100%;
-  height:90%;
+  height:100%;
   display:flex;
   justify-content:center;
     /* flex-direction:column; */
@@ -35,7 +37,7 @@
   width:90%;
   display:flex;
   justify-content:center;
-  height:20%;
+  height:35%;
 }
 
 #browse-button{
@@ -43,10 +45,10 @@
   color:white;
   font-size: 1.2rem;
   width:60%;
-  height:40%;
+  height:25%;
   border-radius: 20px;
   border: 4px solid white;
-  margin-top: 10% ;
+  margin-top: 30% ;
 }
 #browse-button:hover{
   background-color:white;
@@ -85,4 +87,8 @@
   background-color:white;
   color: #2980B9;
   border: 1px solid #2980B9;
+}
+.webshop{
+  height: 10vh;
+  max-height: fit-content;
 }

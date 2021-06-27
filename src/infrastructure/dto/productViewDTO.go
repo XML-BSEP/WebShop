@@ -9,7 +9,6 @@ type ProductViewDTO struct {
 	Image       []string `json:"image"`
 	Category    string `json:"category"`
 	Available   uint   `json:"available"`
-	Currency    string `json:"currency"`
 	Count int64 `json:"count"`
 	SerialNumber uint64 `json:"serial"`
 }

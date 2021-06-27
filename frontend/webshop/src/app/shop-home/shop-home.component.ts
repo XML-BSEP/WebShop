@@ -1,41 +1,46 @@
-import { DeletedProduct } from './../../model/deletedProduct';
-import { ToastrModule, ToastrService } from 'ngx-toastr';
-import { Category } from './../../model/category';
-import { Router } from '@angular/router';
-import { Role } from './../../model/role';
-import { AuthenticationService } from './../../service/authentication/authentication.service';
-import { ThrowStmt } from '@angular/compiler';
-import { Component, OnInit } from '@angular/core';
+import { ProductServiceService } from './../service/product/product-service.service';
+import { Router, ActivatedRouteSnapshot, ActivatedRoute } from '@angular/router';
+import { Role } from './../model/role';
 import { PageEvent } from '@angular/material/paginator';
-import { FilterSearch } from 'src/app/model/filterSearch';
-import { Product } from 'src/app/model/product';
-import { ProductServiceService } from 'src/app/service/product/product-service.service';
+import { Product } from './../model/product';
+import { FilterSearch } from './../model/filterSearch';
+import { Component, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
+import { DeletedProduct } from '../model/deletedProduct';
+import { AuthenticationService } from '../service/authentication/authentication.service';
 
 @Component({
-  selector: 'app-products-page',
-  templateUrl: './products-page.component.html',
-  styleUrls: ['./products-page.component.css']
+  selector: 'app-shop-home',
+  templateUrl: './shop-home.component.html',
+  styleUrls: ['./shop-home.component.css']
 })
-export class ProductsPageComponent implements OnInit {
-
+export class ShopHomeComponent implements OnInit {
   products : Product[]
   itemsCount : number;
   pageSize : number;
   pageSizeOptions = [5, 10, 25]
   filterSearch : FilterSearch
-  constructor(private productService : ProductServiceService, private router : Router,  private toastr : ToastrService, private prodService : ProductServiceService, private authService :AuthenticationService) { }
+  shopid : number
+  shopname : string
+  constructor(private route : ActivatedRoute,private productService : ProductServiceService, private router : Router,  private toastr : ToastrService, private prodService : ProductServiceService, private authService :AuthenticationService) { }
 
   ngOnInit(): void {
-    // this.pageSize = 5;
-    // this.filterSearch = new FilterSearch(Number("", "", 0, 10000000, this.pageSize, 0, "price asc")
+    this.route.queryParams
+    .subscribe(params => {
+      this.shopid = params.id;
+      this.shopname = params.name
+    });
+    console.log(this.shopname)
+    this.pageSize = 5;
+    this.filterSearch = new FilterSearch(Number(this.shopid),"", "", 0, 10000000, this.pageSize, 0, "price asc")
 
-    // this.getProducts(this.filterSearch)
+    this.getShopProducts(this.filterSearch)
   }
   public isAdmin() {
     return this.authService.getUserValue() && this.authService.getUserValue().role === Role.Admin;
   }
 
-  getProducts(filterSearch : FilterSearch) {
+  getShopProducts(filterSearch : FilterSearch) {
       this.prodService.getProducts(filterSearch).subscribe(
         data => {
           this.products = []
@@ -56,7 +61,7 @@ export class ProductsPageComponent implements OnInit {
       this.filterSearch.priceRangeStart = 0
       this.filterSearch.priceRangeEnd = 1000000
       this.filterSearch.order = "price asc"
-      this.getProducts(this.filterSearch)
+      this.getShopProducts(this.filterSearch)
       console.log(event.pageSize)
   }
   edit(product){

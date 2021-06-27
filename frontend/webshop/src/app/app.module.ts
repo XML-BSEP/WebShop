@@ -24,6 +24,7 @@ import { ForbiddenComponent } from './other/forbidden/forbidden.component';
 import { ToastrModule } from 'ngx-toastr';
 import { EditProductComponent } from './product/edit-product/edit-product.component';
 import { ShoppingCartComponent } from './shopping-cart/shopping-cart.component';
+import { ShopHomeComponent } from './shop-home/shop-home.component';
 
 
 
@@ -42,7 +43,8 @@ import { ShoppingCartComponent } from './shopping-cart/shopping-cart.component';
     ForgotPasswordComponent,
     ForbiddenComponent,
     EditProductComponent,
-    ShoppingCartComponent
+    ShoppingCartComponent,
+    ShopHomeComponent
   ],
   imports: [
     BrowserModule,

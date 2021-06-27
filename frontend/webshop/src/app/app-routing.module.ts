@@ -12,6 +12,7 @@ import {ForgotPasswordComponent } from './forgot-password/forgot-password.compon
 import { ForbiddenComponent } from './other/forbidden/forbidden.component';
 import { AuthGuard } from './helpers';
 import { Role } from './model/role';
+import { ShopHomeComponent } from './shop-home/shop-home.component';
 
 const routes: Routes = [
   {
@@ -39,6 +40,10 @@ const routes: Routes = [
 {
   path: 'products',
   component: ProductsPageComponent
+},
+{
+  path: 'shopHome',
+  component: ShopHomeComponent
 },
 {
   path:'addProduct',

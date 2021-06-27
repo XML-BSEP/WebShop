@@ -1,4 +1,5 @@
 export class FilterSearch {
+    userId : number
     name : String;
     category : String;
     priceRangeStart : number;
@@ -7,7 +8,8 @@ export class FilterSearch {
     offset : number;
     order : string;
 
-    constructor(name : String, category : String, priceRangeStart : number, priceRangeEnd : number, limit : number, offset : number, order : string) {
+    constructor(userId :number, name : String, category : String, priceRangeStart : number, priceRangeEnd : number, limit : number, offset : number, order : string) {
+        this.userId = userId
         this.name = name;
         this.category = category;
         this.priceRangeStart = priceRangeStart;
@@ -15,6 +17,6 @@ export class FilterSearch {
         this.limit = limit;
         this.offset = offset;
         this.order = order;
-        
+
     }
 }

@@ -1,6 +1,7 @@
 package datastore
 
 import (
+	"github.com/labstack/echo"
 	"gorm.io/gorm"
 	"web-shop/domain"
 )
@@ -9,10 +10,29 @@ type productRepository struct {
 	Conn *gorm.DB
 }
 
+func (p *productRepository) GetAllAvailableProductsInUsersShop(ctx echo.Context, userId uint) ([]*domain.Product, error) {
+	var (
+		products []*domain.Product
+		err error
+	)
+
+	err = p.Conn.Preload("Images").Joins("Category").Order("id desc").Where("shop_account_id = ? and available>0", userId).Find(&products).Error
+	return products, err
+}
+func (p *productRepository) GetAllProductsInUsersShop(ctx echo.Context, userId uint) ([]*domain.Product, error) {
+	var (
+		products []*domain.Product
+		err error
+	)
+
+	err = p.Conn.Preload("Images").Joins("Category").Order("id desc").Where("shop_account_id = ?", userId).Find(&products).Error
+	return products, err
+}
+
 func (p *productRepository) GetBySerialAndUserId(serial uint64, id uint) (*domain.Product, error) {
 	var product *domain.Product
 
-	err := p.Conn.Where("serial_number = ? and registered_shop_user_id=?", serial, id).Take(&product).Error
+	err := p.Conn.Where("serial_number = ? and shop_account_id=?", serial, id).Take(&product).Error
 
 	return product, err}
 
@@ -43,7 +63,7 @@ func (p *productRepository) FilterByCategory(userid uint,name string, category s
 
 	err = p.Conn.Preload("Images").
 		Joins("JOIN categories on products.category_id = categories.id and lower(categories.name) like lower(?)", category).
-		Where("lower(products.name) LIKE lower(?) and registered_shop_user=?", name, userid).
+		Where("lower(products.name) LIKE lower(?) and shop_account_id=?", name, userid).
 		Order(order).
 		Limit(limit).
 		Offset(offset).

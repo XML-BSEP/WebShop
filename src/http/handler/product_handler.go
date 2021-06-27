@@ -27,6 +27,7 @@ type ProductHandler interface {
 	AddProduct(ctx echo.Context) error
 	EditProduct(ctx echo.Context) error
 	RemoveProduct(ctx echo.Context) error
+	FetchShopProducts(ctx echo.Context) error
 }
 
 type productHandler struct {
@@ -113,8 +114,8 @@ func (p *productHandler) FilterSearch(ctx echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, "Invalid parameters")
 	}
 	//TODO: Fix filter search because joining on table categories doesnt work!
-	//products, err := p.ProductUseCase.FilterByCategory(product.Name, product.Category, product.PriceRangeStart, product.PriceRangeEnd, product.Limit, product.Offset, product.Order)
-	products, err := p.ProductUseCase.Fetch(ctx)
+	products, err := p.ProductUseCase.FilterByCategory(product.UserId,product.Name, product.Category, product.PriceRangeStart, product.PriceRangeEnd, product.Limit, product.Offset, product.Order)
+	//products, err := p.ProductUseCase.Fetch(ctx)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, "Error filtering")
 	}
@@ -175,6 +176,30 @@ func (p *productHandler) AddProduct(ctx echo.Context) error {
 
 	return ctx.JSON(http.StatusOK, product)
 
+}
+
+func (p *productHandler) FetchShopProducts(ctx echo.Context) error {
+	decoder := json.NewDecoder(ctx.Request().Body)
+	var t dto.ShopIdDTO
+	decodeErr := decoder.Decode(&t)
+
+	if decodeErr !=nil{
+		return echo.NewHTTPError(http.StatusBadRequest, "Error decoding dto")
+	}
+
+	products, err := p.ProductUseCase.GetAllAvailableProductsInUsersShop(ctx,t.UserId)
+
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "No results")
+	}
+
+	var productsRet = make([]dto.ProductViewDTO, len(products))
+
+	for i, p := range products {
+		productsRet[i] = mapper.NewProductToProductViewDTO(*p)
+	}
+
+	return ctx.JSON(http.StatusOK, productsRet)
 }
 
 func (p *productHandler) FetchProducts(ctx echo.Context) error {
