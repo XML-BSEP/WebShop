@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"context"
 	"encoding/base64"
 	"fmt"
 	"github.com/labstack/echo"
@@ -17,6 +18,20 @@ type productUseCase struct {
 	ProductRepository domain.ProductRepository
 	CategoryRepository domain.CategoryRepository
 	ImageRepository domain.ImageRepository
+}
+
+func (p *productUseCase) GetProductDetails(ctx context.Context, productId uint) (*domain.Product, error) {
+	product, err := p.ProductRepository.GetProductDetails(ctx,productId)
+	if err!=nil{
+		return nil,err
+	}
+	images, err1 :=p.ImageRepository.GetByProduct(ctx, productId)
+	if err1!=nil{
+		return nil, err
+	}
+
+	product.Images = images
+	return product, nil
 }
 
 func (p *productUseCase) GetAllProductsInUsersShop(ctx echo.Context, userId uint) ([]*domain.Product, error) {

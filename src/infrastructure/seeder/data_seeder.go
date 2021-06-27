@@ -24,6 +24,8 @@ func MigrateData() {
 	conn.Migrator().DropTable(&domain.Category{})
 	conn.Migrator().DropTable(&domain.Image{})
 	conn.Migrator().DropTable(&domain.Role{})
+	conn.Migrator().DropTable(&domain.ShoppingCartItem{})
+
 
 
 	conn.AutoMigrate(&domain.Address{})
@@ -35,6 +37,7 @@ func MigrateData() {
 	conn.AutoMigrate(&domain.Category{})
 	conn.AutoMigrate(&domain.Image{})
 	conn.AutoMigrate(&domain.Role{})
+	conn.AutoMigrate(&domain.ShoppingCartItem{})
 	//conn.AutoMigrate(&domain.Storage{})
 	seedRoles(conn)
 	seedAddresses(conn)

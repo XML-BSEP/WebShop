@@ -75,7 +75,7 @@
                    </mat-card-content>
                    <mat-card-actions>
                        <button mat-button matTooltip="Add to card">
-                           <i class="bi-bag" role="img" aria-label="GitHub" style="font-size: 2rem;"></i>
+                           <i class="bi-bag" role="img" aria-label="GitHub" *ngIf="!isAdmin()" (click)="addToCart(product)" style="font-size: 2rem;"></i>
                        </button>
                        <button mat-button matTooltip="Edit" *ngIf="isAdmin()" (click)="edit(product)">
                          <i class="bi bi-pencil-square" role="img" style="font-size: 2rem;"></i>

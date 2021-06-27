@@ -7,12 +7,15 @@
                 <div class="d-flex flex-row align-items-center" routerLink="/products"><i class="bi bi-arrow-left"></i><span class="ml-2">Continue Shopping</span></div>
                 <hr>
                 <h6 class="mb-0">SHOPPING CART</h6>
-                <div class="d-flex justify-content-between align-items-center mt-3 p-2 items rounded" *ngFor="let item of products">
-                    <div class="d-flex flex-row"><img class="rounded" src={{item.product.picture}} width="40">
-                        <div class="ml-2"><span class="font-weight-bold d-block">{{item.product.name}}</span><span class="spec">{{item.product.description}}</span></div>
-                    </div>
-                    <div class="d-flex flex-row align-items-center"><span class="d-block">{{item.quantity}}</span><span class="d-block ml-5 font-weight-bold">{{item.product.price}}</span></div>
+                <div *ngIf="!empty">
+                  <div class="d-flex justify-content-between align-items-center mt-3 p-2 items rounded" *ngFor="let item of products">
+                      <div class="d-flex flex-row"><img class="rounded" src={{item.picture}} width="40">
+                          <div class="ml-2"><span class="font-weight-bold d-block">{{item.name}}</span><span class="spec">{{item.description}}</span></div>
+                      </div>
+                      <div class="d-flex flex-row align-items-center"><span class="d-block ml-5 font-weight-bold">{{item.price}}</span></div>
+                  </div>
                 </div>
+
             </div>
         </div>
         <div class="col-md-4">

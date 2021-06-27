@@ -9,7 +9,9 @@ import (
 	"web-shop/domain"
 )
 
-
+const (
+	cart = "cart"
+)
 type RedisUsecase interface {
 	AddKeyValueSet(key string, value string, expiration int) error
 	GetValueByKey(key string) (string, error)
@@ -21,10 +23,11 @@ type RedisUsecase interface {
 
 type redisUsecase struct {
 	RedisClient *redis.Client
+	RegisteredUserRepository domain.RegisteredShopUserRepository
 }
 
-func NewRedisUsecase(r *redis.Client) RedisUsecase{
-	return &redisUsecase{r}
+func NewRedisUsecase(r *redis.Client, usecase domain.RegisteredShopUserRepository) RedisUsecase{
+	return &redisUsecase{r, usecase}
 }
 
 
@@ -58,6 +61,7 @@ func (r2 *redisUsecase) ExistsByKey(key string) bool {
 	}
 	return true
 }
+
 
 func (r2 *redisUsecase) CheckUsername(username string) bool {
 	var userObj domain.UserRegistrationRequest

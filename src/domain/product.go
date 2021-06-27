@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"context"
 	"github.com/labstack/echo"
 	"gorm.io/gorm"
 	"web-shop/infrastructure/dto"
@@ -43,6 +44,8 @@ type ProductUsecase interface {
 	Count() (int64, error)
 	GetBySerial(serial uint64) (*Product, error)
 	GetAllProductsInUsersShop(ctx echo.Context, userId uint) ([]*Product, error)
+	GetProductDetails(ctx context.Context, productId uint)(*Product, error)
+
 }
 
 type ProductRepository interface {
@@ -66,4 +69,5 @@ type ProductRepository interface {
 	GetBySerial(serial uint64) (*Product, error)
 	GetBySerialAndUserId(serial uint64, id uint) (*Product, error)
 	GetAllProductsInUsersShop(ctx echo.Context, userId uint) ([]*Product, error)
+	GetProductDetails(ctx context.Context, productId uint)(*Product, error)
 }

@@ -11,4 +11,6 @@ type AppHandler interface {
 	ResetPasswordHandler
 	CategoryHandler
 	ShopAccountHandler
+	ShoppingCartItemHandler
+	
 }

@@ -2,6 +2,7 @@ package domain
 
 
 import (
+	"context"
 	"github.com/labstack/echo"
 	"gorm.io/gorm"
 	"time"
@@ -30,4 +31,6 @@ type ImageRepository interface {
 	Create(o *Image) (*Image, error)
 	Delete(id uint) error
 	GetyByPath(path string) ([]*Image, error)
+	GetByProduct(ctx context.Context, productId uint) ([]Image, error)
+
 }

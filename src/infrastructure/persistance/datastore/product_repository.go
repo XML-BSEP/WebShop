@@ -1,6 +1,7 @@
 package datastore
 
 import (
+	"context"
 	"github.com/labstack/echo"
 	"gorm.io/gorm"
 	"web-shop/domain"
@@ -8,6 +9,20 @@ import (
 
 type productRepository struct {
 	Conn *gorm.DB
+}
+
+func (p *productRepository) GetProductDetails(ctx context.Context, productId uint) (*domain.Product, error) {
+	var (
+		product *domain.Product
+		err error
+	)
+
+	err = p.Conn.Preload("Images").
+		Joins("JOIN images on images.product_id = products.id").
+		Where("products.id=?", productId).
+		Take(&product).Error
+
+	return product, err
 }
 
 func (p *productRepository) GetAllAvailableProductsInUsersShop(ctx echo.Context, userId uint) ([]*domain.Product, error) {

@@ -130,6 +130,7 @@ func (p *productHandler) FilterSearch(ctx echo.Context) error {
 
 	for i, p := range products {
 		productsRet[i] = mapper.NewProductToProductViewDTO(*p)
+		productsRet[i].ProductId = p.ID
 		productsRet[i].Count = count
 	}
 	return ctx.JSON(http.StatusOK, productsRet)

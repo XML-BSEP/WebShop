@@ -9,8 +9,6 @@ import (
 type ShoppingCart struct {
 	gorm.Model
 	ShoppingCartItems []ShoppingCartItem
-	OrderID 		  uint
-	Buyer             string
 }
 
 type ShoppingCartUsecase interface {
@@ -19,6 +17,7 @@ type ShoppingCartUsecase interface {
 	Update(ctx echo.Context, s *ShoppingCart) (*ShoppingCart, error)
 	Create(ctx echo.Context, s *ShoppingCart) (*ShoppingCart, error)
 	Delete(ctx echo.Context, id uint) error
+
 }
 
 type ShoppingCartRepository interface {

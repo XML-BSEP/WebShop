@@ -21,7 +21,9 @@ export const environment = {
   resendPassCode : "resendPassCode",
   resendRegCode : "resendRegistrationCode",
   deleteProduct : "deleteProduct",
-  allShops :"allShops"
+  allShops :"allShops",
+  addToCart:"addToCart",
+  getCart:"getCart"
 };
 
 /*

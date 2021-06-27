@@ -1,3 +1,5 @@
+import { ShopService } from './../service/shop/shop.service';
+import { ItemToCart } from './../model/itemToCart';
 import { ProductServiceService } from './../service/product/product-service.service';
 import { Router, ActivatedRouteSnapshot, ActivatedRoute } from '@angular/router';
 import { Role } from './../model/role';
@@ -22,7 +24,14 @@ export class ShopHomeComponent implements OnInit {
   filterSearch : FilterSearch
   shopid : number
   shopname : string
-  constructor(private route : ActivatedRoute,private productService : ProductServiceService, private router : Router,  private toastr : ToastrService, private prodService : ProductServiceService, private authService :AuthenticationService) { }
+  constructor(
+    private shopService : ShopService,
+    private route : ActivatedRoute,
+    private productService : ProductServiceService,
+    private router : Router,
+    private toastr : ToastrService,
+    private prodService : ProductServiceService,
+    private authService :AuthenticationService) { }
 
   ngOnInit(): void {
     this.route.queryParams
@@ -88,5 +97,21 @@ export class ShopHomeComponent implements OnInit {
         )
 
 
+  }
+  addToCart(item){
+    console.log(item)
+    var curUsr = JSON.parse(localStorage.getItem('currentUser'))
+    let userId = Number(curUsr.id)
+    var itemToCart = new ItemToCart(userId, item.productId);
+
+      this.shopService.addToCart(itemToCart).subscribe(
+        success => {
+          this.toastr.success("Item added to cart")
+        },
+        error => {
+          this.toastr.error(error)
+        }
+
+      )
   }
 }
