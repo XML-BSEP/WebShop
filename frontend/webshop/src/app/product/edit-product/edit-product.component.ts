@@ -24,7 +24,6 @@ export class EditProductComponent implements OnInit {
   submitedPictures: String[] = [];
 
 
-  currency : String;
   fileName : String="";
   imgFile : string;
   upload : Boolean = false;
@@ -44,8 +43,7 @@ export class EditProductComponent implements OnInit {
     }else{
       this.productToEdit = history.state.data;
       console.log(this.productToEdit)
-      this.currency = this.decideCurrency(this.productToEdit.currency)
-      console.log(this.currency)
+
     }
     this.nameCategoryGroup = this._formBuilder.group({
       'productName' : new FormControl(this.productToEdit.name, Validators.required),
@@ -56,20 +54,11 @@ export class EditProductComponent implements OnInit {
       'description' : new FormControl(this.productToEdit.description, Validators.required),
       'price' : new FormControl(this.productToEdit.price,[ Validators.required,  Validators.pattern(this.numberRegEx)]),
       'available' : new FormControl(this.productToEdit.available,[ Validators.required,  Validators.pattern('^[0-9]+$')]),
-      'currency' : new FormControl(this.currency, Validators.required),
     });
     this.selectImages();
     this.getCategories();
   }
-  decideCurrency(currencyString){
-    if(currencyString==="EUR"){
-      return '2';
-    }else if (currencyString ==="USD"){
-      return '1';
-    }else{
-      return '3';
-    }
-  }
+
   selectImages(){
     for(let i=0; i<this.productToEdit.image.length; i++){
       let slices = this.productToEdit.image[i].split(':')
@@ -140,7 +129,6 @@ onFileChanged(e) {
                                     this.descriptionPriceGroup.controls.price.value.toString(),
                                     this.descriptionPriceGroup.controls.description.value,
                                     blobs,
-                                    this.descriptionPriceGroup.controls.currency.value,
                                     this.descriptionPriceGroup.controls.available.value.toString(),
                                     this.productToEdit.serial.toString());
 

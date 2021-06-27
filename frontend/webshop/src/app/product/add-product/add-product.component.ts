@@ -24,7 +24,6 @@ export class AddProductComponent implements OnInit {
   submitedPictures: String[] = [];
 
 
-  currency : Number;
   fileName : String="";
   imgFile : string;
   upload : Boolean = false;
@@ -46,7 +45,6 @@ export class AddProductComponent implements OnInit {
       description: ['', Validators.required],
       'price' : new FormControl(null,[ Validators.required,  Validators.pattern(this.numberRegEx)]),
       'available' : new FormControl(null,[ Validators.required,  Validators.pattern('^[0-9]+$')]),
-      currency:['1', Validators.required]
     });
 
     this.getCategories();
@@ -86,14 +84,12 @@ export class AddProductComponent implements OnInit {
     for(let i=0; i<this.images.length;i++){
       blobs.push(this.images[i].file);
     }
-    console.log(this.descriptionPriceGroup.controls.currency.value)
 
     this.newProduct = new NewProduct(this.nameCategoryGroup.controls.productName.value,
                                     this.nameCategoryGroup.controls.productCategory.value,
                                     this.descriptionPriceGroup.controls.price.value,
                                     this.descriptionPriceGroup.controls.description.value,
                                     blobs,
-                                    this.descriptionPriceGroup.controls.currency.value,
                                     this.descriptionPriceGroup.controls.available.value,
                                     null);
 

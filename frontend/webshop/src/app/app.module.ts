@@ -23,6 +23,7 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
 import { ForbiddenComponent } from './other/forbidden/forbidden.component';
 import { ToastrModule } from 'ngx-toastr';
 import { EditProductComponent } from './product/edit-product/edit-product.component';
+import { ShoppingCartComponent } from './shopping-cart/shopping-cart.component';
 
 
 
@@ -40,7 +41,8 @@ import { EditProductComponent } from './product/edit-product/edit-product.compon
     AddProductComponent,
     ForgotPasswordComponent,
     ForbiddenComponent,
-    EditProductComponent
+    EditProductComponent,
+    ShoppingCartComponent
   ],
   imports: [
     BrowserModule,

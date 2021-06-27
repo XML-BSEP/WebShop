@@ -37,7 +37,6 @@ func NewProductToProductViewDTO (p domain.Product) dto.ProductViewDTO {
 		Category: p.Category.Name,
 		Name: p.Name,
 		Available: p.Available,
-		Currency: mapCurrency(p.Currency),
 		Description: p.Description,
 		Image: images,
 		Price: p.Price,

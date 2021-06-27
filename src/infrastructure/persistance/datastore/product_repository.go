@@ -9,6 +9,13 @@ type productRepository struct {
 	Conn *gorm.DB
 }
 
+func (p *productRepository) GetBySerialAndUserId(serial uint64, id uint) (*domain.Product, error) {
+	var product *domain.Product
+
+	err := p.Conn.Where("serial_number = ? and registered_shop_user_id=?", serial, id).Take(&product).Error
+
+	return product, err}
+
 func (p *productRepository) MinMaxPrice() int64 {
 	panic("implement me")
 }
@@ -28,7 +35,7 @@ func (p *productRepository) GetBySerial(serial uint64) (*domain.Product, error) 
 	return product, err
 }
 
-func (p *productRepository) FilterByCategory(name string, category string, priceRangeStart uint, priceRangeEnd uint, limit int, offset int, order string) ([]*domain.Product, error) {
+func (p *productRepository) FilterByCategory(userid uint,name string, category string, priceRangeStart uint, priceRangeEnd uint, limit int, offset int, order string) ([]*domain.Product, error) {
 	var (
 		products []*domain.Product
 		err error
@@ -36,7 +43,7 @@ func (p *productRepository) FilterByCategory(name string, category string, price
 
 	err = p.Conn.Preload("Images").
 		Joins("JOIN categories on products.category_id = categories.id and lower(categories.name) like lower(?)", category).
-		Where("lower(products.name) LIKE lower(?)", name).
+		Where("lower(products.name) LIKE lower(?) and registered_shop_user=?", name, userid).
 		Order(order).
 		Limit(limit).
 		Offset(offset).

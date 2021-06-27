@@ -8,23 +8,20 @@ import (
 
 type Currency int
 
-const (
-	USD Currency = iota
-	EUR
-	RSD
-)
+
 
 type Product struct {
 	gorm.Model
 	Name         string `json:"name"`
 	Price        float64 `json:"price"`
-	Currency     Currency `json:"currency"`
 	Available    uint `json:"available"`
 	Description  string `json:"description"`
 	Images       []Image
 	Category     Category
 	CategoryId   uint
 	SerialNumber uint64 `json:"serial"`
+	RegisteredShopUser RegisteredShopUser
+	RegisteredShopUserId uint
 }
 
 type ProductUsecase interface {
@@ -41,7 +38,7 @@ type ProductUsecase interface {
 	GetProductsWithConditionOrderedByName(low uint, high uint, category string, limit int, offset int, order int)([]*Product, error)
 	GetByNameOrderByPrice(name string, limit int, offset int, order int)([]*Product, error)
 	GetByNameOrderByName(name string, limit int, offset int, order int)([]*Product, error)
-	FilterByCategory(name string, category string, priceRangeStart uint, priceRangeEnd uint, limit int, offset int, order string) ([]*Product, error)
+	FilterByCategory(userId uint, name string, category string, priceRangeStart uint, priceRangeEnd uint, limit int, offset int, order string) ([]*Product, error)
 	Count() (int64, error)
 	GetBySerial(serial uint64) (*Product, error)
 }
@@ -60,9 +57,10 @@ type ProductRepository interface {
 	GetProductsWithConditionOrderedByName(low uint, high uint, category string, limit int, offset int, order int)([]*Product, error)
 	GetByNameOrderByPrice(name string, limit int, offset int, order int)([]*Product, error)
 	GetByNameOrderByName(name string, limit int, offset int, order int)([]*Product, error)
-	FilterByCategory(name string, category string, priceRangeStart uint, priceRangeEnd uint, limit int, offset int, order string) ([]*Product, error)
+	FilterByCategory(userId uint,name string, category string, priceRangeStart uint, priceRangeEnd uint, limit int, offset int, order string) ([]*Product, error)
 	Count() (int64, error)
 	MinMaxPrice() (int64)
 	GetBySerial(serial uint64) (*Product, error)
+	GetBySerialAndUserId(serial uint64, id uint) (*Product, error)
 
 }

@@ -13,6 +13,7 @@ import (
 )
 
 type productUseCase struct {
+	RegisteredUserRepository domain.RegisteredShopUserRepository
 	ProductRepository domain.ProductRepository
 	CategoryRepository domain.CategoryRepository
 	ImageRepository domain.ImageRepository
@@ -26,14 +27,14 @@ func (p *productUseCase) Count() (int64, error) {
 	return p.ProductRepository.Count()
 }
 
-func (p *productUseCase) FilterByCategory(name string, category string, priceRangeStart uint, priceRangeEnd uint, limit int, offset int, order string) ([]*domain.Product, error) {
+func (p *productUseCase) FilterByCategory(userId uint ,name string, category string, priceRangeStart uint, priceRangeEnd uint, limit int, offset int, order string) ([]*domain.Product, error) {
 	if name == "" {
 		name = "%"
 	}
 	if category == "" {
 		category = "%"
 	}
-	return p.ProductRepository.FilterByCategory(name, category, priceRangeStart, priceRangeEnd, limit, offset, order)
+	return p.ProductRepository.FilterByCategory(userId,name, category, priceRangeStart, priceRangeEnd, limit, offset, order)
 }
 
 func (p *productUseCase) GetProductsWithConditionOrderedByPrice(low uint, high uint, category string, limit int, offset int, order int) ([]*domain.Product, error) {
@@ -90,7 +91,7 @@ func (p *productUseCase) Update(ctx echo.Context, prod *dto.EditProduct) (*domai
 	}
 	serialNumber, _ := strconv.ParseUint(prod.SerialNumber,10, 64)
 
-	oldProduct, _  := p.ProductRepository.GetBySerial(serialNumber)
+	oldProduct, _  := p.ProductRepository.GetBySerialAndUserId(serialNumber, prod.UserId)
 	folderName := strconv.FormatUint(uint64(oldProduct.Model.ID), 10)
 	path1 := "./src/assets/" + folderName
 
@@ -153,11 +154,9 @@ func (p *productUseCase) Update(ctx echo.Context, prod *dto.EditProduct) (*domai
 	}
 	os.Chdir(oldDir)
 
-	curr,_ := strconv.Atoi(prod.Currency)
 	price, _ := strconv.ParseFloat(prod.Price, 64)
 	av,_ :=strconv.Atoi(prod.Available)
 
-	oldProduct.Currency = domain.Currency(curr)
 	oldProduct.Price = price
 	oldProduct.Available = uint(av)
 	oldProduct.Images = images
@@ -171,7 +170,10 @@ func (p *productUseCase) Update(ctx echo.Context, prod *dto.EditProduct) (*domai
 
 func (p *productUseCase) Create(ctx echo.Context, newProd *dto.NewProduct) (*domain.Product, error) {
 
-
+	user, err := p.RegisteredUserRepository.GetByID(newProd.UserId)
+	if err != nil{
+		return nil, err
+	}
 	cat, err := p.CategoryRepository.GetByName(newProd.Category)
 	if err != nil{
 		return nil, err
@@ -229,20 +231,21 @@ func (p *productUseCase) Create(ctx echo.Context, newProd *dto.NewProduct) (*dom
 
 	os.Chdir(path2)
 
-	curr,_ :=strconv.Atoi(newProd.Currency)
 	price, _ := strconv.ParseFloat(newProd.Price, 64)
 	av,_ :=strconv.Atoi(newProd.Available)
-	prod:=domain.Product{Currency: domain.Currency(curr), Available: uint(av), Price: price, Name: newProd.Name, Category: *cat, Description: newProd.Description, Images: images, SerialNumber: makeTimestamp()}
+	prod:=domain.Product{Available: uint(av), Price: price, Name: newProd.Name, Category: *cat, Description: newProd.Description, Images: images, SerialNumber: makeTimestamp(),RegisteredShopUser:  *user}
 
 	return p.ProductRepository.Create(&prod)
 }
 
 func (p *productUseCase) Delete(ctx echo.Context, deletedProduct dto.DeleteProduct) error {
 	serial, err := strconv.ParseUint(deletedProduct.SerialNumber, 10, 64)
+
+
 	if err != nil{
 		return err
 	}
-	deleted, err := p.ProductRepository.GetBySerial(serial)
+	deleted, err := p.ProductRepository.GetBySerialAndUserId(serial, deletedProduct.UserId)
 	if err!=nil{
 		return err
 	}
@@ -270,6 +273,6 @@ func (p *productUseCase) Delete(ctx echo.Context, deletedProduct dto.DeleteProdu
 func makeTimestamp() uint64 {
 	return uint64(time.Now().UnixNano() / int64(time.Millisecond))
 }
-func NewProductUseCase(p domain.ProductRepository, c domain.CategoryRepository, img domain.ImageRepository) domain.ProductUsecase {
-	return &productUseCase{p,c, img}
+func NewProductUseCase(p domain.ProductRepository, c domain.CategoryRepository, img domain.ImageRepository, k domain.RegisteredShopUserRepository) domain.ProductUsecase {
+	return &productUseCase{k,p,c, img}
 }

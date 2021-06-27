@@ -52,9 +52,8 @@
               <form [formGroup]="descriptionPriceGroup">
 
                 <div class="step-field">
-                  <div class="formfields"></div>
-                  <label class="label-field0">Product price:</label>
-                  <mat-form-field class="input-field0">
+                  <label class="label1-field1">Product price:</label>
+                  <mat-form-field class="input1-field1">
                     <mat-label>Product price</mat-label>
                     <input matInput placeholder="Enter product price" formControlName="price" required>
                     <mat-error
@@ -64,18 +63,6 @@
                 *ngIf="!descriptionPriceGroup.get('price').valid && descriptionPriceGroup.get('price').touched && descriptionPriceGroup.get('price').errors['pattern']">
                 Price must be a number</mat-error>
                   </mat-form-field>
-
-
-
-                  <mat-radio-group
-                  aria-labelledby="example-radio-group-label"
-                  class="currency-radio"
-                  formControlName="currency">
-                      <mat-radio-button value="1" style="margin-left: 10px;">$</mat-radio-button>
-                      <mat-radio-button value="2" style="margin-left: 10px;">€</mat-radio-button>
-                      <mat-radio-button value="3" style="margin-left: 10px;">din</mat-radio-button>
-
-                </mat-radio-group>
 
                 </div>
                 <div class="step-field">

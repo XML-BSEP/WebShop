@@ -1,3 +1,4 @@
+import { ShoppingCartComponent } from './shopping-cart/shopping-cart.component';
 import { EditProductComponent } from './product/edit-product/edit-product.component';
 import { AddProductComponent } from './product/add-product/add-product.component';
 import { NgModule } from '@angular/core';
@@ -50,6 +51,12 @@ const routes: Routes = [
   component: EditProductComponent,
   canActivate : [AuthGuard],
   data : {roles: [Role.Admin]}
+},
+{
+  path:'cart',
+  component: ShoppingCartComponent,
+  canActivate:[AuthGuard],
+  data:{role:[Role.Customer]}
 },
 {
   path:'forgotPassword',
