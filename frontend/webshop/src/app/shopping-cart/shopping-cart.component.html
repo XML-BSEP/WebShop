@@ -12,7 +12,10 @@
                       <div class="d-flex flex-row"><img class="rounded" src={{item.picture}} width="40">
                           <div class="ml-2"><span class="font-weight-bold d-block">{{item.name}}</span><span class="spec">{{item.description}}</span></div>
                       </div>
-                      <div class="d-flex flex-row align-items-center"><span class="d-block ml-5 font-weight-bold">{{item.price}}</span></div>
+                      <div class="d-flex flex-row align-items-right"><span class="d-block ml-2 font-weight-bold">{{item.price}}</span></div>
+                      <div class="d-flex flex-row align-items-right"><span class="d-block ml-2 font-weight-bold"><i class="bi bi-trash" role="img" style="font-size: 2rem;" (click)="removeFromCart(item)"></i>
+                      </span></div>
+
                   </div>
                 </div>
 

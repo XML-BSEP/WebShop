@@ -23,7 +23,8 @@ export const environment = {
   deleteProduct : "deleteProduct",
   allShops :"allShops",
   addToCart:"addToCart",
-  getCart:"getCart"
+  getCart:"getCart",
+  removeFromCart:"removeFromCart"
 };
 
 /*

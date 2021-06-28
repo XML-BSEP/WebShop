@@ -1,3 +1,5 @@
+import { ToastrService } from 'ngx-toastr';
+import { ItemToCart } from './../model/itemToCart';
 import { error } from 'selenium-webdriver';
 import { ShopService } from './../service/shop/shop.service';
 import { Product } from 'src/app/model/product';
@@ -21,7 +23,7 @@ export class ShoppingCartComponent implements OnInit {
   totalPrice : number = 0;
   curUsr;
   empty : boolean
-  constructor(private shopService :ShopService) { }
+  constructor(private toastr : ToastrService,private shopService :ShopService) { }
 
   ngOnInit(): void {
     this.addressGroup = new FormGroup({
@@ -31,17 +33,28 @@ export class ShoppingCartComponent implements OnInit {
       'state' : new FormControl(null, Validators.required),
     })
 
-    this.curUsr = JSON.parse(localStorage.getItem('currentUser'))
-    this.product1 = new ProductForCart(1, "Product 1", 660, 'https://i.imgur.com/o2fKskJ.jpg', 'nzm')
-    this.product2 = new ProductForCart(2, "Product 2", 666, 'https://i.imgur.com/GQnIUfs.jpg', 'nzm stvarno')
 
-    this.products=[this.product1, this.product2]
     this.getCart()
   }
   calculateTotalPrice(){
     for(let i=0; i<this.products.length;i++){
       this.totalPrice += this.products[i].price
     }
+  }
+  removeFromCart(product){
+    var curUsr = JSON.parse(localStorage.getItem('currentUser'))
+    let userId = Number(curUsr.id)
+    let item = new ItemToCart(userId, product.id)
+    console.log(item)
+    this.shopService.removeFromCart(item).subscribe(
+      res=>{
+        this.toastr.success('Success');
+        location.reload();
+      },
+      err=>{
+        this.toastr.error(err)
+      }
+  )
   }
   getCart(){
     var curUsr = JSON.parse(localStorage.getItem('currentUser'))

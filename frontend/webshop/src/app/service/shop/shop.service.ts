@@ -21,6 +21,9 @@ export class ShopService {
   addToCart(product : ItemToCart){
     return this.https.post(`${environment.baseUrl}/${environment.addToCart}`,product, {responseType : 'json'});
   }
+  removeFromCart(product : ItemToCart){
+    return this.https.post(`${environment.baseUrl}/${environment.removeFromCart}`,product, {responseType : 'json'});
+  }
   getCart(user : UserDTO): Observable<ProductForCart[]>{
     return this.https.post<ProductForCart[]>(`${environment.baseUrl}/${environment.getCart}`,user);
   }

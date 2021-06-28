@@ -10,11 +10,35 @@ import (
 
 type ShoppingCartItemHandler interface {
 	AddToCart(ctx echo.Context) error
+	RemoveFromCart(ctx echo.Context) error
 	GetUsersShoppingCartItems(ctx echo.Context) error
 }
 
 type shoppingCartItemHandler struct {
 	ShoppingCartItemUsecase domain.ShoppingCartItemUsecase
+
+}
+
+func (s shoppingCartItemHandler) RemoveFromCart(ctx echo.Context) error {
+	decoder := json.NewDecoder(ctx.Request().Body)
+	var itemToCart dto.ItemToCart
+
+	if err := decoder.Decode(&itemToCart); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "Invalid parameters")
+	}
+	items, err := s.ShoppingCartItemUsecase.GetAllUsersShoppingCartItems(ctx.Request().Context(), itemToCart.UserId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusNotFound, "Error getting items")
+	}
+	for _, it :=range items{
+		if it.ProductID==itemToCart.ProductId{
+			err1 := s.ShoppingCartItemUsecase.Delete(ctx, it.ID)
+			if err1!=nil{
+				return echo.NewHTTPError(http.StatusInternalServerError, "Woopski")
+			}
+		}
+	}
+	return echo.NewHTTPError(http.StatusOK, "OK")
 
 }
 
