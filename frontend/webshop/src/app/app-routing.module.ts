@@ -1,3 +1,4 @@
+import { ShoppingCartComponent } from './shopping-cart/shopping-cart.component';
 import { EditProductComponent } from './product/edit-product/edit-product.component';
 import { AddProductComponent } from './product/add-product/add-product.component';
 import { NgModule } from '@angular/core';
@@ -11,6 +12,7 @@ import {ForgotPasswordComponent } from './forgot-password/forgot-password.compon
 import { ForbiddenComponent } from './other/forbidden/forbidden.component';
 import { AuthGuard } from './helpers';
 import { Role } from './model/role';
+import { ShopHomeComponent } from './shop-home/shop-home.component';
 
 const routes: Routes = [
   {
@@ -40,6 +42,10 @@ const routes: Routes = [
   component: ProductsPageComponent
 },
 {
+  path: 'shopHome',
+  component: ShopHomeComponent
+},
+{
   path:'addProduct',
   component: AddProductComponent,
   canActivate : [AuthGuard],
@@ -50,6 +56,12 @@ const routes: Routes = [
   component: EditProductComponent,
   canActivate : [AuthGuard],
   data : {roles: [Role.Admin]}
+},
+{
+  path:'cart',
+  component: ShoppingCartComponent,
+  canActivate:[AuthGuard],
+  data:{role:[Role.Customer]}
 },
 {
   path:'forgotPassword',

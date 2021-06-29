@@ -1,6 +1,8 @@
 package datastore
 
 import (
+	"context"
+	"github.com/labstack/echo"
 	"gorm.io/gorm"
 	"web-shop/domain"
 )
@@ -9,9 +11,26 @@ type shopAccountRepository struct {
 	Conn *gorm.DB
 }
 
-func (s shopAccountRepository) GetUserDetailsByUsername(account *domain.ShopAccount) (*domain.ShopAccount, error) {
+
+func (s shopAccountRepository) FetchShops(ctx echo.Context) ([]*domain.ShopAccount, error) {
+	var (
+		shops []*domain.ShopAccount
+		err error
+	)
+
+	err = s.Conn.Joins("JOIN registered_shop_users on registered_shop_users.shop_account_id=shop_accounts.id").Where("role_id=1").Find(&shops).Error
+	return shops, err
+}
+
+func (s shopAccountRepository) GetUserDetailsByUsername(ctx context.Context, username string) (*domain.ShopAccount, error) {
 	user := &domain.ShopAccount{}
-	err := s.Conn.Where("username = ?", account.Username).Take(&user).Error
+	err := s.Conn.Where("username = ?", username).Take(&user).Error
+	return user, err
+}
+
+func (s shopAccountRepository) GetUserDetailsByEmail(ctx context.Context, email string) (*domain.ShopAccount, error) {
+	user := &domain.ShopAccount{}
+	err := s.Conn.Joins("JOIN registered_shop_users on registered_shop_users.shop_account_id=shop_accounts.id").Where("registered_shop_users.email=?", email).Take(&user).Error
 	return user, err
 }
 

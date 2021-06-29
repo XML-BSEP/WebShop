@@ -1,6 +1,7 @@
 package datastore
 
 import (
+	"context"
 	"gorm.io/gorm"
 	"web-shop/domain"
 )
@@ -8,6 +9,19 @@ import (
 type shoppingCartItemRepository struct {
 	Conn *gorm.DB
 }
+
+
+
+func (s *shoppingCartItemRepository) GetAllUsersShoppingCartItems(ctx context.Context, userId uint) ([]*domain.ShoppingCartItem, error) {
+	var (
+		cartItems []*domain.ShoppingCartItem
+		err error
+	)
+
+	err = s.Conn.Joins("JOIN products on products.id = shopping_cart_items.product_id").Where("registered_shop_user_id = ?",userId).Find(&cartItems).Error
+	return cartItems, err
+}
+
 
 func (s *shoppingCartItemRepository) Fetch() ([]*domain.ShoppingCartItem, error) {
 	var (

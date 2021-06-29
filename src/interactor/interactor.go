@@ -38,12 +38,20 @@ type Interactor interface {
 	NewCategoryHandler() handler.CategoryHandler
 	NewCategoryUsecase() domain.CategoryUsecase
 	NewCategoryRepository() domain.CategoryRepository
+
+	NewShopAccountHandler() handler.ShopAccountHandler
+	NewShopAccountUsecase() domain.ShopAccountUsecase
+
+	NewShoppingCartItemHandler() handler.ShoppingCartItemHandler
+	NewShoppingCartItemUsecase() domain.ShoppingCartItemUsecase
+	NewShoppingCartItemRepository() domain.ShoppingCartItemRepository
 }
 
 type interactor struct {
 	Conn *gorm.DB
 
 }
+
 
 type appHandler struct {
 	handler.AddressHandler
@@ -54,6 +62,8 @@ type appHandler struct {
 	handler.OrderHandler
 	handler.ResetPasswordHandler
 	handler.CategoryHandler
+	handler.ShopAccountHandler
+	handler.ShoppingCartItemHandler
 }
 
 
@@ -71,8 +81,33 @@ func (i *interactor) NewAppHandler() handler.AppHandler {
 	appHandler.OrderHandler = i.NewOrderHandler()
 	appHandler.ResetPasswordHandler = i.NewResetPasswordHandler()
 	appHandler.CategoryHandler = i.NewCategoryHandler()
+	appHandler.ShopAccountHandler = i.NewShopAccountHandler()
+	appHandler.ShoppingCartItemHandler = i.NewShoppingCartItemHandler()
 	return appHandler
 }
+func (i *interactor) NewShoppingCartItemHandler() handler.ShoppingCartItemHandler {
+	return handler.NewShoppingCartItemHandler(i.NewShoppingCartItemUsecase())
+}
+
+func (i *interactor) NewShoppingCartItemUsecase() domain.ShoppingCartItemUsecase {
+	return usecase.NewShoppingCartItemUsecase(i.NewShoppingCartItemRepository(), i.NewShoppingCartRepository(), i.NewProductUsecase())
+}
+
+func (i *interactor) NewShoppingCartItemRepository() domain.ShoppingCartItemRepository {
+	return datastore.NewShoppingCartItemRepository(i.Conn)
+}
+
+func (i *interactor) NewShoppingCartRepository() domain.ShoppingCartRepository {
+	return datastore.NewShoppingCartRepository(i.Conn)
+}
+
+
+
+func (i *interactor) NewShopAccountHandler() handler.ShopAccountHandler{
+	return handler.NewShopAccountHandler(i.NewShopAccountUsecase())
+}
+
+
 func (i *interactor) NewCategoryHandler() handler.CategoryHandler{
 	return handler.NewCategoryHandler(i.NewCategoryUsecase())
 }
@@ -98,7 +133,7 @@ func (i *interactor) NewOrderRepository() domain.OrderRepository {
 }
 
 func (i *interactor) NewProductUsecase() domain.ProductUsecase {
-	return usecase.NewProductUseCase(i.NewProductRepository(), i.NewCategoryRepository(), i.NewImageRepository())
+	return usecase.NewProductUseCase(i.NewProductRepository(), i.NewCategoryRepository(), i.NewImageRepository(),i.NewShopAccountRepository())
 }
 func (i *interactor) NewProductRepository() domain.ProductRepository {
 	return datastore.NewProductRepository(i.Conn)
@@ -159,7 +194,7 @@ func (i *interactor) NewSignUpHandler() handler.SignUpHandler {
 
 func (i *interactor) NewRedisUsecase() usecase.RedisUsecase {
 	redis := redisdb.NewReddisConn()
-	return usecase.NewRedisUsecase(redis)
+	return usecase.NewRedisUsecase(redis, i.NewRegisteredUserRepository(i.NewShopAccountRepository()))
 }
 
 func (i *interactor) NewRedisHandler() handler.RedisHandlerSample {
@@ -182,6 +217,11 @@ func (i *interactor) NewAuthService() auth2.AuthInterface {
 
 func (i *interactor) NewResetPasswordHandler() handler.ResetPasswordHandler {
 	return  handler.NewResetPasswordHandler(i.NewRegisteredShopUserUsecase(), i.NewRandomStringGeneratorUsecase())
+}
+
+func (i *interactor) NewShopAccountUsecase() domain.ShopAccountUsecase {
+	return usecase.NewShopAccoutUsecase(i.NewShopAccountRepository())
+
 }
 
 

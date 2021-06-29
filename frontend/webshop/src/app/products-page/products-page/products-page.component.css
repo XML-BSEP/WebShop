@@ -1,4 +1,6 @@
 @import "~bootstrap/dist/css/bootstrap.css";
+@import '~bootstrap/dist/css/bootstrap.min.css';
+
 .example-card {
     max-width: 30vh;
     min-width: 30vh;

@@ -23,6 +23,9 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
 import { ForbiddenComponent } from './other/forbidden/forbidden.component';
 import { ToastrModule } from 'ngx-toastr';
 import { EditProductComponent } from './product/edit-product/edit-product.component';
+import { ShoppingCartComponent } from './shopping-cart/shopping-cart.component';
+import { ShopHomeComponent } from './shop-home/shop-home.component';
+import { MatCarouselModule } from '@ngmodule/material-carousel';
 
 
 
@@ -40,7 +43,9 @@ import { EditProductComponent } from './product/edit-product/edit-product.compon
     AddProductComponent,
     ForgotPasswordComponent,
     ForbiddenComponent,
-    EditProductComponent
+    EditProductComponent,
+    ShoppingCartComponent,
+    ShopHomeComponent
   ],
   imports: [
     BrowserModule,
@@ -52,7 +57,8 @@ import { EditProductComponent } from './product/edit-product/edit-product.compon
     HttpClientModule,
     MatInputModule,
     MatSelectModule,
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
+    MatCarouselModule.forRoot()
   ],
   providers: [
     {provide : HTTP_INTERCEPTORS, useClass : JwtInterceptor, multi : true},

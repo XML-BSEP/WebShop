@@ -1,5 +1,5 @@
 package dto
 type ShoppingCartItemDTO struct {
-	Product        ProductDTO
-	Amount         uint
+	Product        ProductDTO `json:"product"`
+	Amount         uint	`json:"quantity"`
 }

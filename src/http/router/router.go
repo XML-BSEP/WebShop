@@ -9,10 +9,13 @@ import (
 func NewRouter(e *echo.Echo, h handler.AppHandler, authMiddleware middleware.AuthMiddleware) {
 
 	e.GET("/categories", h.GetAllCategories)
+	e.GET("/shopProducts", h.FetchShopProducts)
+	e.GET("/allShops", h.GetAllShopAdminAccounts)
+	e.GET("/products", h.FetchProducts)
+
 	e.POST("/login", h.Login, authMiddleware.Authenticated())
 	e.POST("/register", h.UserRegister, authMiddleware.Authenticated())
 	e.POST("/confirmAccount", h.ConfirmAccount, authMiddleware.Authenticated())
-	e.GET("/products", h.FetchProducts)
 	e.POST("/confirmAccount", h.ConfirmAccount, authMiddleware.Authenticated())
 	e.POST("/resetPasswordMail", h.SendResetMail, authMiddleware.Authenticated())
 	e.POST("/resetPassword", h.ResetPassword, authMiddleware.Authenticated())
@@ -20,6 +23,9 @@ func NewRouter(e *echo.Echo, h handler.AppHandler, authMiddleware middleware.Aut
 	e.POST("/resendRegistrationCode", h.ResendCode, authMiddleware.Authenticated())
 	e.POST("/resendPassCode", h.ResendResetCode, authMiddleware.Authenticated())
 	e.POST("/refresh", h.Refresh, authMiddleware.Authenticated())
+	e.POST("/addToCart", h.AddToCart)
+	e.POST("/getCart", h.GetUsersShoppingCartItems)
+	e.POST("/removeFromCart", h.RemoveFromCart)
 
 	g := e.Group("/")
 	g.Use(authMiddleware.Auth())
@@ -28,5 +34,6 @@ func NewRouter(e *echo.Echo, h handler.AppHandler, authMiddleware middleware.Aut
 	g.POST("addProduct", h.AddProduct)
 	g.POST("editProduct", h.EditProduct)
 	g.POST("deleteProduct", h.RemoveProduct)
+
 
 }

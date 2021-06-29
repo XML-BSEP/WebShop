@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"context"
 	"github.com/labstack/echo"
 	"gorm.io/gorm"
 )
@@ -9,8 +10,9 @@ type ShoppingCartItem struct {
 	gorm.Model
 	Product        Product
 	ProductID	   uint
-	Amount         uint
-	ShoppingCartID uint
+	RegisteredShopUser RegisteredShopUser
+	RegisteredShopUserID uint
+
 }
 
 type ShoppingCartItemUsecase interface {
@@ -19,6 +21,9 @@ type ShoppingCartItemUsecase interface {
 	Update(ctx echo.Context, s *ShoppingCartItem) (*ShoppingCartItem, error)
 	Create(ctx echo.Context, s *ShoppingCartItem) (*ShoppingCartItem, error)
 	Delete(ctx echo.Context, id uint) error
+	AddToCart(ctx context.Context,productId uint, userId uint) error
+	GetAllUsersShoppingCartItems(ctx context.Context, userId uint) ([]*ShoppingCartItem, error)
+
 }
 
 type ShoppingCartItemRepository interface {
@@ -27,4 +32,8 @@ type ShoppingCartItemRepository interface {
 	Update(s *ShoppingCartItem) (*ShoppingCartItem, error)
 	Create(s *ShoppingCartItem) (*ShoppingCartItem, error)
 	Delete(id uint) error
+	GetAllUsersShoppingCartItems(ctx context.Context, userId uint) ([]*ShoppingCartItem, error)
+
 }
+
+

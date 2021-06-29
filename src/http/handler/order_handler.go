@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"web-shop/domain"
 	"web-shop/infrastructure/dto"
-	"web-shop/infrastructure/mapper"
 )
 
 type OrderHandler interface {
@@ -21,14 +20,13 @@ type orderHandler struct {
 func (o orderHandler) PlaceOrder(ctx echo.Context) error {
 	decoder := json.NewDecoder(ctx.Request().Body)
 
-	var t dto.OrderDTO
+	var t dto.ShoppingCartDTO
 	err := decoder.Decode(&t)
 
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
-	order:=mapper.NewOrderDtoToNewOrder(t)
-
+	var order domain.Order
 	products, err := o.OrderUseCase.Create(ctx, &order)
 
 	if err != nil {

@@ -15,12 +15,12 @@ import (
 
 func main() {
 	seeder.MigrateData()
-
+	fmt.Println("!")
 	conn := database.NewDBConnection()
 	i := interactor.NewInteractor(conn)
 
 	handler := i.NewAppHandler()
-
+	fmt.Println("!2")
 	authMiddleware := middleware.NewAuthMiddleware(i.NewRegisteredUserRepository(i.NewShopAccountRepository()), i.NewRedisUsecase())
 	e := echo.New()
 	e.Use(mid2.Recover())
@@ -32,12 +32,11 @@ func main() {
 
 	}))
 	e.Use(middleware2.Secure())
-
+	fmt.Println("!3")
 	middleware.NewMiddleware(e)
 	router.NewRouter(e, handler, *authMiddleware)
 
 	e.Logger.Fatal(e.StartTLS("localhost:443", "certificate/DukeStrategicTechnologies-SN-9946396461889217640.crt", "certificate/DukeStrategicTechnologies9946396461889217640-key.key"))
-
 	fmt.Println("Successfully connected!")
 
 

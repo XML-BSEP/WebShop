@@ -1,0 +1,88 @@
+<div class="component">
+  <div class="container mt-5 p-3 rounded cart">
+    <mat-card style="width: 60vw;">
+      <div class="row no-gutters">
+        <div class="col-md-8">
+            <div class="product-details mr-2">
+                <div class="d-flex flex-row align-items-center" routerLink="/products"><i class="bi bi-arrow-left"></i><span class="ml-2">Continue Shopping</span></div>
+                <hr>
+                <h6 class="mb-0">SHOPPING CART</h6>
+                <div *ngIf="!empty">
+                  <div class="d-flex justify-content-between align-items-center mt-3 p-2 items rounded" *ngFor="let item of products">
+                      <div class="d-flex flex-row"><img class="rounded" src={{item.picture}} width="40">
+                          <div class="ml-2"><span class="font-weight-bold d-block">{{item.name}}</span><span class="spec">{{item.description}}</span></div>
+                      </div>
+                      <div class="d-flex flex-row align-items-right"><span class="d-block ml-2 font-weight-bold">{{item.price}}</span></div>
+                      <div class="d-flex flex-row align-items-right"><span class="d-block ml-2 font-weight-bold"><i class="bi bi-trash" role="img" style="font-size: 2rem;" (click)="removeFromCart(item)"></i>
+                      </span></div>
+
+                  </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="payment-info">
+                <div class="d-flex justify-content-between align-items-center"><span>Billing address details</span></div>
+                <form [formGroup]="addressGroup">
+                  <div class="row">
+                    <mat-form-field class="example-full-width"  appearance="outline">
+                      <mat-label>Address*</mat-label>
+                      <input matInput id="address" placeholder="Address"
+                            formControlName="address" >
+                      <mat-error
+                        *ngIf="!addressGroup.get('address').valid && addressGroup.get('address').touched && addressGroup.get('address').errors['required']">
+                        Please enter address</mat-error>
+                    </mat-form-field>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-3">
+                      <mat-form-field class="example-full-width"  appearance="outline">
+                        <mat-label>City*</mat-label>
+                        <input matInput id="city" placeholder="City"
+                              formControlName="city" >
+                        <mat-error
+                          *ngIf="!addressGroup.get('city').valid && addressGroup.get('city').touched && addressGroup.get('city').errors['required']">
+                          Please enter city  </mat-error>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-2">
+                      <mat-form-field class="example-full-width"  appearance="outline">
+                        <mat-label>Zip code*</mat-label>
+                        <input matInput id="zip" placeholder="Zip code"
+                              formControlName="zip" >
+                        <mat-error
+                          *ngIf="!addressGroup.get('zip').valid && addressGroup.get('zip').touched && addressGroup.get('zip').errors['required']">
+                          Please enter zip code</mat-error>
+                          <mat-error
+                          *ngIf="!addressGroup.get('zip').valid && addressGroup.get('zip').touched && addressGroup.get('zip').errors['pattern']">
+                          Please enter zip code in correct format</mat-error>
+                      </mat-form-field>
+                    </div>
+
+                  </div>
+                  <div class="row">
+                    <mat-form-field class="example-full-width"  appearance="outline">
+                      <mat-label>State*</mat-label>
+                      <input matInput id="state" placeholder="State"
+                            formControlName="state" >
+                      <mat-error
+                        *ngIf="!addressGroup.get('state').valid && addressGroup.get('state').touched && addressGroup.get('state').errors['required']">
+                        Please enter state</mat-error>
+                    </mat-form-field>
+                  </div>
+                  <hr class="line">
+                <div class="d-flex justify-content-between information"><span>Total Price</span><span>${{totalPrice}}</span></div>
+                <button class="btn btn-primary btn-block d-flex justify-content-between mt-3" type="button" [disabled]="!addressGroup.valid" (click)="checkout()"><span>${{totalPrice}}</span><span>Checkout<i class="bi bi-arrow-right"></i>
+                </span></button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    </mat-card>
+
+  </div>
+
+</div>

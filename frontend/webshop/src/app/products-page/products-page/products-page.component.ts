@@ -26,10 +26,10 @@ export class ProductsPageComponent implements OnInit {
   constructor(private productService : ProductServiceService, private router : Router,  private toastr : ToastrService, private prodService : ProductServiceService, private authService :AuthenticationService) { }
 
   ngOnInit(): void {
-    this.pageSize = 5;
-    this.filterSearch = new FilterSearch("", "", 0, 10000000, this.pageSize, 0, "price asc")
+    // this.pageSize = 5;
+    // this.filterSearch = new FilterSearch(Number("", "", 0, 10000000, this.pageSize, 0, "price asc")
 
-    this.getProducts(this.filterSearch)
+    // this.getProducts(this.filterSearch)
   }
   public isAdmin() {
     return this.authService.getUserValue() && this.authService.getUserValue().role === Role.Admin;

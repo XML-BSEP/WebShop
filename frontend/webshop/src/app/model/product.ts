@@ -1,4 +1,5 @@
 export class Product {
+  productId : number;
     name : String;
     price : number;
     image : String[];
@@ -8,8 +9,9 @@ export class Product {
     description : String;
     count : number;
     serial : Number;
-    constructor(name : String, price : number, image : String[], currency : String, category : String, available : number, description : String, count : number, serial : Number) {
-        this.name = name;
+    constructor(id : number, name : String, price : number, image : String[], currency : String, category : String, available : number, description : String, count : number, serial : Number) {
+      this.productId = id;
+      this.name = name;
         this.price = price;
         this.image = image;
         this.currency = currency;

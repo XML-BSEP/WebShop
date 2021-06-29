@@ -1,5 +1,6 @@
 package dto
 type NewProduct struct{
+	UserId 		 uint 	  `json:"userId"`
 	Name  string `json:"name" validate:"required"`
 	Price string `json:"price" validate:"required,price"`
 	Category string `json:"category" validate:"required"`
