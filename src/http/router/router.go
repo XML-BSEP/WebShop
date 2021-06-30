@@ -26,6 +26,7 @@ func NewRouter(e *echo.Echo, h handler.AppHandler, authMiddleware middleware.Aut
 	e.POST("/addToCart", h.AddToCart)
 	e.POST("/getCart", h.GetUsersShoppingCartItems)
 	e.POST("/removeFromCart", h.RemoveFromCart)
+	e.POST("/placeOrder", h.PlaceOrder)
 
 	g := e.Group("/")
 	g.Use(authMiddleware.Auth())

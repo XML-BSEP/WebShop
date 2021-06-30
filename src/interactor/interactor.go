@@ -1,7 +1,8 @@
 package interactor
 
 import (
-
+	logger "github.com/jelena-vlajkov/logger/logger"
+	"go.mongodb.org/mongo-driver/mongo"
 	"gorm.io/gorm"
 	"web-shop/domain"
 	"web-shop/http/handler"
@@ -48,8 +49,10 @@ type Interactor interface {
 }
 
 type interactor struct {
-	Conn *gorm.DB
 
+	Conn *gorm.DB
+	db *mongo.Client
+	logger *logger.Logger
 }
 
 
@@ -67,8 +70,8 @@ type appHandler struct {
 }
 
 
-func NewInteractor(conn *gorm.DB) Interactor {
-	return &interactor{conn}
+func NewInteractor(conn *gorm.DB, db *mongo.Client, logger *logger.Logger) Interactor {
+	return &interactor{conn, db, logger}
 }
 
 func (i *interactor) NewAppHandler() handler.AppHandler {
@@ -125,11 +128,11 @@ func (i *interactor) NewOrderHandler() handler.OrderHandler{
 	return handler.NewOrderHandler(i.NewOrderUsecase())
 }
 func (i *interactor) NewOrderUsecase() domain.OrderUsecase {
-	return usecase.NewOrderUsecase(i.NewOrderRepository())
+	return usecase.NewOrderUsecase(i.NewOrderRepository(), i.NewShoppingCartItemUsecase())
 }
 
 func (i *interactor) NewOrderRepository() domain.OrderRepository {
-	return datastore.NewOrderRepository(i.Conn)
+	return datastore.NewOrderRepository(i.db)
 }
 
 func (i *interactor) NewProductUsecase() domain.ProductUsecase {
@@ -193,7 +196,7 @@ func (i *interactor) NewSignUpHandler() handler.SignUpHandler {
 }
 
 func (i *interactor) NewRedisUsecase() usecase.RedisUsecase {
-	redis := redisdb.NewReddisConn()
+	redis := redisdb.NewReddisConn(i.logger)
 	return usecase.NewRedisUsecase(redis, i.NewRegisteredUserRepository(i.NewShopAccountRepository()))
 }
 

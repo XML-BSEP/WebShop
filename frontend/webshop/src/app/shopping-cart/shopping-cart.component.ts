@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { ItemToCart } from './../model/itemToCart';
 import { error } from 'selenium-webdriver';
@@ -23,7 +24,7 @@ export class ShoppingCartComponent implements OnInit {
   totalPrice : number = 0;
   curUsr;
   empty : boolean
-  constructor(private toastr : ToastrService,private shopService :ShopService) { }
+  constructor(private toastr : ToastrService,private shopService :ShopService, private router: Router) { }
 
   ngOnInit(): void {
     this.addressGroup = new FormGroup({
@@ -32,7 +33,7 @@ export class ShoppingCartComponent implements OnInit {
       'city' : new FormControl(null, Validators.required),
       'state' : new FormControl(null, Validators.required),
     })
-
+    this.curUsr = JSON.parse(localStorage.getItem('currentUser'))
 
     this.getCart()
   }
@@ -77,7 +78,19 @@ export class ShoppingCartComponent implements OnInit {
       )
   }
   checkout(){
-    // this.myShoppingCart = new ShoppingCart(this.products, this.addressGroup.controls.address.value, this.addressGroup.controls.zip.value, this.addressGroup.controls.city.value, this.addressGroup.controls.state.value, this.totalPrice, this.curUsr.id)
+    this.myShoppingCart = new ShoppingCart(this.addressGroup.controls.address.value, Number(this.addressGroup.controls.zip.value), this.addressGroup.controls.city.value, this.addressGroup.controls.state.value, this.curUsr.id)
     console.log(this.myShoppingCart)
+
+
+    this.shopService.placeOrder(this.myShoppingCart).subscribe(
+        success => {
+          this.toastr.success("Order successfully placed :D")
+          this.router.navigate(['/home']);
+        },
+        error => {
+          this.toastr.error(error)
+        }
+
+      )
   }
 }

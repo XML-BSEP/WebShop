@@ -20,20 +20,21 @@ type orderHandler struct {
 func (o orderHandler) PlaceOrder(ctx echo.Context) error {
 	decoder := json.NewDecoder(ctx.Request().Body)
 
-	var t dto.ShoppingCartDTO
+	var t dto.OrderFrontendDto
 	err := decoder.Decode(&t)
 
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		return echo.NewHTTPError(http.StatusBadRequest, "Failed to decode")
 	}
-	var order domain.Order
-	products, err := o.OrderUseCase.Create(ctx, &order)
+	order := domain.Order{Address: t.Address, Zip: t.Zip, City: t.City, UserId: t.UserId, State: t.State}
 
-	if err != nil {
-		return echo.NewHTTPError(http.StatusNotFound, "Products do not exist")
+	err1 := o.OrderUseCase.PlaceOrder(ctx.Request().Context(), &order)
+
+	if err1 != nil {
+		return echo.NewHTTPError(http.StatusNotFound, "Failed to place order")
 	}
 
-	return ctx.JSON(http.StatusOK, products)
+	return ctx.JSON(http.StatusOK, "Success")
 }
 
 func NewOrderHandler(u domain.OrderUsecase) OrderHandler {

@@ -45,7 +45,7 @@ func (s1 ShoppingCartItemUsecase) Create(ctx echo.Context, s *domain.ShoppingCar
 	return s1.ShoppingCartItemRepository.Create(s)
 }
 
-func (s1 ShoppingCartItemUsecase) Delete(ctx echo.Context, id uint) error {
+func (s1 ShoppingCartItemUsecase) Delete(ctx context.Context, id uint) error {
 	return s1.ShoppingCartItemRepository.Delete(id)
 }
 

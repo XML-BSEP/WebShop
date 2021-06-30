@@ -20,7 +20,7 @@ type ShoppingCartItemUsecase interface {
 	GetByID(ctx echo.Context, id uint) (*ShoppingCartItem, error)
 	Update(ctx echo.Context, s *ShoppingCartItem) (*ShoppingCartItem, error)
 	Create(ctx echo.Context, s *ShoppingCartItem) (*ShoppingCartItem, error)
-	Delete(ctx echo.Context, id uint) error
+	Delete(ctx context.Context, id uint) error
 	AddToCart(ctx context.Context,productId uint, userId uint) error
 	GetAllUsersShoppingCartItems(ctx context.Context, userId uint) ([]*ShoppingCartItem, error)
 

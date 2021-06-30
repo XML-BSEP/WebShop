@@ -1,9 +1,10 @@
 package seeder
 
 import (
+	"context"
+	"go.mongodb.org/mongo-driver/mongo"
 	"time"
 	"web-shop/domain"
-	"web-shop/infrastructure/database"
 	"web-shop/infrastructure/persistance/datastore"
 
 	"gorm.io/gorm"
@@ -14,8 +15,7 @@ type Seed struct {
 	Run  func(db *gorm.DB) error
 }
 
-func MigrateData() {
-	conn := database.NewDBConnection()
+func MigrateData(conn *gorm.DB) {
 	conn.Migrator().DropTable(&domain.Address{})
 	conn.Migrator().DropTable(&domain.ShopAccount{})
 	conn.Migrator().DropTable(&domain.RegisteredShopUser{})
@@ -47,6 +47,25 @@ func MigrateData() {
 	seedRegisteredUsers(conn)
 	seedCategories(conn)
 	seedProducts(conn)
+
+}
+
+func dropDatabase(db string, mongoCli *mongo.Client, ctx *context.Context){
+	err := mongoCli.Database(db).Drop(*ctx)
+	if err != nil {
+		return
+	}
+}
+
+func SeedMongoData(db string, mongoCli *mongo.Client, ctx *context.Context){
+
+	dropDatabase(db,mongoCli, ctx)
+
+	if cnt,_ := mongoCli.Database(db).Collection("orders").EstimatedDocumentCount(*ctx, nil); cnt == 0{
+		_ = mongoCli.Database(db).Collection("orders")
+	}
+
+
 
 }
 
