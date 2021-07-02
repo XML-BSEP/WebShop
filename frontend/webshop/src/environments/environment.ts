@@ -24,7 +24,8 @@ export const environment = {
   allShops :"allShops",
   addToCart:"addToCart",
   getCart:"getCart",
-  removeFromCart:"removeFromCart"
+  removeFromCart:"removeFromCart",
+  placeOrder:"placeOrder"
 };
 
 /*

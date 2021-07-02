@@ -1,31 +1,30 @@
 package domain
 
 import (
-	"github.com/labstack/echo"
+	"context"
 	"time"
-
-	"gorm.io/gorm"
 )
 
 type Order struct {
-	gorm.Model
-	DateOfPlacement time.Time
-	ShoppingCart    ShoppingCart
-	TotalPrice      uint
+	ID string `bson:"_id,omitempty" json:"id"`
+	Timestamp time.Time	`bson:"timestamp" json:"timestamp"`
+	ShoppingCartItems    []uint	`bson:"items" json:"items"`
+	TotalPrice      float64	`bson:"totalPrice" json:"totalPrice"`
+	UserId	uint	`bson:"userId" json:"userId"`
+	Address	string `bson:"address" json:"address"`
+	City	string `bson:"city" json:"city"`
+	Zip	uint `bson:"zip" json:"zip"`
+	State	string `bson:"state" json:"state"`
 }
 
+
+
 type OrderUsecase interface {
-	Fetch(ctx echo.Context) ([]*Order, error)
-	GetByID(ctx echo.Context, id uint) (*Order, error)
-	Update(ctx echo.Context, o *Order) (*Order, error)
-	Create(ctx echo.Context, o *Order) (*Order, error)
-	Delete(ctx echo.Context, id uint) error
+
+	PlaceOrder(ctx context.Context, order *Order) error
+
 }
 
 type OrderRepository interface {
-	Fetch() ([]*Order, error)
-	GetByID(id uint) (*Order, error)
-	Update(o *Order) (*Order, error)
-	Create(o *Order) (*Order, error)
-	Delete(id uint) error
+	PlaceOrder(ctx context.Context, order *Order) error
 }

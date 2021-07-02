@@ -1,3 +1,4 @@
+import { ShoppingCart } from './../../model/shoppingCart';
 import { ProductForCart } from './../../model/productForCart';
 import { UserDTO } from './../../model/userDTO';
 import { ItemToCart } from './../../model/itemToCart';
@@ -26,5 +27,9 @@ export class ShopService {
   }
   getCart(user : UserDTO): Observable<ProductForCart[]>{
     return this.https.post<ProductForCart[]>(`${environment.baseUrl}/${environment.getCart}`,user);
+  }
+  placeOrder(order : ShoppingCart){
+    return this.https.post(`${environment.baseUrl}/${environment.placeOrder}`,order, {responseType : 'json'});
+
   }
 }

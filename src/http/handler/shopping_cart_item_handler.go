@@ -32,7 +32,7 @@ func (s shoppingCartItemHandler) RemoveFromCart(ctx echo.Context) error {
 	}
 	for _, it :=range items{
 		if it.ProductID==itemToCart.ProductId{
-			err1 := s.ShoppingCartItemUsecase.Delete(ctx, it.ID)
+			err1 := s.ShoppingCartItemUsecase.Delete(ctx.Request().Context(), it.ID)
 			if err1!=nil{
 				return echo.NewHTTPError(http.StatusInternalServerError, "Woopski")
 			}
