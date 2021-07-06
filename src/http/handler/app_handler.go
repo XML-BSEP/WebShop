@@ -12,5 +12,6 @@ type AppHandler interface {
 	CategoryHandler
 	ShopAccountHandler
 	ShoppingCartItemHandler
+	CampaignHandler
 	
 }

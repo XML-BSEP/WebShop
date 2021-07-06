@@ -6,7 +6,7 @@ type EditProduct struct{
 	Category     string   `json:"category" validate:"required"`
 	Description  string   `json:"description" validate:"required"`
 	Images       []string `json:"images" validate:"required"`
-	Currency     string   `json:"currency" validate:"required,currency"`
+	Currency     string   `json:"currency"`
 	Available    string   `json:"available" validate:"required,available"`
 	SerialNumber string   `json:"serial" validate:"required"`
 }

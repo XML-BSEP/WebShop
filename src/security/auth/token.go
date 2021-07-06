@@ -131,3 +131,24 @@ func (t *Token) ExtractTokenMetadata(r *http.Request) (*auth.AccessDetails, erro
 	return nil, err
 }
 
+
+
+ func ExtractUserId(r *http.Request) (string, error) {
+	 tokenString := ExtractToken(r)
+
+	 token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		 return []byte(os.Getenv("ACCESS_SECRET")), nil
+	 })
+
+	 claims, ok := token.Claims.(jwt.MapClaims)
+
+	 if ok  {
+		 userId, ok := claims["user_id"].(string)
+		 if !ok {
+			 return "", err
+		 }
+
+		 return userId, nil
+	 }
+	 return "", err
+ }

@@ -35,6 +35,14 @@ func NewRouter(e *echo.Echo, h handler.AppHandler, authMiddleware middleware.Aut
 	g.POST("addProduct", h.AddProduct)
 	g.POST("editProduct", h.EditProduct)
 	g.POST("deleteProduct", h.RemoveProduct)
-
-
+	g.POST("createAd", h.CreateAd)
+	g.POST("saveToken", h.SaveToken)
+	g.GET("getAllAdsPerAgent", h.GetAllAdsPerAgent)
+	g.POST("createDisposableCampaign", h.CreateDisposableCampaign)
+	g.POST("createMultipleCampaign", h.CreateMultipleCampaign)
+	g.GET("getAllMultipleCampaigns", h.GetAllMultipleCampaigns)
+	g.GET("getAllDisposableCampaigns", h.GetAllDisposableCampaigns)
+	g.POST("deleteDisposableCampaign", h.DeleteDisposableCampaign)
+	g.POST("deleteMultipleCampaign", h.DeleteMultipleCampaign)
+	g.POST("updateMultipleCampaign", h.UpdateMultipleCampaign)
 }
