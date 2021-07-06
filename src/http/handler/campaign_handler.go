@@ -74,7 +74,11 @@ func (c2 campaignHandler) GetAllAdsPerAgent(c echo.Context) error {
 			return echo.NewHTTPError(http.StatusInternalServerError, "error")
 		}
 
-		return c.JSON(200,  resp.Body())
+		json.Unmarshal(resp.Body(), &retVal)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusUnprocessableEntity, invalidJson)
+		}
+		return c.JSON(200, retVal)
 	}
 }
 
@@ -131,7 +135,7 @@ func (c2 campaignHandler) GetAllDisposableCampaigns(c echo.Context) error {
 	}
 
 	client := resty.New()
-
+	var retVal []domain.DisposableCampaign
 	domain := os.Getenv("NISHTAGRAM_DOMAIN")
 	if domain == "" {
 		domain = "127.0.0.1"
@@ -146,8 +150,11 @@ func (c2 campaignHandler) GetAllDisposableCampaigns(c echo.Context) error {
 		if resp.StatusCode() != 200 {
 			return echo.NewHTTPError(http.StatusInternalServerError, "error")
 		}
-
-		return c.JSON(200,  resp.Body())
+		json.Unmarshal(resp.Body(), &retVal)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusUnprocessableEntity, invalidJson)
+		}
+		return c.JSON(200, retVal)
 
 	} else {
 		resp, _ := client.R().
@@ -159,8 +166,11 @@ func (c2 campaignHandler) GetAllDisposableCampaigns(c echo.Context) error {
 		if resp.StatusCode() != 200 {
 			return echo.NewHTTPError(http.StatusInternalServerError, "error")
 		}
-
-		return c.JSON(200,  resp.Body())
+		json.Unmarshal(resp.Body(), &retVal)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusUnprocessableEntity, invalidJson)
+		}
+		return c.JSON(200, retVal)
 	}
 }
 
@@ -171,7 +181,7 @@ func (c2 campaignHandler) GetAllMultipleCampaigns(c echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "error")
 	}
-
+	var retVal []domain.MultipleCampaign
 	client := resty.New()
 
 	domain := os.Getenv("NISHTAGRAM_DOMAIN")
@@ -188,8 +198,11 @@ func (c2 campaignHandler) GetAllMultipleCampaigns(c echo.Context) error {
 		if resp.StatusCode() != 200 {
 			return echo.NewHTTPError(http.StatusInternalServerError, "error")
 		}
-
-		return c.JSON(200,  resp.Body())
+		json.Unmarshal(resp.Body(), &retVal)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusUnprocessableEntity, invalidJson)
+		}
+		return c.JSON(200, retVal)
 
 	} else {
 		resp, _ := client.R().
@@ -201,8 +214,11 @@ func (c2 campaignHandler) GetAllMultipleCampaigns(c echo.Context) error {
 		if resp.StatusCode() != 200 {
 			return echo.NewHTTPError(http.StatusInternalServerError, "error")
 		}
-
-		return c.JSON(200,  resp.Body())
+		json.Unmarshal(resp.Body(), &retVal)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusUnprocessableEntity, invalidJson)
+		}
+		return c.JSON(200, retVal)
 	}
 }
 
