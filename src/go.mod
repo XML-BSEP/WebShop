@@ -1,18 +1,19 @@
 module web-shop
 
 go 1.14
+
 replace github.com/jelena-vlajkov/logger/logger => ../../Nishtagram-Logger/
 
 require (
-	github.com/jelena-vlajkov/logger/logger v1.0.0
-
 	github.com/casbin/casbin/v2 v2.28.2
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-playground/locales v0.13.0
 	github.com/go-playground/universal-translator v0.17.0
 	github.com/go-playground/validator v9.31.0+incompatible
 	github.com/go-redis/redis/v8 v8.8.0
+	github.com/go-resty/resty/v2 v2.6.0 // indirect
 	github.com/google/uuid v1.2.0 // indirect
+	github.com/jelena-vlajkov/logger/logger v1.0.0
 	github.com/labstack/echo v3.3.10+incompatible
 	github.com/labstack/gommon v0.3.0 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect

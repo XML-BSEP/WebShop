@@ -3,9 +3,12 @@ package middleware
 import (
 	"fmt"
 	"github.com/casbin/casbin/v2"
+	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo"
 	"log"
 	"net/http"
+	"os"
+	"strings"
 	"web-shop/domain"
 	"web-shop/security/auth"
 	"web-shop/usecase"
@@ -88,4 +91,43 @@ func enforce(role string, obj string, act string) (bool, error) {
 	}
 	ok, _ := enforcer.Enforce(role, obj, act)
 	return ok, nil
+}
+
+func ExtractToken(r *http.Request) string {
+	bearToken := r.Header.Get("Authorization")
+	strArr := strings.Split(bearToken, " ")
+	if len(strArr) == 2{
+		return strArr[1]
+	} else {
+		if len(strArr) == 1 {
+			if strArr[0] != "" {
+				strArr2 := strings.Split(strArr[0], "\"")
+				if len(strArr2) == 1 {
+					return strArr2[0]
+				}
+				return strArr2[1]
+			}
+		}
+	}
+	return ""
+}
+
+func ExtractUserId(r *http.Request) (string, error) {
+	tokenString := ExtractToken(r)
+
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		return []byte(os.Getenv("ACCESS_SECRET")), nil
+	})
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+
+	if ok  {
+		userId, ok := claims["user_id"]
+		if !ok {
+			return "", err
+		}
+
+		return fmt.Sprint(userId), nil
+	}
+	return "", err
 }

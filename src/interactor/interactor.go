@@ -35,6 +35,7 @@ type Interactor interface {
 	NewOrderUsecase() domain.OrderUsecase
 	NewOrderRepository() domain.OrderRepository
 	NewResetPasswordHandler() handler.ResetPasswordHandler
+	NewCampaignHandler() handler.CampaignHandler
 
 	NewCategoryHandler() handler.CategoryHandler
 	NewCategoryUsecase() domain.CategoryUsecase
@@ -46,6 +47,7 @@ type Interactor interface {
 	NewShoppingCartItemHandler() handler.ShoppingCartItemHandler
 	NewShoppingCartItemUsecase() domain.ShoppingCartItemUsecase
 	NewShoppingCartItemRepository() domain.ShoppingCartItemRepository
+	NewTokenRepository() datastore.TokenRepository
 }
 
 type interactor struct {
@@ -55,6 +57,13 @@ type interactor struct {
 	logger *logger.Logger
 }
 
+func (i *interactor) NewCampaignHandler() handler.CampaignHandler {
+	return handler.NewCampaignHandler(i.NewTokenRepository())
+}
+
+func (i *interactor) NewTokenRepository() datastore.TokenRepository {
+	return datastore.NewTokenRepository(i.Conn)
+}
 
 type appHandler struct {
 	handler.AddressHandler
@@ -67,6 +76,7 @@ type appHandler struct {
 	handler.CategoryHandler
 	handler.ShopAccountHandler
 	handler.ShoppingCartItemHandler
+	handler.CampaignHandler
 }
 
 
@@ -86,6 +96,7 @@ func (i *interactor) NewAppHandler() handler.AppHandler {
 	appHandler.CategoryHandler = i.NewCategoryHandler()
 	appHandler.ShopAccountHandler = i.NewShopAccountHandler()
 	appHandler.ShoppingCartItemHandler = i.NewShoppingCartItemHandler()
+	appHandler.CampaignHandler = i.NewCampaignHandler()
 	return appHandler
 }
 func (i *interactor) NewShoppingCartItemHandler() handler.ShoppingCartItemHandler {

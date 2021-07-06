@@ -25,6 +25,7 @@ func MigrateData(conn *gorm.DB) {
 	conn.Migrator().DropTable(&domain.Image{})
 	conn.Migrator().DropTable(&domain.Role{})
 	conn.Migrator().DropTable(&domain.ShoppingCartItem{})
+	conn.Migrator().DropTable(&domain.AdminToken{})
 
 
 
@@ -38,6 +39,7 @@ func MigrateData(conn *gorm.DB) {
 	conn.AutoMigrate(&domain.Image{})
 	conn.AutoMigrate(&domain.Role{})
 	conn.AutoMigrate(&domain.ShoppingCartItem{})
+	conn.AutoMigrate(&domain.AdminToken{})
 	//conn.AutoMigrate(&domain.Storage{})
 	seedRoles(conn)
 	seedAddresses(conn)
@@ -88,13 +90,13 @@ func seedAddresses(conn *gorm.DB) {
 func seedShopAccounts(conn *gorm.DB) {
 	accRepo := datastore.NewShopAccountRepository(conn)
 
-	acc := domain.ShopAccount{Username: "Agent1", Password: "$2y$12$1duXzw4C3iYpZpU14rh0A.cjbF2kWdqKlUfsMWJOpRGmcFFHfok36"}
-	acc1 := domain.ShopAccount{Username: "Agent2", Password: "$2y$12$1duXzw4C3iYpZpU14rh0A.cjbF2kWdqKlUfsMWJOpRGmcFFHfok36"}
+	acc := domain.ShopAccount{Username: "Agent1", Password: "$2y$12$4FQN3yE4HwYwDuI1grAar.KPqCc/kvki6Bps9m4t4qWRuLaILdnBK"}
+	acc1 := domain.ShopAccount{Username: "Agent2", Password: "$2y$12$4FQN3yE4HwYwDuI1grAar.KPqCc/kvki6Bps9m4t4qWRuLaILdnBK"}
 
 	accRepo.Create(&acc)
 	accRepo.Create(&acc1)
 
-	acc2 := domain.ShopAccount{Username: "User", Password: "$2y$12$1duXzw4C3iYpZpU14rh0A.cjbF2kWdqKlUfsMWJOpRGmcFFHfok36"}
+	acc2 := domain.ShopAccount{Username: "User", Password: "$2y$12$4FQN3yE4HwYwDuI1grAar.KPqCc/kvki6Bps9m4t4qWRuLaILdnBK"}
 
 	accRepo.Create(&acc2)
 

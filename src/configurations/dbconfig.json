@@ -4,9 +4,9 @@
   "database": {
     "host_localhost": "localhost",
     "host_docker" : "authpostgres",
-    "port": "5432",
+    "port": "5434",
     "user": "postgres",
     "pass": "root",
-    "dbname": "authentication"
+    "dbname": "webshop"
   }
 }

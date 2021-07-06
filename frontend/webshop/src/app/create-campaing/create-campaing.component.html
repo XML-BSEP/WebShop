@@ -1,0 +1,132 @@
+<mat-drawer-container autosize style="position: absolute;right: 0px;left: 0px;bottom: 0px;top: 10%; background: transparent;" hasBackdrop="true">
+    <mat-drawer-content>
+
+      <div class="table-wrapper">
+          <table matSort class="fl-table" >
+              <thead>
+                <tr>
+                    <th>Ad link</th>
+                    <th>Caption</th>
+                    <th>Type</th>
+                    <th>Image</th>
+                    <th>Add</th>
+                   
+                    
+                
+                </tr>
+                </thead>
+                <tbody>
+                <tr  *ngFor="let a of ads">
+                    <td>{{a.link}}</td>
+                    <td>{{a.description}}</td>
+                    <td>{{a.mediaType}}</td>
+                    <td><button mat-button style="background-color: darkslategray; color: white;" (click)="showImage(a)">ViewImage</button></td>
+                    <td *ngIf="!a.isAdded"><button mat-button style="background-color: darkslategray; color: white;" (click)="addToCampaign(a)">Add</button></td>
+                    <td *ngIf="a.isAdded"><button mat-button style="background-color: darkslategray; color: white;" (click)="addToCampaign(a)">Remove</button></td>
+                
+        
+                </tr>
+              <tbody>
+          </table>
+        
+      </div>
+      
+      
+      <mat-divider fxFlex="1 0"></mat-divider>
+      <div style="margin-left: 45vw;">
+        <div class="custom-control custom-radio">
+            <input type="radio" class="custom-control-input" id="multipleCampaignCheck" value="multipleCampaign"
+            mdbInput [(ngModel)]="campaignChecked" checked>
+            <label class="custom-control-label" for="multipleCampaignCheck">Multiple campaign</label>
+        </div>
+        
+        <!-- Default checked -->
+        <div class="custom-control custom-radio">   
+            <input type="radio" class="custom-control-input" id="disposableCampaignCheck" value="disposableCampaign"
+           mdbInput [(ngModel)]="campaignChecked">
+            <label class="custom-control-label" for="disposableCampaignCheck">Disposable campaign</label>
+        </div>
+
+        <br><br>
+        <mat-label>Campaign type:</mat-label>
+
+        <div class="custom-control custom-radio">
+          <input type="radio" class="custom-control-input" name="campaignType" id="postChecked" value="postChecked"
+          mdbInput [(ngModel)]="sinImputarValue" checked>
+          <label class="custom-control-label" for="postChecked">Post</label>
+      </div>
+      
+      <!-- Default checked -->
+      <div class="custom-control custom-radio">   
+          <input type="radio" class="custom-control-input" name="campaignType" id="storyChecked" value="storyChecked"
+         mdbInput [(ngModel)]="sinImputarValue">
+          <label class="custom-control-label" for="storyChecked">Story</label>
+      </div>
+      </div>
+
+      
+     
+
+      <br> 
+      <div *ngIf="campaignChecked === 'disposableCampaign'" style="margin-left: 42vw;" >
+        <mat-label>Choose expose date: </mat-label>
+        <input matInput [matDatepicker]="dp3" [min]="today" [value]="today"  [(ngModel)]="exposeDateDisposableCampaing">
+        <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
+        <mat-datepicker #dp3 disabled="false"></mat-datepicker>
+      </div>
+
+      
+      <div *ngIf="campaignChecked === 'disposableCampaign'" style="margin-left: 42vw; display: flex;">
+        <mat-label >Choose time: </mat-label>
+        <input matInput [ngxTimepicker]="timePickerStart" [value]="startTimedisposableCampaignTime" [(ngModel)]="disposableCampaignTime" [format]="24" required readonly (ngModelChange)="onTimeDisposableCampaignChange($event)" #input>
+        <ngx-material-timepicker-toggle matSuffix [for]="timePickerStart" ></ngx-material-timepicker-toggle>
+        <ngx-material-timepicker #timePickerStart  ></ngx-material-timepicker>
+      </div>
+
+      <br *ngIf="campaignChecked === 'disposableCampaign'">
+      <button *ngIf="campaignChecked === 'disposableCampaign'" (click)="addDisposableCampaign()" mat-button style="background-color: darkslategray; color: white; margin-left: 45vw;">Add disposable campaign</button>
+      
+      <div *ngIf="campaignChecked === 'multipleCampaign'" style="margin-left: 42vw; " >
+        <mat-label>Choose expose start date: </mat-label>
+        <input matInput [matDatepicker]="dp3" [min]="today" [value]="today"  [(ngModel)]="exposeStartDateMultipleCapaign">
+        <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
+        <mat-datepicker #dp3 disabled="false"></mat-datepicker>
+        
+        <div style="display: flex;">
+        <mat-label >Choose expose start time: </mat-label>
+        <input matInput [ngxTimepicker]="timePickerStart" [value]="multipleCampaignStartTime" [(ngModel)]="multipleCampaignStartTime" [format]="24" required readonly (ngModelChange)="onStartTimeMulitpleCampaignChange($event)" #input>
+        <ngx-material-timepicker-toggle matSuffix [for]="timePickerStart" ></ngx-material-timepicker-toggle>
+        <ngx-material-timepicker #timePickerStart  ></ngx-material-timepicker>
+        </div>
+      </div>
+
+      <br *ngIf="campaignChecked === 'multipleCampaign'">
+      <div *ngIf="campaignChecked === 'multipleCampaign'" style="margin-left: 42vw; " >
+        <mat-label>Choose expose end date: </mat-label>
+        <input matInput [matDatepicker]="dp3" [min]="exposeStartDateMultipleCapaign"   [(ngModel)]="exposeEndDateMultipleCapaign">
+        <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
+        <mat-datepicker #dp3 disabled="false"></mat-datepicker>
+        
+        <div style="display: flex;">
+        <mat-label >Choose expose end time: </mat-label>
+        <input matInput [ngxTimepicker]="timePickerStart" [value]="multipleCampaignEndTime" [(ngModel)]="multipleCampaignEndTime" [format]="24" required readonly (ngModelChange)="onEndTimeTimeMulitpleCampaignChange($event)" #input>
+        <ngx-material-timepicker-toggle matSuffix [for]="timePickerStart" ></ngx-material-timepicker-toggle>
+        <ngx-material-timepicker #timePickerStart  ></ngx-material-timepicker>
+        </div>
+      </div>
+
+      <br *ngIf="campaignChecked === 'multipleCampaign'">
+      <div *ngIf="campaignChecked === 'multipleCampaign'" style="margin-left: 42vw; " >   
+        <mat-label>Choose frequency: </mat-label>                    
+        <input type="number" [(ngModel)]="frequency" min="0" />
+    </div>
+    <br *ngIf="campaignChecked === 'multipleCampaign'">
+    <button *ngIf="campaignChecked === 'multipleCampaign'" (click)="addMultipleCampaign()" mat-button style="background-color: darkslategray; color: white; margin-left: 47vw;">Add multiple campaign</button>
+
+      
+ 
+    
+    </mat-drawer-content>
+
+</mat-drawer-container>
+
