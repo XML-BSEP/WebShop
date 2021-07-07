@@ -32,6 +32,8 @@ import { ChangeCampaignComponent } from './change-campaign/change-campaign.compo
 import { ShowImageComponent } from './dialogs/show-image/show-image.component';
 import { EditProfileComponent } from './userprofile/edit-profile/edit-profile.component';
 import { DatePipe } from '@angular/common'
+import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
+
 
 
 @NgModule({
@@ -68,7 +70,9 @@ import { DatePipe } from '@angular/common'
     MatInputModule,
     MatSelectModule,
     ToastrModule.forRoot(),
-    MatCarouselModule.forRoot()
+    MatCarouselModule.forRoot(),
+    NgxMaterialTimepickerModule
+    
   ],
   providers: [
     DatePipe,

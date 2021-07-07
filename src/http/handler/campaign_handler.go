@@ -141,11 +141,11 @@ func (c2 campaignHandler) GetAllDisposableCampaigns(c echo.Context) error {
 		domain = "127.0.0.1"
 	}
 	if os.Getenv("DOCKER_ENV") == "" {
-		resp, _ := client.R().
+		resp, err := client.R().
 			SetHeader("Authorization", token).
 			EnableTrace().
 			Get("http://" + domain + ":8093/ad/getAllDisposableCampaigns")
-
+		fmt.Println(err)
 
 		if resp.StatusCode() != 200 {
 			return echo.NewHTTPError(http.StatusInternalServerError, "error")
@@ -189,10 +189,11 @@ func (c2 campaignHandler) GetAllMultipleCampaigns(c echo.Context) error {
 		domain = "127.0.0.1"
 	}
 	if os.Getenv("DOCKER_ENV") == "" {
-		resp, _ := client.R().
+		resp, err := client.R().
 			SetHeader("Authorization", token).
 			EnableTrace().
 			Get("http://" + domain + ":8093/ad/getAllMultipleCampaigns")
+		fmt.Println(err)
 
 
 		if resp.StatusCode() != 200 {
@@ -240,7 +241,7 @@ func (c2 campaignHandler) UpdateMultipleCampaign(c echo.Context) error {
 			SetBody(c.Request().Body).
 			SetHeader("Authorization", token).
 			EnableTrace().
-			Post("http://" + domain + ":8093/ad/UpdateMultipleCampaign")
+			Post("http://" + domain + ":8093/ad/updateMultipleCampaign")
 
 
 		if resp.StatusCode() != 200 {
@@ -254,7 +255,7 @@ func (c2 campaignHandler) UpdateMultipleCampaign(c echo.Context) error {
 			SetBody(c.Request().Body).
 			SetHeader("Authorization", token).
 			EnableTrace().
-			Post("http://" + domain + ":8093/ad/UpdateMultipleCampaign")
+			Post("http://" + domain + ":8093/ad/updateMultipleCampaign")
 
 
 		if resp.StatusCode() != 200 {
@@ -283,7 +284,7 @@ func (c2 campaignHandler) DeleteMultipleCampaign(c echo.Context) error {
 			SetBody(c.Request().Body).
 			SetHeader("Authorization", token).
 			EnableTrace().
-			Post("http://" + domain + ":8093/ad/DeleteMultipleCampaign")
+			Post("http://" + domain + ":8093/ad/deleteMultipleCampaign")
 
 
 		if resp.StatusCode() != 200 {
@@ -297,7 +298,7 @@ func (c2 campaignHandler) DeleteMultipleCampaign(c echo.Context) error {
 			SetBody(c.Request().Body).
 			SetHeader("Authorization", token).
 			EnableTrace().
-			Post("http://" + domain + ":8093/ad/DeleteMultipleCampaign")
+			Post("http://" + domain + ":8093/ad/deleteMultipleCampaign")
 
 
 		if resp.StatusCode() != 200 {
