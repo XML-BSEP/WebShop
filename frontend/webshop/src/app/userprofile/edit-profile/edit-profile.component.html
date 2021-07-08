@@ -302,7 +302,7 @@
         
         <div class="col-md-8">
           <div class="card">
-            <div *ngIf="generateToken"  style="height:fit-content">
+            <div *ngIf="generateToken"  style="height:fit-content; margin: 10px;">
               <h6>ADD YOUR PERSONAL NISHTAGRAMTOKEN</h6>
               <hr>
               <br><br><br>
@@ -316,15 +316,63 @@
                 <button mat-raised-button color="primary" (click)="saveToken()">Save your token</button>
               </div>
             </div>
-            <div *ngIf="statisticsReport"  style="height:fit-content; width: 1000px;" >
+            <div *ngIf="statisticsReport"  style="height:fit-content; width: 1000px;  margin: 10px;" >
               <h6>MONITOR YOUR CAMPAIGNS</h6>
               <hr>
-              <br><br><br>
+              <br>
               <div style="margin: 10px;">
                 <mat-label>Here you can download a report of basic statistics of your campaigns.</mat-label>
                 <br><br>
-                
-                <button mat-raised-button color="primary" (click)="saveToken()">Download Report</button>
+                <button mat-raised-button color="primary" (click)="downloadReport()">Download Report</button>
+                <br>
+                <div *ngFor="let c of statistics.statistic_report" >
+                  <div style="display: flex; margin: 10px;">
+                    
+                  <div style="margin: 10px;">
+                    Campaign ID: {{c.campaignId}}
+                    <br>
+                    Campaign Type: {{c.campaignType}}
+                    <br>
+                    Campaign Period: {{c.campaignPeriod}}
+                    <br>
+                    Campaign Frequency: {{c.advertisementFrequency}}
+                  </div>
+
+                  <div  style="margin: 10px;">
+                    Number Of Likes: {{c.numOfLikes}}
+                    <br>
+                    Number Of Dislikes: {{c.numOfDislikes}}
+                    <br>
+                    Number Of Comments: {{c.numOfComments}}
+                    <br>
+                    Number Of Advertisements: {{c.advertisingCount.advertisedCount}}
+                    <br>
+                  </div>
+
+                </div>
+
+                  <div class="table-wrapper">
+                    Influencer Site Visits:
+                    <br>
+                    <table matSort class="fl-table" >
+                        <thead>
+                          <tr>
+                              <th>Username</th>
+                              <th>Visits</th>  
+                          
+                          </tr>
+                          </thead>
+                          <tbody>
+                          <tr  *ngFor="let a of c.clicks">
+                              <td>{{a.influencerUsername}}</td>
+                              <td>{{a.clicks}}</td>
+                          </tr>
+                        <tbody>
+                    </table>
+                  
+                </div>
+
+                </div>
               
               
             </div>

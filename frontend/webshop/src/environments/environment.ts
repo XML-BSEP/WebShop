@@ -38,7 +38,8 @@ export const environment = {
   deleteMultipleCampaign : "deleteMultipleCampaign",
   updateMultipleCampaign : "updateMultipleCampaign", 
   saveToken : "saveToken",
-  generateStatisticsReport : "generateStatisticsReport"
+  generateStatisticsReport : "generateStatisticsReport",
+  downloadPdf : "downloadPdf"
 };
 
 /*

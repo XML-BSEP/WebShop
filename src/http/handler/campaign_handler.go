@@ -82,8 +82,12 @@ func (c2 campaignHandler) GenerateStatisticsReport(c echo.Context) error {
 		if err != nil {
 			return echo.NewHTTPError(http.StatusUnprocessableEntity, invalidJson)
 		}
-		c2.reportUseCase.SaveReport(context.Background(), retVal)
-		return c.JSON(200, retVal)
+		report, err := c2.reportUseCase.SaveReport(context.Background(), retVal)
+
+		if err != nil {
+			return echo.NewHTTPError(http.StatusInternalServerError, "error")
+		}
+		return c.JSON(200, report)
 
 	} else {
 		resp, _ := client.R().
@@ -100,8 +104,12 @@ func (c2 campaignHandler) GenerateStatisticsReport(c echo.Context) error {
 		if err != nil {
 			return echo.NewHTTPError(http.StatusUnprocessableEntity, invalidJson)
 		}
-		c2.reportUseCase.SaveReport(context.Background(), retVal)
-		return c.JSON(200, retVal)
+		report, err := c2.reportUseCase.SaveReport(context.Background(), retVal)
+
+		if err != nil {
+			return echo.NewHTTPError(http.StatusInternalServerError, "error")
+		}
+		return c.JSON(200, report)
 	}
 }
 

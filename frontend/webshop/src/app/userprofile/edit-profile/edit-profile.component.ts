@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
+import { DownloadReport } from 'src/app/model/downloadReport';
+import { CampaignsReport } from 'src/app/model/report';
 import { SaveToken } from 'src/app/model/save_token';
 import { StatisticsReport } from 'src/app/model/statisticsreport';
 import { AgentService } from 'src/app/service/agent_service';
@@ -14,7 +16,7 @@ export class EditProfileComponent implements OnInit {
   constructor(private agentService : AgentService, private toastr : ToastrService) { }
   public generateToken : boolean = false;
   public tokenGenerated : boolean = false;
-  public statistics : StatisticsReport[] = [];
+  public statistics : CampaignsReport;
   public statisticsReport : boolean = false;
   public personalToken : String = "";
   ngOnInit(): void {
@@ -23,6 +25,7 @@ export class EditProfileComponent implements OnInit {
   goToGenerateToken() {
     this.tokenGenerated = true;
     this.generateToken = true;
+    this.statisticsReport = false;
   }
 
   saveToken() {
@@ -49,6 +52,18 @@ export class EditProfileComponent implements OnInit {
     this.agentService.getStatisticsReport().subscribe(
       res => {
         this.statistics = res;
+      }
+    )
+  }
+
+  downloadReport() {
+    let pdf = new DownloadReport();
+    pdf.reportId = this.statistics.report_id;
+    this.agentService.downloadReport(pdf).subscribe(
+      res => {
+        this.toastr.success("Report downloaded")
+      }, err => {
+        this.toastr.error("Something went wrong")
       }
     )
   }
