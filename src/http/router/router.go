@@ -45,4 +45,6 @@ func NewRouter(e *echo.Echo, h handler.AppHandler, authMiddleware middleware.Aut
 	g.POST("deleteDisposableCampaign", h.DeleteDisposableCampaign)
 	g.POST("deleteMultipleCampaign", h.DeleteMultipleCampaign)
 	g.POST("updateMultipleCampaign", h.UpdateMultipleCampaign)
+	g.GET("generateStatisticsReport", h.GenerateStatisticsReport)
+	g.POST("downloadPdf", h.DownloadPdf)
 }

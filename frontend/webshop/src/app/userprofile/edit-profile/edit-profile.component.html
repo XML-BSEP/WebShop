@@ -277,11 +277,29 @@
                     <path d="M4 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
                   </svg>Add Nishtagram Token
                 </button>
+                
+  
+              </nav>
+              <br>
+              <mat-divider></mat-divider>
+              <br>
+              <nav class="nav flex-column nav-pills nav-gap-y-1">
+                <!-- <button mat-flat-button data-toggle="tab" style="background-color: transparent;" class="nav-item nav-link has-icon nav-link-faded active">
+  
+                </button> -->
+                <button mat-flat-button data-toggle="tab" class="nav-item nav-link has-icon nav-link-faded" (click)="generateStatisticsReport()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" stroke="currentCollor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="bi bi-images mr-2" viewBox="0 0 16 16">
+                        <path d="M10.854 7.854a.5.5 0 0 0-.708-.708L7.5 9.793 6.354 8.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3z"/>
+                        <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
+                      </svg>Monitor your campaigns
+                  </button>
+                
   
               </nav>
             </div>
           </div>
         </div>
+        
         <div class="col-md-8">
           <div class="card">
             <div *ngIf="generateToken"  style="height:fit-content">
@@ -297,6 +315,19 @@
                       <br><br>
                 <button mat-raised-button color="primary" (click)="saveToken()">Save your token</button>
               </div>
+            </div>
+            <div *ngIf="statisticsReport"  style="height:fit-content; width: 1000px;" >
+              <h6>MONITOR YOUR CAMPAIGNS</h6>
+              <hr>
+              <br><br><br>
+              <div style="margin: 10px;">
+                <mat-label>Here you can download a report of basic statistics of your campaigns.</mat-label>
+                <br><br>
+                
+                <button mat-raised-button color="primary" (click)="saveToken()">Download Report</button>
+              
+              
+            </div>
             </div>
           </div>
         </div>

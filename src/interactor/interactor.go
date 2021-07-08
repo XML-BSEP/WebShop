@@ -58,7 +58,7 @@ type interactor struct {
 }
 
 func (i *interactor) NewCampaignHandler() handler.CampaignHandler {
-	return handler.NewCampaignHandler(i.NewTokenRepository())
+	return handler.NewCampaignHandler(i.NewTokenRepository(), usecase.NewReportUseCase())
 }
 
 func (i *interactor) NewTokenRepository() datastore.TokenRepository {
