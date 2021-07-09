@@ -71,7 +71,7 @@ func (c2 campaignHandler) GenerateStatisticsReport(c echo.Context) error {
 		resp, _ := client.R().
 			SetHeader("Authorization", token).
 			EnableTrace().
-			Get("http://" + domain + ":8093/ad/generateStatisticReport")
+			Get("https://" + domain + ":8080/generateStatisticReport")
 
 
 		if resp.StatusCode() != 200 {
@@ -93,7 +93,7 @@ func (c2 campaignHandler) GenerateStatisticsReport(c echo.Context) error {
 		resp, _ := client.R().
 			SetHeader("Authorization", token).
 			EnableTrace().
-			Get("http://" + domain + ":8093/ad/generateStatisticReport")
+			Get("http://" + domain + ":8080/generateStatisticReport")
 
 
 		if resp.StatusCode() != 200 {
@@ -130,7 +130,7 @@ func (c2 campaignHandler) GetAllAdsPerAgent(c echo.Context) error {
 		resp, _ := client.R().
 			SetHeader("Authorization", token).
 			EnableTrace().
-			Get("http://" + domain + ":8093/ad/getAdsByAgent")
+			Get("https://" + domain + ":8080/getAdsByAgent")
 
 
 		if resp.StatusCode() != 200 {
@@ -147,7 +147,7 @@ func (c2 campaignHandler) GetAllAdsPerAgent(c echo.Context) error {
 		resp, _ := client.R().
 			SetHeader("Authorization", token).
 			EnableTrace().
-			Get("http://" + domain + ":8093/ad/getAdsByAgent")
+			Get("http://" + domain + ":8080/getAdsByAgent")
 
 
 		if resp.StatusCode() != 200 {
@@ -181,7 +181,7 @@ func (c2 campaignHandler) DeleteDisposableCampaign(c echo.Context) error {
 			SetBody(c.Request().Body).
 			SetHeader("Authorization", token).
 			EnableTrace().
-			Post("http://" + domain + ":8093/ad/deleteDisposableCampaign")
+			Post("https://" + domain + ":8080/deleteDisposableCampaign")
 
 
 		if resp.StatusCode() != 200 {
@@ -195,7 +195,7 @@ func (c2 campaignHandler) DeleteDisposableCampaign(c echo.Context) error {
 			SetBody(c.Request().Body).
 			SetHeader("Authorization", token).
 			EnableTrace().
-			Post("http://" + domain + ":8093/ad/deleteDisposableCampaign")
+			Post("http://" + domain + ":8080/deleteDisposableCampaign")
 
 
 		if resp.StatusCode() != 200 {
@@ -224,7 +224,7 @@ func (c2 campaignHandler) GetAllDisposableCampaigns(c echo.Context) error {
 		resp, err := client.R().
 			SetHeader("Authorization", token).
 			EnableTrace().
-			Get("http://" + domain + ":8093/ad/getAllDisposableCampaigns")
+			Get("https://" + domain + ":8080/getAllDisposableCampaigns")
 		fmt.Println(err)
 
 		if resp.StatusCode() != 200 {
@@ -240,7 +240,7 @@ func (c2 campaignHandler) GetAllDisposableCampaigns(c echo.Context) error {
 		resp, _ := client.R().
 			SetHeader("Authorization", token).
 			EnableTrace().
-			Get("http://" + domain + ":8093/ad/getAllDisposableCampaigns")
+			Get("http://" + domain + ":8080/getAllDisposableCampaigns")
 
 
 		if resp.StatusCode() != 200 {
@@ -272,7 +272,7 @@ func (c2 campaignHandler) GetAllMultipleCampaigns(c echo.Context) error {
 		resp, err := client.R().
 			SetHeader("Authorization", token).
 			EnableTrace().
-			Get("http://" + domain + ":8093/ad/getAllMultipleCampaigns")
+			Get("https://" + domain + ":8080/getAllMultipleCampaigns")
 		fmt.Println(err)
 
 
@@ -289,7 +289,7 @@ func (c2 campaignHandler) GetAllMultipleCampaigns(c echo.Context) error {
 		resp, _ := client.R().
 			SetHeader("Authorization", token).
 			EnableTrace().
-			Get("http://" + domain + ":8093/ad/getAllMultipleCampaigns")
+			Get("http://" + domain + ":8080/getAllMultipleCampaigns")
 
 
 		if resp.StatusCode() != 200 {
@@ -321,7 +321,7 @@ func (c2 campaignHandler) UpdateMultipleCampaign(c echo.Context) error {
 			SetBody(c.Request().Body).
 			SetHeader("Authorization", token).
 			EnableTrace().
-			Post("http://" + domain + ":8093/ad/updateMultipleCampaign")
+			Post("https://" + domain + ":8080/updateMultipleCampaign")
 
 
 		if resp.StatusCode() != 200 {
@@ -335,7 +335,7 @@ func (c2 campaignHandler) UpdateMultipleCampaign(c echo.Context) error {
 			SetBody(c.Request().Body).
 			SetHeader("Authorization", token).
 			EnableTrace().
-			Post("http://" + domain + ":8093/ad/updateMultipleCampaign")
+			Post("http://" + domain + ":8080/updateMultipleCampaign")
 
 
 		if resp.StatusCode() != 200 {
@@ -364,7 +364,7 @@ func (c2 campaignHandler) DeleteMultipleCampaign(c echo.Context) error {
 			SetBody(c.Request().Body).
 			SetHeader("Authorization", token).
 			EnableTrace().
-			Post("http://" + domain + ":8093/ad/deleteMultipleCampaign")
+			Post("https://" + domain + ":8080/deleteMultipleCampaign")
 
 
 		if resp.StatusCode() != 200 {
@@ -378,7 +378,7 @@ func (c2 campaignHandler) DeleteMultipleCampaign(c echo.Context) error {
 			SetBody(c.Request().Body).
 			SetHeader("Authorization", token).
 			EnableTrace().
-			Post("http://" + domain + ":8093/ad/deleteMultipleCampaign")
+			Post("http://" + domain + ":8080/deleteMultipleCampaign")
 
 
 		if resp.StatusCode() != 200 {
@@ -425,7 +425,7 @@ func (c2 campaignHandler) CreateAd(c echo.Context) error {
 			SetBody(c.Request().Body).
 			SetHeader("Authorization", token).
 			EnableTrace().
-			Post("http://" + domain + ":8093/ad/createAd")
+			Post("https://" + domain + ":8080/createAd")
 
 
 		if resp.StatusCode() != 200 {
@@ -439,7 +439,7 @@ func (c2 campaignHandler) CreateAd(c echo.Context) error {
 			SetBody(c.Request().Body).
 			SetHeader("Authorization", token).
 			EnableTrace().
-			Post("http://" + domain + ":8093/ad/createAd")
+			Post("http://" + domain + ":8080/createAd")
 
 
 		if resp.StatusCode() != 200 {
@@ -469,7 +469,7 @@ func (c2 campaignHandler) CreateDisposableCampaign(c echo.Context) error {
 			SetBody(c.Request().Body).
 			SetHeader("Authorization", token).
 			EnableTrace().
-			Post("http://" + domain + ":8093/ad/createDisposableCampaign")
+			Post("https://" + domain + ":8080/createDisposableCampaign")
 
 
 		if resp.StatusCode() != 200 {
@@ -483,7 +483,7 @@ func (c2 campaignHandler) CreateDisposableCampaign(c echo.Context) error {
 			SetBody(c.Request().Body).
 			SetHeader("Authorization", token).
 			EnableTrace().
-			Post("http://" + domain + ":8093/ad/createDisposableCampaign")
+			Post("http://" + domain + ":8080/createDisposableCampaign")
 
 
 		if resp.StatusCode() != 200 {
@@ -513,7 +513,7 @@ func (c2 campaignHandler) CreateMultipleCampaign(c echo.Context) error {
 			SetBody(c.Request().Body).
 			SetHeader("Authorization", token).
 			EnableTrace().
-			Post("http://" + domain + ":8093/ad/createMultipleCampaign")
+			Post("https://" + domain + ":8080/createMultipleCampaign")
 
 
 		if resp.StatusCode() != 200 {
@@ -527,7 +527,7 @@ func (c2 campaignHandler) CreateMultipleCampaign(c echo.Context) error {
 			SetBody(c.Request().Body).
 			SetHeader("Authorization", token).
 			EnableTrace().
-			Post("http://" + domain + ":8093/ad/createMultipleCampaign")
+			Post("http://" + domain + ":8080/createMultipleCampaign")
 
 
 		if resp.StatusCode() != 200 {

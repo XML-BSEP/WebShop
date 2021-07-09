@@ -7,6 +7,7 @@ export class NewProduct{
   images : String[];
   available : Number;
   serial : String;
+  public userId : Number;
   constructor(name : String, category: string, price : Number, description : String, images : String[], a : Number, s : String){
     this.name = name;
     this.price = price;

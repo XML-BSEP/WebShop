@@ -47,7 +47,7 @@ export class ProductsPageComponent implements OnInit {
   }
 
   isMine() {
-    
+
   }
 
   load(event : PageEvent) {
@@ -71,8 +71,9 @@ export class ProductsPageComponent implements OnInit {
   remove(product){
     console.log(product)
     // this.router.navigate(['/editProduct'], {state: {data: product}});
-
-    var deletedProduct = new DeletedProduct(product.serial.toString())
+    console.log(this.authService.currentUserValue.id)
+    var deletedProduct = new DeletedProduct(product.serial.toString(), this.authService.currentUserValue.id)
+    
 
     console.log(deletedProduct);
 

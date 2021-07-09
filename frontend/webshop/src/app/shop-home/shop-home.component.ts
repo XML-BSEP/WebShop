@@ -86,7 +86,7 @@ export class ShopHomeComponent implements OnInit {
     console.log(product)
     // this.router.navigate(['/editProduct'], {state: {data: product}});
 
-    var deletedProduct = new DeletedProduct(product.serial.toString())
+    var deletedProduct = new DeletedProduct(product.serial.toString(), this.authService.currentUserValue.id)
 
     console.log(deletedProduct);
 

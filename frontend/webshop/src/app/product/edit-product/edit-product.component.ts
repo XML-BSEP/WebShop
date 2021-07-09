@@ -8,6 +8,7 @@ import { Image } from './../../model/image';
 import { NewProduct } from './../../model/newProduct';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
+import { AuthenticationService } from 'src/app/service/authentication/authentication.service';
 
 @Component({
   selector: 'app-edit-product',
@@ -35,7 +36,7 @@ export class EditProductComponent implements OnInit {
   allCategories : Category[];
   productToEdit : Product;
   files : String[] = new Array();
-  constructor(private router: Router, private toastr : ToastrService, private productService : ProductServiceService, private categoryService : CategoryService ,private _formBuilder: FormBuilder) { }
+  constructor(private router: Router, private toastr : ToastrService, private productService : ProductServiceService, private categoryService : CategoryService ,private _formBuilder: FormBuilder, private authService : AuthenticationService) { }
 
   ngOnInit(): void {
     if(history.state.data === undefined){
@@ -131,6 +132,10 @@ onFileChanged(e) {
                                     blobs,
                                     this.descriptionPriceGroup.controls.available.value.toString(),
                                     this.productToEdit.serial.toString());
+                          
+
+
+    this.newProduct.userId = this.authService.currentUserValue.id;
 
     console.log(this.newProduct);
 

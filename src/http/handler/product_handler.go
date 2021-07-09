@@ -95,7 +95,6 @@ func (p *productHandler) EditProduct(ctx echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, errorsString)
 	}
 
-
 	product, err := p.ProductUseCase.Update(ctx, &editedProduct)
 
 	if err != nil {
