@@ -1,8 +1,8 @@
 <mat-drawer-container autosize style="position: absolute;right: 0px;left: 0px;bottom: 0px;top: 10%; background: transparent;" hasBackdrop="true">
     <mat-drawer-content>
         <div style="position: absolute; left: 40%;">
-            <button mat-button style="background-color: darkslategray; color: white;" (click)="clickShowDisposable()" >Show disposable campaigns</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <button mat-button style="background-color: darkslategray; color: white;" (click)="clikcShowMultiple()">Show mulitple campaigns</button>
+            <button mat-button style="background-color: #2980B9; color: white;" (click)="clickShowDisposable()" >Show disposable campaigns</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button mat-button style="background-color: #2980B9; color: white;" (click)="clikcShowMultiple()">Show mulitple campaigns</button>
         </div>
 
         <br><br>
@@ -32,9 +32,9 @@
                     <td style="display: flexbox;"><input  matInput [ngxTimepicker]="timePickerStart" [format]="24" value="{{d.exposureDate | date:'HH:mm' : '+0'}}" required readonly #input>
                         <ngx-material-timepicker #timePickerStart  ></ngx-material-timepicker>
                     </td>
-                    <td><button mat-button style="background-color: darkslategray; color: white;" (click)="showImageDisposable(d)">View ad post</button></td>
-                    <td ><button mat-button style="background-color: darkslategray; color: white;" >Change campaign</button></td>
-                    <td ><button mat-button style="background-color: darkslategray; color: white;" (click)="deleteDisposableCampaign(d)">Delete campaign</button></td>
+                    <td><button mat-button style="background-color: #2980B9; color: white;" (click)="showImageDisposable(d)">View ad post</button></td>
+                    <td ><button mat-button style="background-color: #2980B9; color: white;" >Change campaign</button></td>
+                    <td ><button mat-button style="background-color: #2980B9; color: white;" (click)="deleteDisposableCampaign(d)">Delete campaign</button></td>
                 
         
                 </tr>
@@ -80,9 +80,9 @@
                      <td>
                         <input type="number" min="0" style="width: 80%;" [(ngModel)]="d.frequency"/>
                      </td>
-                     <td><button mat-button style="background-color: darkslategray; color: white;" (click)="showImageMultiple(d)">View ad post</button></td>
-                     <td ><button mat-button style="background-color: darkslategray; color: white;" (click)="changeMultipleCampaign(d, inputStart.value, inputEnd.value) ">Change campaign</button></td>
-                     <td ><button mat-button style="background-color: darkslategray; color: white;" (click)="deleteMultipleCampaign(d)" >Delete campaign</button></td>
+                     <td><button mat-button style="background-color: #2980B9; color: white;" (click)="showImageMultiple(d)">View ad post</button></td>
+                     <td ><button mat-button style="background-color: #2980B9; color: white;" (click)="changeMultipleCampaign(d, inputStart.value, inputEnd.value) ">Change campaign</button></td>
+                     <td ><button mat-button style="background-color: #2980B9; color: white;" (click)="deleteMultipleCampaign(d)" >Delete campaign</button></td>
                  
          
                  </tr>

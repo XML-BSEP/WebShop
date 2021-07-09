@@ -10,7 +10,10 @@ import { MultipleCampaign } from "src/app/model/multiple_campaign";
 import { MultipleCampaignRequest } from "src/app/model/multiple_campaign_request";
 import { ShowAd } from "src/app/model/show_ads";
 import { environment } from "src/environments/environment";
+import { DownloadReport } from "../model/downloadReport";
+import { CampaignsReport } from "../model/report";
 import { SaveToken } from "../model/save_token";
+import { StatisticsReport } from "../model/statisticsreport";
 
 @Injectable({
     providedIn: 'root'
@@ -59,6 +62,13 @@ import { SaveToken } from "../model/save_token";
         return this.https.post<Response>(`${environment.baseUrl}/${environment.saveToken}`, saveToken)
     }
 
+    getStatisticsReport() : Observable<CampaignsReport> {
+        return this.https.get<CampaignsReport>(`${environment.baseUrl}/${environment.generateStatisticsReport}`)
+    }
+
+    downloadReport(downloadPdf : DownloadReport) : Observable<Response> {
+        return this.https.post<Response>(`${environment.baseUrl}/${environment.downloadPdf}`, downloadPdf)
+    }
 
 
   }  

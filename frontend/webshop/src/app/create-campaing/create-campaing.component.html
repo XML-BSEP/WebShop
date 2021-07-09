@@ -20,9 +20,9 @@
                     <td>{{a.link}}</td>
                     <td>{{a.description}}</td>
                     <td>{{a.mediaType}}</td>
-                    <td><button mat-button style="background-color: darkslategray; color: white;" (click)="showImage(a)">ViewImage</button></td>
-                    <td *ngIf="!a.isAdded"><button mat-button style="background-color: darkslategray; color: white;" (click)="addToCampaign(a)">Add</button></td>
-                    <td *ngIf="a.isAdded"><button mat-button style="background-color: darkslategray; color: white;" (click)="addToCampaign(a)">Remove</button></td>
+                    <td><button mat-button style="background-color: #2980B9; color: white;" (click)="showImage(a)">ViewImage</button></td>
+                    <td *ngIf="!a.isAdded"><button mat-button style="background-color: #2980B9; color: white;" (click)="addToCampaign(a)">Add</button></td>
+                    <td *ngIf="a.isAdded"><button mat-button style="background-color: #2980B9; color: white;" (click)="addToCampaign(a)">Remove</button></td>
                 
         
                 </tr>
@@ -84,7 +84,7 @@
       </div>
 
       <br *ngIf="campaignChecked === 'disposableCampaign'">
-      <button *ngIf="campaignChecked === 'disposableCampaign'" (click)="addDisposableCampaign()" mat-button style="background-color: darkslategray; color: white; margin-left: 45vw;">Add disposable campaign</button>
+      <button *ngIf="campaignChecked === 'disposableCampaign'" (click)="addDisposableCampaign()" mat-button style="background-color: #2980B9; color: white; margin-left: 45vw;">Add disposable campaign</button>
       
       <div *ngIf="campaignChecked === 'multipleCampaign'" style="margin-left: 42vw; " >
         <mat-label>Choose expose start date: </mat-label>
@@ -121,7 +121,7 @@
         <input type="number" [(ngModel)]="frequency" min="0" />
     </div>
     <br *ngIf="campaignChecked === 'multipleCampaign'">
-    <button *ngIf="campaignChecked === 'multipleCampaign'" (click)="addMultipleCampaign()" mat-button style="background-color: darkslategray; color: white; margin-left: 47vw;">Add multiple campaign</button>
+    <button *ngIf="campaignChecked === 'multipleCampaign'" (click)="addMultipleCampaign()" mat-button style="background-color: #2980B9; color: white; margin-left: 47vw;">Add multiple campaign</button>
 
       
  

@@ -10,7 +10,9 @@ import (
 	"os"
 	"web-shop/domain"
 	"web-shop/http/middleware"
+	"web-shop/infrastructure/dto"
 	"web-shop/infrastructure/persistance/datastore"
+	"web-shop/usecase"
 )
 
 type CampaignHandler interface {
@@ -24,6 +26,8 @@ type CampaignHandler interface {
 	DeleteMultipleCampaign(c echo.Context) error
 	DeleteDisposableCampaign(c echo.Context) error
 	GetAllAdsPerAgent(c echo.Context) error
+	GenerateStatisticsReport(c echo.Context) error
+	DownloadPdf(c echo.Context) error
 
 
 }
@@ -31,6 +35,82 @@ type CampaignHandler interface {
 
 type campaignHandler struct {
 	tokenRepository datastore.TokenRepository
+	reportUseCase usecase.ReportUseCase
+}
+
+func (c2 campaignHandler) DownloadPdf(c echo.Context) error {
+	var token *dto.GeneratePdf
+
+	decoder := json.NewDecoder(c.Request().Body)
+	err := decoder.Decode(&token)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusUnprocessableEntity, invalidJson)
+	}
+
+	err = c2.reportUseCase.ExportToPDF(context.Background(), token.ReportId, "")
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "error")
+	}
+	return c.JSON(200, "ok")
+}
+
+func (c2 campaignHandler) GenerateStatisticsReport(c echo.Context) error {
+	userId, _ := middleware.ExtractUserId(c.Request())
+	token, err := c2.tokenRepository.FetchToken(context.Background(), userId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "error")
+	}
+	var retVal []domain.StatisticsReport
+	client := resty.New()
+
+	domain := os.Getenv("NISHTAGRAM_DOMAIN")
+	if domain == "" {
+		domain = "127.0.0.1"
+	}
+	if os.Getenv("DOCKER_ENV") == "" {
+		resp, _ := client.R().
+			SetHeader("Authorization", token).
+			EnableTrace().
+			Get("http://" + domain + ":8093/ad/generateStatisticReport")
+
+
+		if resp.StatusCode() != 200 {
+			return echo.NewHTTPError(http.StatusInternalServerError, "error")
+		}
+		fmt.Println(string(resp.Body()))
+		json.Unmarshal(resp.Body(), &retVal)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusUnprocessableEntity, invalidJson)
+		}
+		report, err := c2.reportUseCase.SaveReport(context.Background(), retVal)
+
+		if err != nil {
+			return echo.NewHTTPError(http.StatusInternalServerError, "error")
+		}
+		return c.JSON(200, report)
+
+	} else {
+		resp, _ := client.R().
+			SetHeader("Authorization", token).
+			EnableTrace().
+			Get("http://" + domain + ":8093/ad/generateStatisticReport")
+
+
+		if resp.StatusCode() != 200 {
+			return echo.NewHTTPError(http.StatusInternalServerError, "error")
+		}
+
+		json.Unmarshal(resp.Body(), &retVal)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusUnprocessableEntity, invalidJson)
+		}
+		report, err := c2.reportUseCase.SaveReport(context.Background(), retVal)
+
+		if err != nil {
+			return echo.NewHTTPError(http.StatusInternalServerError, "error")
+		}
+		return c.JSON(200, report)
+	}
 }
 
 func (c2 campaignHandler) GetAllAdsPerAgent(c echo.Context) error {
@@ -141,11 +221,11 @@ func (c2 campaignHandler) GetAllDisposableCampaigns(c echo.Context) error {
 		domain = "127.0.0.1"
 	}
 	if os.Getenv("DOCKER_ENV") == "" {
-		resp, _ := client.R().
+		resp, err := client.R().
 			SetHeader("Authorization", token).
 			EnableTrace().
 			Get("http://" + domain + ":8093/ad/getAllDisposableCampaigns")
-
+		fmt.Println(err)
 
 		if resp.StatusCode() != 200 {
 			return echo.NewHTTPError(http.StatusInternalServerError, "error")
@@ -189,10 +269,11 @@ func (c2 campaignHandler) GetAllMultipleCampaigns(c echo.Context) error {
 		domain = "127.0.0.1"
 	}
 	if os.Getenv("DOCKER_ENV") == "" {
-		resp, _ := client.R().
+		resp, err := client.R().
 			SetHeader("Authorization", token).
 			EnableTrace().
 			Get("http://" + domain + ":8093/ad/getAllMultipleCampaigns")
+		fmt.Println(err)
 
 
 		if resp.StatusCode() != 200 {
@@ -254,7 +335,7 @@ func (c2 campaignHandler) UpdateMultipleCampaign(c echo.Context) error {
 			SetBody(c.Request().Body).
 			SetHeader("Authorization", token).
 			EnableTrace().
-			Post("http://" + domain + ":8093/ad/UpdateMultipleCampaign")
+			Post("http://" + domain + ":8093/ad/updateMultipleCampaign")
 
 
 		if resp.StatusCode() != 200 {
@@ -283,7 +364,7 @@ func (c2 campaignHandler) DeleteMultipleCampaign(c echo.Context) error {
 			SetBody(c.Request().Body).
 			SetHeader("Authorization", token).
 			EnableTrace().
-			Post("http://" + domain + ":8093/ad/DeleteMultipleCampaign")
+			Post("http://" + domain + ":8093/ad/deleteMultipleCampaign")
 
 
 		if resp.StatusCode() != 200 {
@@ -297,7 +378,7 @@ func (c2 campaignHandler) DeleteMultipleCampaign(c echo.Context) error {
 			SetBody(c.Request().Body).
 			SetHeader("Authorization", token).
 			EnableTrace().
-			Post("http://" + domain + ":8093/ad/DeleteMultipleCampaign")
+			Post("http://" + domain + ":8093/ad/deleteMultipleCampaign")
 
 
 		if resp.StatusCode() != 200 {
@@ -457,6 +538,6 @@ func (c2 campaignHandler) CreateMultipleCampaign(c echo.Context) error {
 	}
 }
 
-func NewCampaignHandler(tokenRepo datastore.TokenRepository) CampaignHandler {
-	return &campaignHandler{tokenRepository: tokenRepo}
+func NewCampaignHandler(tokenRepo datastore.TokenRepository, reportUsecase usecase.ReportUseCase) CampaignHandler {
+	return &campaignHandler{tokenRepository: tokenRepo, reportUseCase: reportUsecase}
 }
