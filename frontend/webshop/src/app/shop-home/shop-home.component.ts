@@ -49,6 +49,10 @@ export class ShopHomeComponent implements OnInit {
     return this.authService.getUserValue() && this.authService.getUserValue().role === Role.Admin;
   }
 
+  isMine(product : Product) {
+    return product.userId === this.authService.currentUserValue.id
+  }
+
   getShopProducts(filterSearch : FilterSearch) {
       this.prodService.getProducts(filterSearch).subscribe(
         data => {

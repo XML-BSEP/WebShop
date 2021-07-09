@@ -9,6 +9,7 @@ export class Product {
     description : String;
     count : number;
     serial : Number;
+    public userId : Number;
     constructor(id : number, name : String, price : number, image : String[], currency : String, category : String, available : number, description : String, count : number, serial : Number) {
       this.productId = id;
       this.name = name;

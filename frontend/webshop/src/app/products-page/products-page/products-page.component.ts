@@ -46,6 +46,10 @@ export class ProductsPageComponent implements OnInit {
         })
   }
 
+  isMine() {
+    
+  }
+
   load(event : PageEvent) {
       this.pageSize = event.pageSize
       this.filterSearch.category = ""

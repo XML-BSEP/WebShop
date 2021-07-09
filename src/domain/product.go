@@ -22,7 +22,7 @@ type Product struct {
 	CategoryId   uint
 	SerialNumber uint64 `json:"serial"`
 	ShopAccount   ShopAccount
-	ShopAccountID uint
+	ShopAccountID uint `json:"shopAccountId"`
 }
 
 type ProductUsecase interface {

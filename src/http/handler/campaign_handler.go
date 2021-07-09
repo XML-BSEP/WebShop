@@ -240,7 +240,7 @@ func (c2 campaignHandler) UpdateMultipleCampaign(c echo.Context) error {
 			SetBody(c.Request().Body).
 			SetHeader("Authorization", token).
 			EnableTrace().
-			Post("http://" + domain + ":8093/ad/UpdateMultipleCampaign")
+			Post("http://" + domain + ":8093/ad/updateMultipleCampaign")
 
 
 		if resp.StatusCode() != 200 {
