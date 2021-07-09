@@ -37,7 +37,7 @@
 .fl-table thead th:nth-child(odd) {
     color: #ffffff;
    /* background: #324960;*/
-    background: darkslategray;
+    background: #2980B9;
 }
 
 .fl-table tr:nth-child(even) {
