@@ -45,6 +45,7 @@ type ProductUsecase interface {
 	GetBySerial(serial uint64) (*Product, error)
 	GetAllProductsInUsersShop(ctx echo.Context, userId uint) ([]*Product, error)
 	GetProductDetails(ctx context.Context, productId uint)(*Product, error)
+	DecodeBase64(media string, agentId string, ctx context.Context) (string, error)
 
 }
 

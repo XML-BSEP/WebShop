@@ -1,10 +1,12 @@
 package usecase
 
 import (
+	"bufio"
 	"context"
 	"encoding/base64"
 	"fmt"
 	"github.com/labstack/echo"
+	"io/ioutil"
 	"os"
 	"strconv"
 	"strings"
@@ -35,15 +37,61 @@ func (p *productUseCase) GetProductDetails(ctx context.Context, productId uint) 
 }
 
 func (p *productUseCase) GetAllProductsInUsersShop(ctx echo.Context, userId uint) ([]*domain.Product, error) {
-	return p.ProductRepository.GetAllProductsInUsersShop(ctx, userId)
+	products, err := p.ProductRepository.GetAllProductsInUsersShop(ctx, userId)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, prod := range products {
+		for i, img := range prod.Images {
+			id := strconv.FormatUint(uint64(prod.ID), 10)
+			encoded, err := p.DecodeBase64(img.Path, id, context.Background())
+			if err != nil {
+				continue
+			}
+			prod.Images[i].Path = encoded
+		}
+	}
+	return products, nil
 }
 
 func (p *productUseCase) GetAllAvailableProductsInUsersShop(ctx echo.Context, userId uint) ([]*domain.Product, error) {
-	return p.ProductRepository.GetAllAvailableProductsInUsersShop(ctx,userId)
+	products, err := p.ProductRepository.GetAllAvailableProductsInUsersShop(ctx,userId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	for _, prod := range products {
+		for i, img := range prod.Images {
+			id := strconv.FormatUint(uint64(prod.ID), 10)
+			encoded, err := p.DecodeBase64(img.Path, id, context.Background())
+			if err != nil {
+				continue
+			}
+			prod.Images[i].Path = encoded
+		}
+	}
+	return products, nil
 }
 
 func (p *productUseCase) GetBySerial(serial uint64) (*domain.Product, error) {
-	return p.ProductRepository.GetBySerial(serial)
+	product, err := p.ProductRepository.GetBySerial(serial)
+	if err != nil {
+		return nil, err
+	}
+
+
+	for i, img := range product.Images {
+		id := strconv.FormatUint(uint64(product.ID), 10)
+		encoded, err := p.DecodeBase64(img.Path, id, context.Background())
+		if err != nil {
+			continue
+		}
+		product.Images[i].Path = encoded
+	}
+
+	return product, nil
 }
 
 func (p *productUseCase) Count() (int64, error) {
@@ -292,6 +340,41 @@ func (p *productUseCase) Delete(ctx echo.Context, deletedProduct dto.DeleteProdu
 
 	return p.ProductRepository.Delete(deleted.Model.ID)
 }
+
+
+func (p *productUseCase) DecodeBase64(media string, agentId string, ctx context.Context) (string, error) {
+	workingDirectory, _ := os.Getwd()
+	if !strings.HasSuffix(workingDirectory, "src") {
+		firstPart := strings.Split(workingDirectory, "src")
+		value := firstPart[0] + "/src"
+		workingDirectory = value
+		os.Chdir(workingDirectory)
+	}
+
+	path1 := "./assets/"
+	err := os.Chdir(path1)
+	fmt.Println(err)
+	spliced := strings.Split(media, "/")
+	var f *os.File
+	if len(spliced) > 1 {
+		err = os.Chdir(agentId)
+		f, _ = os.Open(spliced[1])
+	} else {
+		f, _ = os.Open(spliced[0])
+	}
+
+	defer f.Close()
+	reader := bufio.NewReader(f)
+	content, _ := ioutil.ReadAll(reader)
+
+	encoded := base64.StdEncoding.EncodeToString(content)
+
+	fmt.Println("ENCODED: " + encoded)
+	os.Chdir(workingDirectory)
+
+	return "data:image/jpg;base64," + encoded, nil
+}
+
 
 func makeTimestamp() uint64 {
 	return uint64(time.Now().UnixNano() / int64(time.Millisecond))

@@ -2,7 +2,7 @@
   "server" : {
     "domain": "127.0.0.1",
     "docker_domain" : "webshopredis",
-    "port_docker": 6400,
-    "port_localhost": 6379
+    "port_docker": 6379,
+    "port_localhost": 6400
   }
 }
