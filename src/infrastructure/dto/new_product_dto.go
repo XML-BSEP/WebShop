@@ -6,7 +6,7 @@ type NewProduct struct{
 	Category string `json:"category" validate:"required"`
 	Description string `json:"description" validate:"required"`
 	Images []string `json:"images" validate:"required,images"`
-	Currency string `json:"currency" validate:"required,currency"`
+	Currency string `json:"currency"`
 	Available string `json:"available" validate:"required,available"`
 
 }

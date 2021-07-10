@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  baseUrl: 'https://localhost:443',
+  baseUrl: 'http://localhost:8099',
   login:"login",
   auth:"auth",
   registration : "register",

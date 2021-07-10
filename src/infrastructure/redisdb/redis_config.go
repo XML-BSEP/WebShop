@@ -26,7 +26,7 @@ func NewReddisConn(logger *logger.Logger) *redis.Client {
 	var port string
 
 	if os.Getenv("DOCKER_ENV") != "" {
-		address = viper.GetString(`server.address_docker`)
+		address = viper.GetString(`server.docker_domain`)
 		port = viper.GetString(`server.port_docker`)
 	}else{
 		address = viper.GetString(`server.address_localhost`)

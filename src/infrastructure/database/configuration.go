@@ -34,13 +34,14 @@ func init_viper(logger *logger.Logger) {
 
 func getConnection(logger *logger.Logger) *gorm.DB {
 	init_viper(logger)
-	var host string
+	var host, port string
 	if os.Getenv("DOCKER_ENV") != "" {
 		host = viper.GetString(`database.host_docker`)
+		port = viper.GetString(`database.port_docker`)
 	}else{
 		host = viper.GetString(`database.host_localhost`)
+		port = viper.GetString(`database.port`)
 	}
-	port := viper.GetString(`database.port`)
 	user := viper.GetString(`database.user`)
 	password := viper.GetString(`database.pass`)
 	dbName := viper.GetString(`database.dbname`)

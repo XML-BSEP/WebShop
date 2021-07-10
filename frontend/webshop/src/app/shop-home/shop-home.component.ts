@@ -49,6 +49,10 @@ export class ShopHomeComponent implements OnInit {
     return this.authService.getUserValue() && this.authService.getUserValue().role === Role.Admin;
   }
 
+  isMine(product : Product) {
+    return product.userId === this.authService.currentUserValue.id
+  }
+
   getShopProducts(filterSearch : FilterSearch) {
       this.prodService.getProducts(filterSearch).subscribe(
         data => {
@@ -82,7 +86,7 @@ export class ShopHomeComponent implements OnInit {
     console.log(product)
     // this.router.navigate(['/editProduct'], {state: {data: product}});
 
-    var deletedProduct = new DeletedProduct(product.serial.toString())
+    var deletedProduct = new DeletedProduct(product.serial.toString(), this.authService.currentUserValue.id)
 
     console.log(deletedProduct);
 

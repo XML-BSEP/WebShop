@@ -77,10 +77,10 @@
                        <button mat-button matTooltip="Add to card">
                            <i class="bi-bag" role="img" aria-label="GitHub" *ngIf="!isAdmin()" (click)="addToCart(product)" style="font-size: 2rem;"></i>
                        </button>
-                       <button mat-button matTooltip="Edit" *ngIf="isAdmin()" (click)="edit(product)">
+                       <button mat-button matTooltip="Edit" *ngIf="isAdmin() && isMine(product)" (click)="edit(product)">
                          <i class="bi bi-pencil-square" role="img" style="font-size: 2rem;"></i>
                      </button>
-                     <button mat-button matTooltip="Edit" *ngIf="isAdmin()" (click)="remove(product)">
+                     <button mat-button matTooltip="Edit" *ngIf="isAdmin() && isMine(product)" (click)="remove(product)">
                        <i class="bi bi-trash" role="img" style="font-size: 2rem;"></i>
                    </button>
                    </mat-card-actions>

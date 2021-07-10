@@ -22,7 +22,7 @@ type Product struct {
 	CategoryId   uint
 	SerialNumber uint64 `json:"serial"`
 	ShopAccount   ShopAccount
-	ShopAccountID uint
+	ShopAccountID uint `json:"shopAccountId"`
 }
 
 type ProductUsecase interface {
@@ -45,6 +45,7 @@ type ProductUsecase interface {
 	GetBySerial(serial uint64) (*Product, error)
 	GetAllProductsInUsersShop(ctx echo.Context, userId uint) ([]*Product, error)
 	GetProductDetails(ctx context.Context, productId uint)(*Product, error)
+	DecodeBase64(media string, agentId string, ctx context.Context) (string, error)
 
 }
 
