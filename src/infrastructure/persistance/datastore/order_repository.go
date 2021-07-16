@@ -1,45 +1,31 @@
 package datastore
 
 import (
-	"gorm.io/gorm"
+	"context"
+	"github.com/google/uuid"
+	"go.mongodb.org/mongo-driver/mongo"
 	"web-shop/domain"
 )
 
 type orderRepository struct {
-	Conn *gorm.DB
+	collection *mongo.Collection
+	db *mongo.Client
 }
 
-func (o *orderRepository) Fetch() ([]*domain.Order, error) {
-	var (
-		orders []*domain.Order
-		err   error
-	)
-	err = o.Conn.Order("id desc").Find(&orders).Error
-	return orders, err
+
+func NewOrderRepository(db *mongo.Client) domain.OrderRepository {
+	return &orderRepository{
+		db: db,
+		collection : db.Database("order_db").Collection("orders"),
+	}
 }
 
-func (o *orderRepository) GetByID(id uint) (*domain.Order, error) {
-	ord := &domain.Order{Model: gorm.Model{ID: id}}
-	err := o.Conn.First(ord).Error
-	return ord, err
+func (o *orderRepository) PlaceOrder(ctx context.Context, order *domain.Order) error {
+	order.ID = uuid.NewString()
+	_, err := o.collection.InsertOne(ctx, *order)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
-func (o *orderRepository) Update(order *domain.Order) (*domain.Order, error) {
-	err := o.Conn.Save(order).Error
-	return order, err
-}
-
-func (o *orderRepository) Create(order *domain.Order) (*domain.Order, error) {
-	err := o.Conn.Create(order).Error
-	return order, err
-}
-
-func (o *orderRepository) Delete(id uint) error {
-	ord := &domain.Order{Model: gorm.Model{ID: id}}
-	err := o.Conn.Delete(ord).Error
-	return err
-}
-
-func NewOrderRepository(Conn *gorm.DB) domain.OrderRepository {
-	return &orderRepository{Conn}
-}

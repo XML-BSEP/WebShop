@@ -27,6 +27,7 @@ type signUp struct {
 	SignUpUsecase usecase.SignUpUseCase
 }
 
+
 func NewSignUpHandler(us domain.RegisteredShopUserRepository,signUpUsecase usecase.SignUpUseCase) SignUpHandler {
 	return &signUp{us, signUpUsecase}
 }

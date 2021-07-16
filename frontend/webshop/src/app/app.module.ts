@@ -23,6 +23,16 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
 import { ForbiddenComponent } from './other/forbidden/forbidden.component';
 import { ToastrModule } from 'ngx-toastr';
 import { EditProductComponent } from './product/edit-product/edit-product.component';
+import { ShoppingCartComponent } from './shopping-cart/shopping-cart.component';
+import { ShopHomeComponent } from './shop-home/shop-home.component';
+import { MatCarouselModule } from '@ngmodule/material-carousel';
+import { CreateAdComponent } from './create-ad/create-ad.component';
+import { CreateCampaingComponent } from './create-campaing/create-campaing.component';
+import { ChangeCampaignComponent } from './change-campaign/change-campaign.component';
+import { ShowImageComponent } from './dialogs/show-image/show-image.component';
+import { EditProfileComponent } from './userprofile/edit-profile/edit-profile.component';
+import { DatePipe } from '@angular/common'
+import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
 
 
 
@@ -40,7 +50,14 @@ import { EditProductComponent } from './product/edit-product/edit-product.compon
     AddProductComponent,
     ForgotPasswordComponent,
     ForbiddenComponent,
-    EditProductComponent
+    EditProductComponent,
+    ShoppingCartComponent,
+    ShopHomeComponent,
+    CreateAdComponent,
+    CreateCampaingComponent,
+    ChangeCampaignComponent,
+    ShowImageComponent,
+    EditProfileComponent
   ],
   imports: [
     BrowserModule,
@@ -52,11 +69,16 @@ import { EditProductComponent } from './product/edit-product/edit-product.compon
     HttpClientModule,
     MatInputModule,
     MatSelectModule,
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
+    MatCarouselModule.forRoot(),
+    NgxMaterialTimepickerModule
+    
   ],
   providers: [
+    DatePipe,
     {provide : HTTP_INTERCEPTORS, useClass : JwtInterceptor, multi : true},
     {provide : HTTP_INTERCEPTORS, useClass : ErrorInterceptor, multi : true}],
+  
   bootstrap: [AppComponent]
 })
 export class AppModule { }

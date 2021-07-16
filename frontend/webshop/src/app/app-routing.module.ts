@@ -1,3 +1,4 @@
+import { ShoppingCartComponent } from './shopping-cart/shopping-cart.component';
 import { EditProductComponent } from './product/edit-product/edit-product.component';
 import { AddProductComponent } from './product/add-product/add-product.component';
 import { NgModule } from '@angular/core';
@@ -11,6 +12,12 @@ import {ForgotPasswordComponent } from './forgot-password/forgot-password.compon
 import { ForbiddenComponent } from './other/forbidden/forbidden.component';
 import { AuthGuard } from './helpers';
 import { Role } from './model/role';
+import { ShopHomeComponent } from './shop-home/shop-home.component';
+import { CreateCampaingComponent } from './create-campaing/create-campaing.component';
+import { CreateAd } from './model/create_ad';
+import { ChangeCampaignComponent } from './change-campaign/change-campaign.component';
+import { CreateAdComponent } from './create-ad/create-ad.component';
+import { EditProfileComponent } from './userprofile/edit-profile/edit-profile.component';
 
 const routes: Routes = [
   {
@@ -40,6 +47,10 @@ const routes: Routes = [
   component: ProductsPageComponent
 },
 {
+  path: 'shopHome',
+  component: ShopHomeComponent
+},
+{
   path:'addProduct',
   component: AddProductComponent,
   canActivate : [AuthGuard],
@@ -52,12 +63,43 @@ const routes: Routes = [
   data : {roles: [Role.Admin]}
 },
 {
+  path:'cart',
+  component: ShoppingCartComponent,
+  canActivate:[AuthGuard],
+  data:{role:[Role.Customer]}
+},
+{
   path:'forgotPassword',
   component : ForgotPasswordComponent
 },
 {
   path: 'forbidden',
   component: ForbiddenComponent
+},
+
+{
+  path: 'createAd',
+  component : CreateAdComponent,
+  canActivate : [AuthGuard],
+  data : {roles: [Role.Admin]}
+},
+{
+  path: 'createCampaign',
+  component : CreateCampaingComponent,
+  canActivate : [AuthGuard],
+  data : {roles: [Role.Admin]}
+}, 
+{
+  path: 'changeCampaign',
+  component : ChangeCampaignComponent,
+  canActivate : [AuthGuard],
+  data : {roles: [Role.Admin]}
+},
+{
+  path: 'settings',
+  component : EditProfileComponent,
+  canActivate : [AuthGuard],
+  data : {roles: [Role.Admin]}
 }
 ];
 

@@ -1,0 +1,386 @@
+
+<!-- <div class="component">
+  <div class="content">
+    <mat-card class="main-card mat-elevation-z4">
+      <form [formGroup]="registrationForm" >
+        <div class="row">
+          <div class="col">
+            <div class="d-flex flex-column align-items-center text-center">
+              <img class="circular rounded-circle mt-5 mb-5"  src={{imgFile}}>
+            </div>
+
+          </div>
+          <div class="col d-flex flex-row align-items-center text-center" *ngIf="isEmptyImage()">
+            <input
+              style="display: none"
+              type="file" (change)="onFileChanged($event)"
+              #fileInput accept="image/x-png,image/gif,image/jpeg" >
+            <button mat-fab color="primary" (click)="fileInput.click()" >
+              <mat-icon>add</mat-icon>
+            </button>
+
+          </div>
+
+          <div class="col d-flex flex-row align-items-center text-center" *ngIf="!isEmptyImage()">
+            <button mat-fab color="accent" (click)="removePhoto()" >
+              <mat-icon>remove</mat-icon>
+            </button>
+          </div>
+
+        </div>
+        <div class="row">
+          <div class="col-sm" >
+            <mat-form-field appearance="outline" class="name" id="text-ff">
+              <mat-label>Name*</mat-label>
+              <input matInput placeholder="Name"
+                    formControlName="name">
+              <mat-error
+                *ngIf="!registrationForm.get('name').valid && registrationForm.get('name').touched && registrationForm.get('name').errors['required']">
+                Please enter name</mat-error>
+
+            </mat-form-field>
+          </div>
+          <div class="col-sm">
+            <mat-form-field appearance="outline" class="name" id="text-ff">
+              <mat-label>Lastname*</mat-label>
+              <input matInput placeholder="Lastname"
+                    formControlName="surname">
+              <mat-error
+                *ngIf="!registrationForm.get('surname').valid && registrationForm.get('surname').touched && registrationForm.get('surname').errors['required']">
+                Please enter lastname</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <mat-form-field appearance="outline" class="name" id="text-ff">
+              <mat-label>Address*</mat-label>
+              <input matInput type="text" placeholder="Address"
+                    formControlName="address" >
+              <mat-error
+                *ngIf="!registrationForm.get('address').valid && registrationForm.get('address').touched && registrationForm.get('address').errors['required']">
+                Please enter address</mat-error>
+
+            </mat-form-field>
+          </div>
+          <div class="col">
+            <mat-form-field appearance="outline" class="name" id="text-ff">
+              <mat-label>Phone*</mat-label>
+              <input matInput type="text" placeholder="Phone"
+                    formControlName="phone" >
+              <mat-error
+                *ngIf="!registrationForm.get('phone').valid && registrationForm.get('phone').touched && registrationForm.get('phone').errors['required']">
+                Please enter phone number</mat-error>
+
+            </mat-form-field>
+
+          </div>
+
+        </div>
+        <div class="row">
+          <div class="col">
+            <mat-form-field appearance="outline" class="name">
+              <mat-label>Birthday*</mat-label>
+              <input matInput [matDatepicker]="dp3" [max]="today" formControlName="birthday">
+              <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
+              <mat-datepicker #dp3 disabled="false"></mat-datepicker>
+              <mat-error
+              *ngIf="!registrationForm.get('birthday').valid && registrationForm.get('birthday').touched && registrationForm.get('birthday').errors['required']">
+              Please enter birthday</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col mt-3">
+            <mat-label class="mr-3">Gender*</mat-label>
+            <mat-radio-group class="mt-4  " formControlName="gender">
+              <mat-radio-button class="mr-3" value="Male">Male</mat-radio-button>
+              <mat-radio-button class="mr-3" value="Female">Female</mat-radio-button>
+              <mat-radio-button class="mr-3" value="Other">Other</mat-radio-button>
+
+            </mat-radio-group>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <mat-form-field appearance="outline" class="name" id="text-ff">
+              <mat-label>Website</mat-label>
+              <input matInput type="text" placeholder="Website"
+                    formControlName="web" >
+            </mat-form-field>
+          </div>
+          <div class="col">
+            <mat-form-field appearance="outline" class="name" id="text-ff">
+              <mat-label>Bio</mat-label>
+              <textarea matInput placeholder="Biography" formControlName='bio'></textarea>
+
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+
+          <div class="col">
+            <mat-form-field appearance="outline" class="name" id="text-ff">
+              <mat-label>Email*</mat-label>
+              <input matInput placeholder="Email"
+                    formControlName="email">
+              <mat-error
+                *ngIf="!registrationForm.get('email').valid && registrationForm.get('email').touched && registrationForm.get('email').errors['required']">
+                Please enter email</mat-error>
+                <mat-error
+                *ngIf="!registrationForm.get('email').valid && registrationForm.get('email').touched && registrationForm.get('email').errors['email']">
+                Please enter email</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col">
+            <mat-form-field appearance="outline" class="name" id="text-ff">
+              <mat-label>Username*</mat-label>
+              <input matInput placeholder="Username"
+                    formControlName="username">
+              <mat-error
+                *ngIf="!registrationForm.get('username').valid && registrationForm.get('username').touched && registrationForm.get('username').errors['required']">
+                Please enter username</mat-error>
+
+            </mat-form-field>
+          </div>
+
+        </div>
+      </form>
+      <form [formGroup]="changePasswordForm" >
+
+        <div class="row" *ngIf="changePass">
+          <div class="col mb-4">
+            <mat-form-field appearance="outline" class="name"  id="text-ff">
+              <mat-label>Password*</mat-label>
+              <input matInput type="password" placeholder="Password"
+                    formControlName="password" (change)="checkPassword()">
+                    <mat-hint>Password must have minimum 1 uppercase letter, 1 lowercase letter, 1 digit and 1 special character</mat-hint>
+
+              <mat-error
+                *ngIf="!changePasswordForm.get('password').valid && changePasswordForm.get('password').touched && changePasswordForm.get('password').errors['required']">
+                Please enter password</mat-error>
+                <mat-error
+                *ngIf="!changePasswordForm.get('password').valid && changePasswordForm.get('password').touched && changePasswordForm.get('password').errors['pattern']">
+                Password must have minimum 1 uppercase letter, 1 lowercase letter, 1 digit and 1 special character and needs to be minimum 8 characters long.</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col mb-4">
+            <mat-form-field appearance="outline" class="name" id="text-ff">
+              <mat-label>Confirm password*</mat-label>
+              <input matInput type="password" placeholder="Password"
+                    formControlName="confirmPassword" >
+                    <mat-hint>Password must have minimum 1 uppercase letter, 1 lowercase letter, 1 digit and 1 special character</mat-hint>
+
+              <mat-error
+                *ngIf="!changePasswordForm.get('confirmPassword').valid && changePasswordForm.get('confirmPassword').touched && changePasswordForm.get('confirmPassword').errors['required']">
+                Please confirm password</mat-error>
+                <mat-error
+                *ngIf="!changePasswordForm.get('confirmPassword').valid && changePasswordForm.get('confirmPassword').touched && changePasswordForm.get('confirmPassword').errors['pattern']">
+                Password must have minimum 1 uppercase letter, 1 lowercase letter, 1 digit and 1 special character and needs to be minimum 8 characters long.</mat-error>
+
+            </mat-form-field>
+          </div>
+
+        </div>
+        </form>
+        <div class="row">
+          <div class="col d-flex flex-row align-items-center text-center">
+            <button mat-raised-button color="primary" *ngIf="!changePass" (click)="toggleChangePassword()">Change password</button>
+            <button mat-raised-button color="accent" class="mr-5" *ngIf="changePass" (click)="toggleChangePassword()">Cancel</button>
+
+            <button mat-raised-button color="primary"  *ngIf="changePass" (click)="confirmPassword()" [disabled]="!changePasswordForm.valid">Confirm password change</button>
+
+          </div>
+          <div class="col d-flex flex-row justify-content-center align-items-center">
+            <button mat-raised-button class="mr-5" color="accent">Cancel</button>
+
+            <button mat-raised-button color="primary" [disabled]="!registrationForm.valid" (click)="confirmEdit()">Confirm</button>
+          </div>
+        </div>
+    </mat-card>
+    <mat-card class="main-card mat-elevation-z4" style="margin-left: 30px; width: 500px;">
+
+      <div class="row">
+        <div class="col d-flex justify-content-left mt-4 mb-3">
+          <mat-label style="margin-right: 10px;">Enable two factor authentication</mat-label>
+          <mat-slide-toggle (click)="enable2fa()" [(ngModel)]="isEnabled2fa"></mat-slide-toggle>
+        </div>
+      </div>
+
+      <form [formGroup]="passcodeForm">
+
+      <div *ngIf="showQRCodeDetails" style="justify-content: center; align-content: center;">
+        <mat-label>Scan your QR code using Google Authenticator</mat-label>
+        <img [src]="qrCodeImg">
+        <div class="col mb-4">
+          <mat-form-field appearance="outline" class="passcode" id="text-ff">
+            <mat-label>Passcode*</mat-label>
+            <input matInput type="text" placeholder="Passcode"
+                  formControlName="passcode" >
+                  <mat-hint>Please enter your passcode from Google Authenticator to continue</mat-hint>
+
+            <mat-error
+              *ngIf="!passcodeForm.get('passcode').valid && passcodeForm.get('passcode').touched && passcodeForm.get('passcode').errors['required']">
+              You must enter your passcode to continue.</mat-error>
+              <mat-error
+              *ngIf="!passcodeForm.get('passcode').valid && passcodeForm.get('passcode').touched && passcodeForm.get('passcode').errors['pattern']">
+              You must enter your passcode to continue.</mat-error>
+
+          </mat-form-field>
+
+          <div *ngIf="!isEnabled2fa">
+            <button mat-raised-button color="primary" style="margin-left: 15px;" (click)="confirm2FA()">Enable</button>
+          </div>
+
+        </div>
+      </div>
+
+      <div *ngIf="showDisabledPassCode">
+
+        <mat-label>Enter your code using Google Authenticator to disable</mat-label>
+        <mat-form-field appearance="outline" class="passcode" id="text-ff">
+          <mat-label>Passcode*</mat-label>
+          <input matInput type="text" placeholder="Passcode"
+                formControlName="passcode" >
+                <mat-hint>Please enter your passcode from Google Authenticator to continue</mat-hint>
+
+          <mat-error
+            *ngIf="!passcodeForm.get('passcode').valid && passcodeForm.get('passcode').touched && passcodeForm.get('passcode').errors['required']">
+            You must enter your passcode to continue.</mat-error>
+            <mat-error
+            *ngIf="!passcodeForm.get('passcode').valid && passcodeForm.get('passcode').touched && passcodeForm.get('passcode').errors['pattern']">
+            You must enter your passcode to continue.</mat-error>
+
+        </mat-form-field>
+        <div *ngIf="isEnabled2fa">
+          <button mat-raised-button color="primary" style="margin-left: 15px;" (click)="disable2FA()">Disable</button>
+        </div>
+        </div>
+    </form>
+    </mat-card>
+
+  </div>
+
+</div> -->
+<div class="component">
+    <div class="container" >
+    <br><br>
+      <div class="row gutters-sm" style="display: flex;">
+        <div class="col-md-4 d-none d-md-block">
+          <div class="card">
+            <div class="card-body" >
+              <nav class="nav flex-column nav-pills nav-gap-y-1">
+                <!-- <button mat-flat-button data-toggle="tab" style="background-color: transparent;" class="nav-item nav-link has-icon nav-link-faded active">
+  
+                </button> -->
+                <button mat-flat-button data-toggle="tab" class="nav-item nav-link has-icon nav-link-faded" (click)="goToGenerateToken()">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" stroke="currentCollor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="bi bi-images mr-2" viewBox="0 0 16 16">
+                    <path d="M0 8a4 4 0 0 1 7.465-2H14a.5.5 0 0 1 .354.146l1.5 1.5a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0L13 9.207l-.646.647a.5.5 0 0 1-.708 0L11 9.207l-.646.647a.5.5 0 0 1-.708 0L9 9.207l-.646.647A.5.5 0 0 1 8 10h-.535A4 4 0 0 1 0 8zm4-3a3 3 0 1 0 2.712 4.285A.5.5 0 0 1 7.163 9h.63l.853-.854a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.793-.793-1-1h-6.63a.5.5 0 0 1-.451-.285A3 3 0 0 0 4 5z"/>
+                    <path d="M4 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                  </svg>Add Nishtagram Token
+                </button>
+                
+  
+              </nav>
+              <br>
+              <mat-divider></mat-divider>
+              <br>
+              <nav class="nav flex-column nav-pills nav-gap-y-1">
+                <!-- <button mat-flat-button data-toggle="tab" style="background-color: transparent;" class="nav-item nav-link has-icon nav-link-faded active">
+  
+                </button> -->
+                <button mat-flat-button data-toggle="tab" class="nav-item nav-link has-icon nav-link-faded" (click)="generateStatisticsReport()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" stroke="currentCollor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="bi bi-images mr-2" viewBox="0 0 16 16">
+                        <path d="M10.854 7.854a.5.5 0 0 0-.708-.708L7.5 9.793 6.354 8.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3z"/>
+                        <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
+                      </svg>Monitor your campaigns
+                  </button>
+                
+  
+              </nav>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-8">
+          <div class="card">
+            <div *ngIf="generateToken"  style="height:fit-content; margin: 10px;">
+              <h6>ADD YOUR PERSONAL NISHTAGRAMTOKEN</h6>
+              <hr>
+              <br><br><br>
+              <div style="margin: 10px;" *ngIf="tokenGenerated">
+                <mat-label>Here you can copy your personal Nishtagram token so you can advertise your products faster!</mat-label>
+                <br><br>
+                
+                <input matInput type="text" style="width: 300px;"
+                      [(ngModel)]="personalToken">
+                      <br><br>
+                <button mat-raised-button color="primary" (click)="saveToken()">Save your token</button>
+              </div>
+            </div>
+            <div *ngIf="statisticsReport"  style="height:fit-content; width: 1000px;  margin: 10px;" >
+              <h6>MONITOR YOUR CAMPAIGNS</h6>
+              <hr>
+              <br>
+              <div style="margin: 10px;">
+                <mat-label>Here you can download a report of basic statistics of your campaigns.</mat-label>
+                <br><br>
+                <button mat-raised-button color="primary" (click)="downloadReport()">Download Report</button>
+                <br>
+                <div *ngFor="let c of statistics.statistic_report" >
+                  <div style="display: flex; margin: 10px;">
+                    
+                  <div style="margin: 10px;">
+                    Campaign ID: {{c.campaignId}}
+                    <br>
+                    Campaign Type: {{c.campaignType}}
+                    <br>
+                    Campaign Period: {{c.campaignPeriod}}
+                    <br>
+                    Campaign Frequency: {{c.advertisementFrequency}}
+                  </div>
+
+                  <div  style="margin: 10px;">
+                    Number Of Likes: {{c.numOfLikes}}
+                    <br>
+                    Number Of Dislikes: {{c.numOfDislikes}}
+                    <br>
+                    Number Of Comments: {{c.numOfComments}}
+                    <br>
+                    Number Of Advertisements: {{c.advertisingCount.advertisedCount}}
+                    <br>
+                  </div>
+
+                </div>
+
+                  <div class="table-wrapper">
+                    Influencer Site Visits:
+                    <br>
+                    <table matSort class="fl-table" >
+                        <thead>
+                          <tr>
+                              <th>Username</th>
+                              <th>Visits</th>  
+                          
+                          </tr>
+                          </thead>
+                          <tbody>
+                          <tr  *ngFor="let a of c.clicks">
+                              <td>{{a.influencerUsername}}</td>
+                              <td>{{a.clicks}}</td>
+                          </tr>
+                        <tbody>
+                    </table>
+                  
+                </div>
+
+                </div>
+              
+              
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+    </div>
+  </div>
+  

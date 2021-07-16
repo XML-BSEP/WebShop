@@ -1,6 +1,8 @@
 export class DeletedProduct{
   serial : String;
-  constructor(serial : String){
+  public userId : Number;
+  constructor(serial : String, userId : Number){
     this.serial = serial;
+    this.userId = userId;
   }
 }

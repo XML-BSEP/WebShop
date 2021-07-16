@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  baseUrl: 'https://localhost:443',
+  baseUrl: 'http://localhost:8099',
   login:"login",
   auth:"auth",
   registration : "register",
@@ -20,7 +20,26 @@ export const environment = {
   resetPassword : "resetPassword",
   resendPassCode : "resendPassCode",
   resendRegCode : "resendRegistrationCode",
-  deleteProduct : "deleteProduct"
+  deleteProduct : "deleteProduct",
+  allShops :"allShops",
+  addToCart:"addToCart",
+  getCart:"getCart",
+  removeFromCart:"removeFromCart",
+  placeOrder:"placeOrder",
+  banProfile : "banProfile",
+  createAd : "createAd",
+  getAllAdsPerAgent : "getAllAdsPerAgent",
+  createDisposableCampaign : "createDisposableCampaign",
+  createMultipleCampaign : "createMultipleCampaign",
+  confirmAgentAccount : "confirmAgentAccount",
+  getAllMultipleCampaigns : "getAllMultipleCampaigns",
+  getAllDisposableCampaigns : "getAllDisposableCampaigns",
+  deleteDisposableCampaign : "deleteDisposableCampaign",
+  deleteMultipleCampaign : "deleteMultipleCampaign",
+  updateMultipleCampaign : "updateMultipleCampaign", 
+  saveToken : "saveToken",
+  generateStatisticsReport : "generateStatisticsReport",
+  downloadPdf : "downloadPdf"
 };
 
 /*

@@ -1,7 +1,7 @@
 <!--Navbar -->
 <nav class="mb-1 navbar navbar-expand-lg navbar-dark bg-primary fixed-top" >
-    <a class="navbar-brand" href="#">DukeStrategic</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-333"
+  <a class="navbar-brand" href="#">Queen's WebShop</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-333"
       aria-controls="navbarSupportedContent-333" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -20,6 +20,28 @@
         </li>
       </ul>
       <ul class="navbar-nav ml-auto nav-flex-icons">
+        
+      <li class="nav-item">
+        <i class="nav-link bi bi-bar-chart-line" routerLink="/influencerCampaignRequest" data-toggle="tooltip" title="Campaign requests"></i>
+        <span class="sr-only">(current)</span>
+      </li>
+      <li class="nav-item">
+        <i class="nav-link bi bi-hammer" routerLink="/changeCampaign" data-toggle="tooltip" title="Change campaign"></i>
+        <span class="sr-only">(current)</span>
+      </li>
+      <li class="nav-item">
+        <i class="nav-link bi-bag-plus" routerLink="/createCampaign" data-toggle="tooltip" title="Create campaign"></i>
+        <span class="sr-only">(current)</span>
+      </li>
+      <li  class="nav-item">
+        <i class="nav-link bi-badge-ad" routerLink="/createAd" data-toggle="tooltip" title="Create ad"></i>
+        <span class="sr-only">(current)</span>
+      </li>
+      <li  class="nav-item">
+        <i class="nav-link bi bi-gear" routerLink="/settings" data-toggle="tooltip" title="Settings"></i>
+        <span class="sr-only">(current)</span>
+      </li>
+      
         <li class="nav-item">
             <a class="nav-link" (click)="logout()" routerLink="/login">Logout</a>
           </li>

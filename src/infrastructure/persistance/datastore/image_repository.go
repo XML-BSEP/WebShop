@@ -1,12 +1,22 @@
 package datastore
 
 import (
+	"context"
 	"gorm.io/gorm"
 	"web-shop/domain"
 )
 
 type imageRepository struct {
 	Conn *gorm.DB
+}
+
+func (i *imageRepository) GetByProduct(ctx context.Context, productId uint) ([]domain.Image, error) {
+	var image []domain.Image
+
+	err := i.Conn.Where("product_id=?", productId).Find(&image).Error
+
+	return image, err
+
 }
 
 func (i *imageRepository) GetyByPath(path string) ([]*domain.Image, error) {

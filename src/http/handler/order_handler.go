@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"web-shop/domain"
 	"web-shop/infrastructure/dto"
-	"web-shop/infrastructure/mapper"
 )
 
 type OrderHandler interface {
@@ -21,21 +20,21 @@ type orderHandler struct {
 func (o orderHandler) PlaceOrder(ctx echo.Context) error {
 	decoder := json.NewDecoder(ctx.Request().Body)
 
-	var t dto.OrderDTO
+	var t dto.OrderFrontendDto
 	err := decoder.Decode(&t)
 
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		return echo.NewHTTPError(http.StatusBadRequest, "Failed to decode")
 	}
-	order:=mapper.NewOrderDtoToNewOrder(t)
+	order := domain.Order{Address: t.Address, Zip: t.Zip, City: t.City, UserId: t.UserId, State: t.State}
 
-	products, err := o.OrderUseCase.Create(ctx, &order)
+	err1 := o.OrderUseCase.PlaceOrder(ctx.Request().Context(), &order)
 
-	if err != nil {
-		return echo.NewHTTPError(http.StatusNotFound, "Products do not exist")
+	if err1 != nil {
+		return echo.NewHTTPError(http.StatusNotFound, "Failed to place order")
 	}
 
-	return ctx.JSON(http.StatusOK, products)
+	return ctx.JSON(http.StatusOK, "Success")
 }
 
 func NewOrderHandler(u domain.OrderUsecase) OrderHandler {

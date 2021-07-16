@@ -106,6 +106,7 @@ func (au *Authenticate) Login(c echo.Context) error {
 	userData := make(map[string]interface{})
 	userData["access_token"] = ts.AccessToken
 	userData["refresh_token"] = ts.RefreshToken
+	userData["user_id"] = accDetails.ID
 	userData["id"] = u.Model.ID
 	role, err := au.us.GetRoleById(u.Model.ID)
 	if err != nil {

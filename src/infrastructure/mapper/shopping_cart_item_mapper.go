@@ -7,12 +7,12 @@ import (
 
 func NewShoppingCartItemDtoToNewShoppingCartItem (dto dto.ShoppingCartItemDTO) domain.ShoppingCartItem {
 
-	return domain.ShoppingCartItem{Product: NewProductDtoToProduct(dto.Product), Amount: dto.Amount}
+	return domain.ShoppingCartItem{Product: NewProductDtoToProduct(dto.Product)}
 }
 
 func NewShoppingCartItemToNewShoppingCartItemDTO (s domain.ShoppingCartItem) dto.ShoppingCartItemDTO {
 
-	return dto.ShoppingCartItemDTO{Product: NewProductToProductDto(s.Product), Amount: s.Amount}
+	return dto.ShoppingCartItemDTO{Product: NewProductToProductDto(s.Product)}
 }
 
 func NewDtosFromShoppingCartItems(s []domain.ShoppingCartItem) []dto.ShoppingCartItemDTO{

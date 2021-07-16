@@ -1,6 +1,7 @@
 package dto
 
 type FilterDTO struct {
+	UserId 		 uint 	  `json:"userId"`
 	Name string `json:"name"`
 	Category string `json:"category"`
 	PriceRangeStart uint `json:"priceRangeStart"`

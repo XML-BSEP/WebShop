@@ -2,29 +2,40 @@ package redisdb
 
 import (
 	"github.com/go-redis/redis/v8"
+	logger "github.com/jelena-vlajkov/logger/logger"
 	"github.com/spf13/viper"
+
+	"os"
 )
 
-func init_viper() {
-	viper.SetConfigFile(`src/configurations/redis.json`)
+func init_viper(logger *logger.Logger) {
+	if os.Getenv("DOCKER_ENV") != "" {
+		viper.SetConfigFile(`src/configurations/redis.json`)
+	} else {
+		viper.SetConfigFile(`src/configurations/redis.json`)
+	}
 	err := viper.ReadInConfig()
 	if err != nil {
-		panic(err)
+		logger.Logger.Fatalf("errow while reading redis config file, error: %v\n", err)
 	}
 
-
 }
+func NewReddisConn(logger *logger.Logger) *redis.Client {
+	init_viper(logger)
+	var address string
+	var port string
 
-func NewReddisConn() *redis.Client {
-	init_viper()
-	address := viper.GetString(`server.address`)
-	port := viper.GetString(`server.port`)
+	if os.Getenv("DOCKER_ENV") != "" {
+		address = viper.GetString(`server.docker_domain`)
+		port = viper.GetString(`server.port_docker`)
+	}else{
+		address = viper.GetString(`server.address_localhost`)
+		port = viper.GetString(`server.port_localhost`)
+	}
 
 	return redis.NewClient(&redis.Options{
 		Addr: address + ":" + port,
 		Password: "",
 		DB: 0,
 	})
-
-
 }

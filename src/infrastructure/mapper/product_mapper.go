@@ -34,10 +34,11 @@ func NewProductToProductViewDTO (p domain.Product) dto.ProductViewDTO {
 	}
 
 	return dto.ProductViewDTO{
+		UserId: p.ShopAccountID,
+		ProductId: p.ID,
 		Category: p.Category.Name,
 		Name: p.Name,
 		Available: p.Available,
-		Currency: mapCurrency(p.Currency),
 		Description: p.Description,
 		Image: images,
 		Price: p.Price,

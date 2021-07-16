@@ -26,10 +26,10 @@ export class ProductsPageComponent implements OnInit {
   constructor(private productService : ProductServiceService, private router : Router,  private toastr : ToastrService, private prodService : ProductServiceService, private authService :AuthenticationService) { }
 
   ngOnInit(): void {
-    this.pageSize = 5;
-    this.filterSearch = new FilterSearch("", "", 0, 10000000, this.pageSize, 0, "price asc")
+    // this.pageSize = 5;
+    // this.filterSearch = new FilterSearch(Number("", "", 0, 10000000, this.pageSize, 0, "price asc")
 
-    this.getProducts(this.filterSearch)
+    // this.getProducts(this.filterSearch)
   }
   public isAdmin() {
     return this.authService.getUserValue() && this.authService.getUserValue().role === Role.Admin;
@@ -44,6 +44,10 @@ export class ProductsPageComponent implements OnInit {
           console.log("Posle: " + this.products.length)
           this.itemsCount = data[0].count
         })
+  }
+
+  isMine() {
+
   }
 
   load(event : PageEvent) {
@@ -67,8 +71,9 @@ export class ProductsPageComponent implements OnInit {
   remove(product){
     console.log(product)
     // this.router.navigate(['/editProduct'], {state: {data: product}});
-
-    var deletedProduct = new DeletedProduct(product.serial.toString())
+    console.log(this.authService.currentUserValue.id)
+    var deletedProduct = new DeletedProduct(product.serial.toString(), this.authService.currentUserValue.id)
+    
 
     console.log(deletedProduct);
 

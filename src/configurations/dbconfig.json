@@ -1,7 +1,11 @@
+
 {
+  "docker" : false,
   "database": {
-    "host": "localhost",
-    "port": "5432",
+    "host_localhost": "localhost",
+    "host_docker" : "webshoppostgres",
+    "port": "5434",
+    "port_docker" : "5432",
     "user": "postgres",
     "pass": "root",
     "dbname": "webshop"

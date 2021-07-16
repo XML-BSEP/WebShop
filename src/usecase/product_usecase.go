@@ -1,9 +1,12 @@
 package usecase
 
 import (
+	"bufio"
+	"context"
 	"encoding/base64"
 	"fmt"
 	"github.com/labstack/echo"
+	"io/ioutil"
 	"os"
 	"strconv"
 	"strings"
@@ -13,27 +16,96 @@ import (
 )
 
 type productUseCase struct {
+	ShopAccountRepository domain.ShopAccountRepository
 	ProductRepository domain.ProductRepository
 	CategoryRepository domain.CategoryRepository
 	ImageRepository domain.ImageRepository
 }
 
+func (p *productUseCase) GetProductDetails(ctx context.Context, productId uint) (*domain.Product, error) {
+	product, err := p.ProductRepository.GetProductDetails(ctx,productId)
+	if err!=nil{
+		return nil,err
+	}
+	images, err1 :=p.ImageRepository.GetByProduct(ctx, productId)
+	if err1!=nil{
+		return nil, err
+	}
+
+	product.Images = images
+	return product, nil
+}
+
+func (p *productUseCase) GetAllProductsInUsersShop(ctx echo.Context, userId uint) ([]*domain.Product, error) {
+	products, err := p.ProductRepository.GetAllProductsInUsersShop(ctx, userId)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, prod := range products {
+		for i, img := range prod.Images {
+			id := strconv.FormatUint(uint64(prod.ID), 10)
+			encoded, err := p.DecodeBase64(img.Path, id, context.Background())
+			if err != nil {
+				continue
+			}
+			prod.Images[i].Path = encoded
+		}
+	}
+	return products, nil
+}
+
+func (p *productUseCase) GetAllAvailableProductsInUsersShop(ctx echo.Context, userId uint) ([]*domain.Product, error) {
+	products, err := p.ProductRepository.GetAllAvailableProductsInUsersShop(ctx,userId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	for _, prod := range products {
+		for i, img := range prod.Images {
+			id := strconv.FormatUint(uint64(prod.ID), 10)
+			encoded, err := p.DecodeBase64(img.Path, id, context.Background())
+			if err != nil {
+				continue
+			}
+			prod.Images[i].Path = encoded
+		}
+	}
+	return products, nil
+}
+
 func (p *productUseCase) GetBySerial(serial uint64) (*domain.Product, error) {
-	return p.ProductRepository.GetBySerial(serial)
+	product, err := p.ProductRepository.GetBySerial(serial)
+	if err != nil {
+		return nil, err
+	}
+
+
+	for i, img := range product.Images {
+		id := strconv.FormatUint(uint64(product.ID), 10)
+		encoded, err := p.DecodeBase64(img.Path, id, context.Background())
+		if err != nil {
+			continue
+		}
+		product.Images[i].Path = encoded
+	}
+
+	return product, nil
 }
 
 func (p *productUseCase) Count() (int64, error) {
 	return p.ProductRepository.Count()
 }
 
-func (p *productUseCase) FilterByCategory(name string, category string, priceRangeStart uint, priceRangeEnd uint, limit int, offset int, order string) ([]*domain.Product, error) {
+func (p *productUseCase) FilterByCategory(userId uint ,name string, category string, priceRangeStart uint, priceRangeEnd uint, limit int, offset int, order string) ([]*domain.Product, error) {
 	if name == "" {
 		name = "%"
 	}
 	if category == "" {
 		category = "%"
 	}
-	return p.ProductRepository.FilterByCategory(name, category, priceRangeStart, priceRangeEnd, limit, offset, order)
+	return p.ProductRepository.FilterByCategory(userId,name, category, priceRangeStart, priceRangeEnd, limit, offset, order)
 }
 
 func (p *productUseCase) GetProductsWithConditionOrderedByPrice(low uint, high uint, category string, limit int, offset int, order int) ([]*domain.Product, error) {
@@ -90,7 +162,7 @@ func (p *productUseCase) Update(ctx echo.Context, prod *dto.EditProduct) (*domai
 	}
 	serialNumber, _ := strconv.ParseUint(prod.SerialNumber,10, 64)
 
-	oldProduct, _  := p.ProductRepository.GetBySerial(serialNumber)
+	oldProduct, _  := p.ProductRepository.GetBySerialAndUserId(serialNumber, prod.UserId)
 	folderName := strconv.FormatUint(uint64(oldProduct.Model.ID), 10)
 	path1 := "./src/assets/" + folderName
 
@@ -153,11 +225,9 @@ func (p *productUseCase) Update(ctx echo.Context, prod *dto.EditProduct) (*domai
 	}
 	os.Chdir(oldDir)
 
-	curr,_ := strconv.Atoi(prod.Currency)
 	price, _ := strconv.ParseFloat(prod.Price, 64)
 	av,_ :=strconv.Atoi(prod.Available)
 
-	oldProduct.Currency = domain.Currency(curr)
 	oldProduct.Price = price
 	oldProduct.Available = uint(av)
 	oldProduct.Images = images
@@ -171,7 +241,10 @@ func (p *productUseCase) Update(ctx echo.Context, prod *dto.EditProduct) (*domai
 
 func (p *productUseCase) Create(ctx echo.Context, newProd *dto.NewProduct) (*domain.Product, error) {
 
-
+	user, err := p.ShopAccountRepository.GetByID(newProd.UserId)
+	if err != nil{
+		return nil, err
+	}
 	cat, err := p.CategoryRepository.GetByName(newProd.Category)
 	if err != nil{
 		return nil, err
@@ -229,20 +302,21 @@ func (p *productUseCase) Create(ctx echo.Context, newProd *dto.NewProduct) (*dom
 
 	os.Chdir(path2)
 
-	curr,_ :=strconv.Atoi(newProd.Currency)
 	price, _ := strconv.ParseFloat(newProd.Price, 64)
 	av,_ :=strconv.Atoi(newProd.Available)
-	prod:=domain.Product{Currency: domain.Currency(curr), Available: uint(av), Price: price, Name: newProd.Name, Category: *cat, Description: newProd.Description, Images: images, SerialNumber: makeTimestamp()}
+	prod:=domain.Product{Available: uint(av), Price: price, Name: newProd.Name, Category: *cat, Description: newProd.Description, Images: images, SerialNumber: makeTimestamp(),ShopAccount:  *user}
 
 	return p.ProductRepository.Create(&prod)
 }
 
 func (p *productUseCase) Delete(ctx echo.Context, deletedProduct dto.DeleteProduct) error {
 	serial, err := strconv.ParseUint(deletedProduct.SerialNumber, 10, 64)
+
+
 	if err != nil{
 		return err
 	}
-	deleted, err := p.ProductRepository.GetBySerial(serial)
+	deleted, err := p.ProductRepository.GetBySerialAndUserId(serial, deletedProduct.UserId)
 	if err!=nil{
 		return err
 	}
@@ -267,9 +341,44 @@ func (p *productUseCase) Delete(ctx echo.Context, deletedProduct dto.DeleteProdu
 	return p.ProductRepository.Delete(deleted.Model.ID)
 }
 
+
+func (p *productUseCase) DecodeBase64(media string, agentId string, ctx context.Context) (string, error) {
+	workingDirectory, _ := os.Getwd()
+	if !strings.HasSuffix(workingDirectory, "src") {
+		firstPart := strings.Split(workingDirectory, "src")
+		value := firstPart[0] + "/src"
+		workingDirectory = value
+		os.Chdir(workingDirectory)
+	}
+
+	path1 := "./assets/"
+	err := os.Chdir(path1)
+	fmt.Println(err)
+	spliced := strings.Split(media, "/")
+	var f *os.File
+	if len(spliced) > 1 {
+		err = os.Chdir(agentId)
+		f, _ = os.Open(spliced[1])
+	} else {
+		f, _ = os.Open(spliced[0])
+	}
+
+	defer f.Close()
+	reader := bufio.NewReader(f)
+	content, _ := ioutil.ReadAll(reader)
+
+	encoded := base64.StdEncoding.EncodeToString(content)
+
+	fmt.Println("ENCODED: " + encoded)
+	os.Chdir(workingDirectory)
+
+	return "data:image/jpg;base64," + encoded, nil
+}
+
+
 func makeTimestamp() uint64 {
 	return uint64(time.Now().UnixNano() / int64(time.Millisecond))
 }
-func NewProductUseCase(p domain.ProductRepository, c domain.CategoryRepository, img domain.ImageRepository) domain.ProductUsecase {
-	return &productUseCase{p,c, img}
+func NewProductUseCase(p domain.ProductRepository, c domain.CategoryRepository, img domain.ImageRepository, s domain.ShopAccountRepository) domain.ProductUsecase {
+	return &productUseCase{s,p,c, img}
 }
