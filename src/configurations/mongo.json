@@ -1,11 +1,11 @@
 {
   "docker" : true,
   "mongodb_uri_docker" : "mongodb://mongowebshop:27017",
-  "mongodb_uri_localhost" : "mongodb://127.0.0.1:27021",
+  "mongodb_uri_localhost" : "mongodb://127.0.0.1:27022",
   "server" : {
     "address_docker" : "mongowebshop",
     "address_localhost" : "localhost",
-    "port" : 27021
+    "port" : 27022
   },
   "database" : "order_db",
   "production_server" : {

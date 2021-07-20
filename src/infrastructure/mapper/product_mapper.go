@@ -4,6 +4,7 @@ import (
 	"github.com/microcosm-cc/bluemonday"
 	"gorm.io/gorm"
 	"io/ioutil"
+	"os"
 	"strconv"
 	"strings"
 	"web-shop/domain"
@@ -24,8 +25,12 @@ func NewProductToProductDto (p domain.Product) dto.ProductDTO {
 }
 
 func NewProductToProductViewDTO (p domain.Product) dto.ProductViewDTO {
-
-	imt_path := "https://localhost:443/static/"
+	var imt_path string
+ 	if os.Getenv("DOCKER_ENV") == "" {
+		imt_path = "https://localhost:443/static/"
+	}  else {
+		imt_path = "http://localhost:8099/static/"
+	}
 	files, _ := ioutil.ReadDir("./src/assets/"+strconv.FormatUint(uint64(p.Model.ID), 10))
 	var images []string
 	for _, file := range files{
